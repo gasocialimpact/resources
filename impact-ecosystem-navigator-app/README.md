@@ -10,10 +10,10 @@ The application is now **ready to use**!
 
 ```bash
 cd impact-ecosystem-navigator-app
-python -m http.server 8001
+python -m http.server 8002
 ```
 
-Then open: **http://localhost:8001**
+Then open: **http://localhost:8002**
 
 ## 📁 Current Structure
 
