@@ -4,55 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Component Builder</title>
-    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        #tabs { margin: 20px 0; }
-        .tab { display: inline-block; margin: 0 10px; cursor: pointer; padding: 10px; background: #e0e0e0; }
-        .tab.active { background: #d0d0d0; }
-        #content { border: 1px solid #ccc; padding: 20px; }
-    </style>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
     <h1>Component Builder</h1>
-    <div id="tabs">
-        <div class="tab active" data-tab="preview">Prompt Preview</div>
-        <div class="tab" data-tab="source">Prompt Source</div>
-        <div class="tab" data-tab="instructions">Instructions</div>
+    <div>
+        <button onclick="copyPrompt()">Copy Prompt</button>
+        <button onclick="downloadPrompt()" id="downloadBtn" disabled>Download Prompt (.txt)</button>
     </div>
-    <div id="content">
-        <div class="tab-content" id="preview-content">Preview Content...</div>
-        <div class="tab-content hidden" id="source-content">Source Content...</div>
-        <div class="tab-content hidden" id="instructions-content">Instructions Content...</div>
+    <div>
+        <div>
+            <button onclick="switchTab('preview')">Prompt Preview</button>
+            <button onclick="switchTab('source')">Prompt Source</button>
+            <button onclick="switchTab('instructions')">Instructions</button>
+        </div>
+        <div id="tab-content">
+            <div id="preview" class="tab">...Preview of prompt...</div>
+            <div id="source" class="tab" style="display:none;">...Source code...</div>
+            <div id="instructions" class="tab" style="display:none;">Instructions on how to use...</div>
+        </div>
     </div>
-    <button id="copy-prompt">Copy Prompt</button>
-    <button id="download-prompt">Download Prompt (.txt)</button>
-
-    <script>
-        const tabs = document.querySelectorAll('.tab');
-        const previewContent = document.getElementById('preview-content');
-        const sourceContent = document.getElementById('source-content');
-        const instructionsContent = document.getElementById('instructions-content');
-
-        tabs.forEach(tab => {
-            tab.onclick = function() {
-                tabs.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                const tabName = this.getAttribute('data-tab');
-                previewContent.classList.toggle('hidden', tabName !== 'preview');
-                sourceContent.classList.toggle('hidden', tabName !== 'source');
-                instructionsContent.classList.toggle('hidden', tabName !== 'instructions');
-            };
-        });
-
-        document.getElementById('copy-prompt').onclick = function() {
-            // Copy prompt logic
+    <script type="text/babel">
+        // React+Babel code here
+        const App = () => {
+            return (
+                <div>
+                    <h2>Welcome to the Component Builder!</h2>
+                    {/* Additional React components go here */}
+                </div>
+            );
         };
 
-        document.getElementById('download-prompt').onclick = function() {
-            // Download prompt logic
+        const renderTabContent = (tab) => {
+            document.querySelectorAll('.tab').forEach(t => t.style.display = 'none');
+            document.getElementById(tab).style.display = 'block';
         };
+
+        const switchTab = (tab) => {
+            renderTabContent(tab);
+        };
+
+        const copyPrompt = () => {
+            const promptText = "...Your prompt text...";
+            navigator.clipboard.writeText(promptText);
+            alert('Prompt copied to clipboard!');
+            document.getElementById('downloadBtn').disabled = false; // Enable download
+        };
+
+        const downloadPrompt = () => {
+            const blob = new Blob(["...Your prompt text..."]; , { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = 'prompt.txt';
+            link.click();
+        };
+
+        ReactDOM.render(<App />, document.body);
     </script>
 </body>
 </html>
