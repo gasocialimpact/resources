@@ -4,242 +4,544 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Atlanta Nonprofit Capital Ecosystem</title>
-<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --brand-dk:#1E2951; --brand-grn:#0F7938; --brand-ylw:#D4AF37; --brand-lbl:#6FBFB3;
-  --ink:#1E2951; --ink-2:#33406f; --muted:#5c6b9b; --bg:#ffffff; --surface:#f6f8fb;
-  --card:#ffffff; --line:#e4e8f2; --ok:#0F7938;
-  --warn:#D4720C; --warn-bg:#fff4e6; --warn-line:#f0c992;
-  --danger:#B92B27; --danger-bg:#fdecea; --danger-line:#f4b4af;
-  --good:#0F7938; --good-bg:#eaf6ee; --good-line:#b9dec3;
-  --shadow:0 10px 30px rgba(0,0,0,.08); --radius:14px;
+  --accent:#149a49;
+  --primary-cream:#fff1d3;
+  --primary-blue:#dde0fe;
+  --accent-gold:#eec61a;
+  --accent-teal:#53c3c2;
+  --accent-lime:#66b445;
+  --accent-orange:#f15922;
+  --warn-bg:#f8dcd3;
+  --secondary-purple:#4750a2;
+  --secondary-green:#e0f1d9;
+  --soft-cream:#fcf3cf;
+  --soft-gray:#f4f5f7;
+  --ink:#000;
+  --line:#e6e8ec;
+  --line-dark:#cfd2d8;
+  --bg:#fff;
+  --shadow:0 4px 14px rgba(0,0,0,.05);
 }
 *{box-sizing:border-box}
-html,body{height:100%}
-body{margin:0;background:var(--bg); color:var(--ink);
-  padding-left:10px; padding-right:10px; overflow-x:hidden;
-  font:15px/1.55 "Familjen Grotesk", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;}
-header{position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid var(--line)}
-.wrap{max-width:1600px; margin:0 auto; padding:12px 18px; display:flex; gap:10px; align-items:center; flex-wrap:wrap}
-.brand{width:24px; height:24px; border-radius:6px; background:conic-gradient(from 90deg, var(--brand-dk), var(--brand-lbl), var(--brand-ylw), var(--brand-grn)); border:1px solid var(--line)}
-.kicker{font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
-.controls{margin-left:auto; display:flex; gap:8px; flex-wrap:wrap}
-.btn{background:#fff; color:var(--ink); border:1px solid var(--line); padding:9px 12px; font-weight:700; border-radius:10px; cursor:pointer; transition:.2s; font-family:inherit; font-size:14px}
-.btn:hover{transform:translateY(-1px); box-shadow:0 4px 14px rgba(0,0,0,.08)}
-.btn.primary{background:var(--brand-grn); color:#fff; border:none}
-.btn.ghost{background:#fff; border:1px dashed var(--line); color:var(--ink-2)}
+html,body{height:100%;background:#fff}
+body{
+  margin:0;
+  color:var(--ink);
+  background:#fff;
+  padding-left:10px;
+  padding-right:10px;
+  overflow-x:hidden;
+  font-family:"Familjen Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size:15px;
+  line-height:1.4;
+}
 
-main{max-width:1600px; margin:18px auto 20px; padding:0 18px; display:grid; grid-template-columns:280px 1fr; gap:16px}
-aside{position:sticky; top:66px; align-self:start; background:#fff; border:1px solid var(--line); border-radius:14px; padding:12px; box-shadow:var(--shadow); max-height:calc(100vh - 80px); overflow-y:auto}
-.nav{display:grid; gap:6px}
-.nav button{width:100%; text-align:left; background:#fff; color:var(--ink); border:1px solid var(--line); padding:10px 12px; border-radius:10px; cursor:pointer; font-family:inherit; font-size:14px; font-weight:600}
-.nav button.active{outline:2px solid var(--brand-lbl); background:#f7fbfb}
-.nav button:hover{border-color:var(--brand-lbl)}
+/* Header */
+header{position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid var(--line)}
+.wrap{max-width:1500px; margin:0 auto; padding:14px 24px; display:flex; gap:14px; align-items:center; flex-wrap:wrap}
+.brand-logo{display:flex; align-items:center; gap:10px}
+.brand-mark{width:28px; height:28px; border-radius:6px; background:conic-gradient(from 90deg, var(--secondary-purple), var(--accent-teal), var(--accent-gold), var(--accent)); border:1px solid var(--line)}
+.kicker{font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink)}
+.controls{margin-left:auto; display:flex; gap:8px; flex-wrap:wrap}
+.btn{
+  background:#fff; color:var(--ink); border:1px solid var(--line-dark);
+  padding:9px 14px; font-weight:600; border-radius:8px; cursor:pointer;
+  font-family:inherit; font-size:13px;
+  display:inline-flex; align-items:center; gap:6px;
+  transition:.15s;
+}
+.btn:hover{background:#f7faf7; border-color:var(--accent)}
+.btn.primary{background:var(--accent); color:#fff; border-color:var(--accent)}
+.btn.primary:hover{background:#117a3a; border-color:#117a3a}
+.btn svg{width:14px; height:14px; flex-shrink:0}
+
+/* Layout */
+main{
+  max-width:1500px;
+  margin:24px auto 32px;
+  padding:0 24px;
+  display:grid;
+  grid-template-columns:260px 1fr;
+  gap:32px;
+}
+aside{
+  position:sticky; top:78px; align-self:start;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:14px;
+  max-height:calc(100vh - 100px);
+  overflow-y:auto;
+}
+.nav{display:grid; gap:4px}
+.nav button{
+  width:100%; text-align:left;
+  background:#fff; color:var(--ink);
+  border:1px solid transparent;
+  padding:10px 12px; border-radius:8px; cursor:pointer;
+  font-family:inherit; font-size:14px; font-weight:500;
+  display:flex; align-items:center; gap:10px;
+  transition:.15s;
+}
+.nav button:hover{background:var(--secondary-green); color:var(--accent)}
+.nav button.active{background:var(--secondary-green); color:var(--accent); font-weight:700; border-color:var(--accent)}
+.nav button svg{width:16px; height:16px; flex-shrink:0}
+
+.legend{margin-top:16px; padding-top:14px; border-top:1px solid var(--line); display:grid; gap:8px; font-size:13px}
+.legend .row{display:flex; align-items:center; gap:8px; color:var(--ink)}
+.legend .dot{width:10px; height:10px; border-radius:999px; display:inline-block}
+.dot-vuln{background:var(--accent-orange)}
+.dot-build{background:var(--accent-gold)}
+.dot-resi{background:var(--accent)}
+
+.tip{margin-top:14px; padding-top:14px; border-top:1px solid var(--line); font-size:12.5px; color:var(--ink); line-height:1.5}
+
+/* Section content frame */
+.content-frame{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:32px 36px;
+  max-width:1100px;
+}
 .section{display:none}
 .section.active{display:block}
 
-.legend{margin-top:14px; display:grid; gap:8px; font-size:12px; color:var(--ink-2); padding-top:14px; border-top:1px dashed var(--line)}
-.legend .row{display:flex; align-items:center; gap:8px}
-.legend .dot{width:10px; height:10px; border-radius:999px; display:inline-block}
-.dot-vuln{background:var(--danger)} .dot-build{background:var(--warn)} .dot-resi{background:var(--good)}
+/* Headings */
+.section h1{
+  font-size:28px; font-weight:800; margin:0 0 8px;
+  color:var(--accent); line-height:1.2;
+  display:flex; align-items:center; gap:12px;
+}
+.section h1 svg{width:28px; height:28px; flex-shrink:0}
+.section h2{
+  font-size:20px; font-weight:700; margin:32px 0 12px;
+  color:var(--secondary-purple); padding-bottom:6px;
+  border-bottom:1px solid var(--line);
+  display:flex; align-items:center; gap:10px;
+}
+.section h2 svg{width:18px; height:18px; flex-shrink:0; color:var(--secondary-purple)}
+.section h3{font-size:16px; font-weight:700; margin:20px 0 8px; color:var(--secondary-purple)}
+.section h4{font-size:13px; font-weight:700; margin:14px 0 6px; color:var(--ink); text-transform:uppercase; letter-spacing:.04em}
+.subtitle{margin:0 0 24px; font-size:15px; color:var(--ink); max-width:780px}
 
-.tip{margin-top:12px; color:#6a789f; font-size:12px; padding-top:12px; border-top:1px dashed var(--line)}
-
-/* Section headings */
-.section h1{font-size:28px; margin:0 0 6px; color:var(--brand-dk); line-height:1.2}
-.section h2{font-size:20px; margin:30px 0 14px; color:var(--brand-dk); padding-bottom:8px; border-bottom:2px solid var(--line)}
-.section h3{font-size:16px; margin:18px 0 8px; color:var(--ink)}
-.section h4{font-size:14px; margin:12px 0 6px; color:var(--ink); text-transform:uppercase; letter-spacing:.05em}
-.subtitle{color:var(--muted); margin:0 0 22px; font-size:15px; max-width:880px}
+p{margin:0 0 12px}
+p:last-child{margin-bottom:0}
+strong{font-weight:700; color:var(--ink)}
 
 /* Panels */
-.panel{background:#fff; border:1px solid var(--line); border-radius:14px; padding:18px; box-shadow:var(--shadow); margin-bottom:16px}
-.panel.alert{border-left:4px solid var(--brand-grn); background:#f4fbf6}
-.panel.warn{border-left:4px solid var(--warn); background:var(--warn-bg)}
-.panel.danger{border-left:4px solid var(--danger); background:var(--danger-bg)}
-.panel.lbl{border-left:4px solid var(--brand-lbl); background:#f0fafa}
+.panel{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:18px 20px;
+  margin-bottom:14px;
+}
+.panel.purpose{background:var(--soft-cream); border-left:4px solid var(--secondary-purple); border-color:#f0e5a8 var(--line) #f0e5a8 var(--secondary-purple)}
+.panel.warn{background:var(--warn-bg); border-left:4px solid var(--accent-orange); border-color:#f3c1b3 var(--line) #f3c1b3 var(--accent-orange)}
+.panel.success{background:var(--soft-cream); border-left:4px solid var(--accent); border-color:#f0e5a8 var(--line) #f0e5a8 var(--accent)}
+.panel.highlight{background:var(--soft-cream); border-left:4px solid var(--accent-gold); border-color:#f0e5a8 var(--line) #f0e5a8 var(--accent-gold)}
 
-/* Cards & grids */
-.card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px; transition:.2s}
-.card:hover{transform:translateY(-2px); box-shadow:0 4px 14px rgba(0,0,0,.06)}
-.card .title{font-weight:800; font-size:14px; color:var(--ink)}
-.card .meta{color:var(--muted); font-size:12px; margin-top:4px}
+/* Numbered list (Information-Gathering Steps) */
+ol.steps{list-style:none; padding:0; margin:0; counter-reset:step}
+ol.steps li{
+  counter-increment:step;
+  display:flex; gap:14px;
+  padding:12px 0;
+  border-bottom:1px solid var(--line);
+}
+ol.steps li:last-child{border-bottom:none; padding-bottom:0}
+ol.steps li:first-child{padding-top:0}
+ol.steps li:before{
+  content:counter(step);
+  background:var(--accent); color:#fff;
+  width:28px; height:28px; border-radius:6px;
+  font-weight:700; font-size:13px;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+ol.steps .step-body strong{display:block; font-weight:700; margin-bottom:2px}
+ol.steps .step-body span{display:block; font-size:13.5px}
 
-.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:14px}
-.grid-3{display:grid; grid-template-columns:repeat(3, 1fr); gap:14px}
-.grid-auto{display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:12px}
+/* Three Key Areas */
+.areas{display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; margin-top:8px}
+.area{
+  background:#fff; border:1px solid var(--line); border-radius:10px;
+  padding:16px;
+}
+.area .icon-circle{
+  width:36px; height:36px; border-radius:8px;
+  background:var(--soft-gray); color:var(--secondary-purple);
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom:10px;
+}
+.area .icon-circle svg{width:18px; height:18px}
+.area .a-title{font-weight:700; font-size:14px; margin-bottom:4px}
+.area .a-meta{font-size:13px}
 
-/* Stat cards (big number) */
-.stat-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px; box-shadow:var(--shadow)}
-.stat-card .num{font-size:32px; font-weight:800; color:var(--brand-grn); line-height:1; margin-bottom:6px}
-.stat-card .lbl{font-weight:700; font-size:13px; color:var(--ink); margin-bottom:6px}
-.stat-card .det{color:var(--muted); font-size:12.5px; line-height:1.45}
+/* Use case */
+.usecase{
+  background:#fff; border:1px solid var(--line); border-radius:10px;
+  padding:18px 20px; margin-bottom:14px;
+}
+.usecase .head{
+  display:flex; align-items:center; gap:10px; margin-bottom:12px;
+  padding-bottom:10px; border-bottom:1px solid var(--line);
+}
+.usecase .head .num{
+  background:var(--accent); color:#fff;
+  padding:3px 10px; border-radius:999px;
+  font-size:11px; font-weight:700; letter-spacing:.04em;
+}
+.usecase .head .ttl{font-weight:700; font-size:15px}
+.usecase .head svg{width:18px; height:18px; color:var(--accent); flex-shrink:0}
+.uc-grid{display:grid; grid-template-columns:1fr 1fr; gap:24px}
+.uc-grid h4{margin:0 0 6px; font-size:11px; font-weight:700; color:var(--secondary-purple); letter-spacing:.06em; text-transform:uppercase}
+.uc-grid p{font-size:13.5px; line-height:1.5}
 
-/* Pills/badges */
-.badge{display:inline-block; padding:3px 8px; border-radius:999px; background:#eef6ff; border:1px solid var(--line); color:#0f2a65; font-weight:700; font-size:12px}
-.badge.warn{background:var(--warn-bg); border-color:var(--warn-line); color:#7a4a06}
-.badge.good{background:var(--good-bg); border-color:var(--good-line); color:#0a4a1d}
-.badge.danger{background:var(--danger-bg); border-color:var(--danger-line); color:#7a1612}
-
-/* Use case cards (Roundtable) */
-.usecase{background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:14px}
-.usecase .heading{display:flex; gap:10px; align-items:center; margin-bottom:10px}
-.usecase .heading .badge{flex-shrink:0}
-.usecase .heading .title{font-weight:800; font-size:15px}
-.usecase .grid-2{margin-top:8px}
-.usecase .col h4{margin:0 0 6px; font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em}
-.usecase .col p{margin:0; color:var(--ink-2); font-size:13.5px; line-height:1.55}
-
-/* Spectrum stages */
-.spectrum{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:14px 0}
-.stage{background:#fff; border:2px solid; border-radius:14px; padding:18px; position:relative}
-.stage.vuln{border-color:var(--danger)}
-.stage.build{border-color:var(--warn)}
-.stage.resi{border-color:var(--good)}
-.stage .pct{position:absolute; top:-12px; right:14px; background:#fff; padding:3px 10px; border-radius:999px; font-weight:800; font-size:12px; border:2px solid}
-.stage.vuln .pct{border-color:var(--danger); color:var(--danger)}
-.stage.build .pct{border-color:var(--warn); color:var(--warn)}
-.stage.resi .pct{border-color:var(--good); color:var(--good)}
-.stage .label{font-weight:800; font-size:16px; margin-bottom:8px}
-.stage.vuln .label{color:var(--danger)}
-.stage.build .label{color:var(--warn)}
-.stage.resi .label{color:var(--good)}
-.stage ul{margin:8px 0 0; padding-left:18px; color:var(--ink-2); font-size:13.5px}
-.stage ul li{margin-bottom:4px}
-
-/* Stage detail */
-.stage-detail{background:#fff; border:2px solid var(--line); border-radius:14px; padding:22px; margin-bottom:20px}
-.stage-detail.vuln{border-color:var(--danger-line)}
-.stage-detail.build{border-color:var(--warn-line)}
-.stage-detail.resi{border-color:var(--good-line)}
-.stage-detail .head{display:flex; gap:14px; align-items:center; padding-bottom:14px; border-bottom:1px dashed var(--line); margin-bottom:14px}
-.stage-detail .icon{width:48px; height:48px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800; flex-shrink:0}
-.stage-detail.vuln .icon{background:var(--danger-bg); color:var(--danger)}
-.stage-detail.build .icon{background:var(--warn-bg); color:var(--warn)}
-.stage-detail.resi .icon{background:var(--good-bg); color:var(--good)}
-.stage-detail .htitle{font-size:18px; font-weight:800}
-.stage-detail.vuln .htitle{color:var(--danger)}
-.stage-detail.build .htitle{color:var(--warn)}
-.stage-detail.resi .htitle{color:var(--good)}
-.stage-detail .meta-row{font-size:12.5px; color:var(--muted); margin-top:4px}
-.stage-detail .meta-row strong{color:var(--ink)}
-.indicator-list{list-style:none; padding:0; margin:0}
-.indicator-list li{padding:6px 0 6px 18px; position:relative; color:var(--ink-2); font-size:13.5px}
-.indicator-list li:before{content:"●"; position:absolute; left:0; color:var(--brand-lbl); font-size:10px; top:8px}
-
-/* Intervention boxes */
-.intervention-box{background:linear-gradient(135deg, #f0fafa, #f6f8fb); border:1px solid var(--brand-lbl); border-radius:12px; padding:18px; margin-top:14px}
-.intervention-box h4{margin:0 0 12px; color:var(--brand-dk); font-size:14px}
-.intervention-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:10px}
-.intervention-item{background:#fff; padding:12px; border-radius:10px; border-left:3px solid var(--brand-lbl)}
-.intervention-item .type{font-weight:800; color:var(--brand-dk); font-size:12.5px; margin-bottom:6px}
-.intervention-item .desc{font-size:12.5px; color:var(--ink-2); line-height:1.5}
-
-/* Intervention cards (Ecosystem Transformation) */
-.transformation{display:grid; gap:14px; margin-top:14px}
-.transform-row{background:#fff; border:1px solid var(--line); border-radius:14px; padding:18px; box-shadow:var(--shadow)}
-.transform-row .gap-label{display:inline-block; background:var(--danger-bg); color:var(--danger); padding:4px 10px; border-radius:999px; font-weight:800; font-size:11px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:8px}
-.transform-row .arrow-grid{display:grid; grid-template-columns:1fr 30px 1fr 30px 1fr; align-items:center; gap:10px; margin-top:14px}
-.transform-row .col-box{background:#fafbfe; border:1px solid var(--line); border-radius:10px; padding:14px; min-height:100%}
-.transform-row .col-box.gap{border-left:4px solid var(--danger)}
-.transform-row .col-box.intervention{border-left:4px solid var(--brand-grn)}
-.transform-row .col-box.future{border-left:4px solid var(--brand-lbl)}
-.transform-row .col-box h4{margin:0 0 8px; font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em}
-.transform-row .col-box .ttl{font-weight:800; font-size:14px; color:var(--ink); margin-bottom:6px}
-.transform-row .col-box p{margin:6px 0 0; font-size:13px; color:var(--ink-2); line-height:1.5}
-.transform-row .arrow{font-size:22px; color:var(--brand-lbl); text-align:center; font-weight:800}
-.transform-row .deps{margin-top:14px; padding-top:14px; border-top:1px dashed var(--line)}
-.transform-row .deps h4{margin:0 0 8px; font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em}
-.transform-row .deps ul{margin:0; padding-left:18px; color:var(--ink-2); font-size:13px}
-
-/* Tables */
-.tbl{width:100%; border-collapse:collapse; margin-top:12px; background:#fff; border:1px solid var(--line); border-radius:12px; overflow:hidden}
-.tbl th{background:var(--surface); text-align:left; padding:12px 14px; font-size:12px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); border-bottom:1px solid var(--line)}
-.tbl td{padding:14px; vertical-align:top; border-bottom:1px solid var(--line); font-size:13.5px; color:var(--ink-2); line-height:1.55}
+/* Table */
+.tbl{width:100%; border-collapse:collapse; margin-top:8px; background:#fff; border:1px solid var(--line); border-radius:10px; overflow:hidden}
+.tbl th{background:var(--soft-gray); text-align:left; padding:12px 16px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--secondary-purple); border-bottom:1px solid var(--line)}
+.tbl td{padding:14px 16px; vertical-align:top; border-bottom:1px solid var(--line); font-size:13.5px; line-height:1.5}
 .tbl tr:last-child td{border-bottom:none}
-.tbl td strong{color:var(--ink)}
+.tbl td .meta-line{font-size:12px; color:var(--ink); opacity:.75; display:block; margin-top:4px}
+.tbl ul{margin:0; padding-left:18px}
+.tbl ul li{margin-bottom:4px}
+
+/* Inline 2-col list (Limiting Factors, Funding Challenges) */
+.split{display:grid; grid-template-columns:1fr 1fr; gap:24px; padding:6px 0}
+.split .item{padding:10px 0; border-bottom:1px solid var(--line)}
+.split .item:last-of-type{border-bottom:none}
+.split .item .it-title{font-weight:700; font-size:14px; margin-bottom:4px; display:flex; align-items:center; gap:8px}
+.split .item .it-title svg{width:14px; height:14px; color:var(--accent); flex-shrink:0}
+.split .item .it-desc{font-size:13px; line-height:1.5}
+
+/* Ecosystem Transformation cards */
+.tx-tabs{
+  display:grid; grid-template-columns:repeat(5, 1fr); gap:10px;
+  margin:14px 0 18px;
+}
+.tx-tab{
+  background:#fff; border:1px solid var(--line); border-radius:10px;
+  padding:14px 12px; cursor:pointer;
+  text-align:left; font-family:inherit;
+  transition:.15s;
+}
+.tx-tab:hover{background:var(--secondary-green); border-color:var(--accent)}
+.tx-tab.active{background:var(--accent); color:#fff; border-color:var(--accent)}
+.tx-tab .gap-num{font-size:11px; font-weight:700; letter-spacing:.05em; opacity:.8}
+.tx-tab .gap-name{font-weight:700; font-size:14px; line-height:1.25; margin-top:6px}
+.tx-detail{
+  background:#fff; border:1px solid var(--line); border-radius:12px;
+  padding:24px;
+}
+.tx-flow{display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; margin-bottom:18px}
+.tx-col{padding:0}
+.tx-col .label{
+  font-size:11px; font-weight:700; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--secondary-purple); margin-bottom:8px;
+  display:flex; align-items:center; gap:6px;
+}
+.tx-col .label svg{width:14px; height:14px}
+.tx-col .name{font-weight:700; font-size:15px; margin-bottom:6px; line-height:1.3}
+.tx-col .desc{font-size:13.5px; line-height:1.5}
+.tx-col.gap{border-left:3px solid var(--accent-orange); padding-left:14px}
+.tx-col.intervention{border-left:3px solid var(--accent); padding-left:14px}
+.tx-col.future{border-left:3px solid var(--secondary-purple); padding-left:14px}
+.tx-deps{padding-top:16px; border-top:1px solid var(--line)}
+.tx-deps h4{margin:0 0 8px; color:var(--secondary-purple)}
+.tx-deps ul{margin:0; padding-left:20px; font-size:13.5px; line-height:1.55}
+.tx-deps ul li{margin-bottom:4px}
+
+/* Stat cards */
+.stats{display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; margin-top:8px}
+.stat{
+  background:#fff; border:1px solid var(--line); border-radius:10px;
+  padding:18px;
+}
+.stat .stat-head{
+  display:flex; align-items:center; gap:10px; margin-bottom:8px;
+}
+.stat .stat-icon{
+  width:32px; height:32px; border-radius:8px;
+  background:var(--soft-gray); color:var(--secondary-purple);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.stat .stat-icon svg{width:16px; height:16px}
+.stat .num{font-size:32px; font-weight:800; color:var(--accent); line-height:1}
+.stat .lbl{font-weight:700; font-size:14px; margin:6px 0 4px}
+.stat .det{font-size:13px; line-height:1.5}
 
 /* Region cards */
-.region-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:12px; margin-top:12px}
-.region-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px; box-shadow:var(--shadow); text-align:center}
-.region-card .rname{font-weight:800; color:var(--brand-dk); font-size:14px; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(--line)}
-.region-card .rstat{font-size:24px; font-weight:800; color:var(--brand-grn); line-height:1}
-.region-card .rstat.warn{color:var(--warn)}
-.region-card .rstat.danger{color:var(--danger)}
-.region-card .rlabel{font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; margin-top:4px; margin-bottom:8px}
+.regions{display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin-top:8px}
+.region{
+  background:#fff; border:1px solid var(--line); border-radius:10px;
+  padding:14px; text-align:center;
+}
+.region .rname{font-weight:700; font-size:14px; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(--line); color:var(--accent)}
+.region .rstat{font-size:22px; font-weight:800; line-height:1}
+.region .rstat.deficit{color:var(--accent-orange)}
+.region .rstat.cash{color:var(--accent-gold)}
+.region .rstat.wage{color:var(--accent)}
+.region .rlabel{font-size:11px; text-transform:uppercase; letter-spacing:.04em; margin-top:4px; margin-bottom:10px}
+
+/* Diagnostic cards (Understanding Your Financial Position) */
+.diagnostics{display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; margin-top:8px}
+.diagnostic{background:#fff; border:1px solid var(--line); border-radius:10px; padding:18px; border-top:4px solid var(--accent)}
+.diagnostic.gold{border-top-color:var(--accent-gold)}
+.diagnostic.teal{border-top-color:var(--accent-teal)}
+.diagnostic .d-icon{
+  width:32px; height:32px; border-radius:8px;
+  background:var(--soft-gray); color:var(--secondary-purple);
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom:10px;
+}
+.diagnostic.gold .d-icon{background:var(--soft-cream); color:#a0830a}
+.diagnostic.teal .d-icon{background:var(--soft-gray); color:#2e8a89}
+.diagnostic .d-icon svg{width:16px; height:16px}
+.diagnostic .d-title{font-weight:700; font-size:14px; margin-bottom:6px}
+.diagnostic .d-formula{font-size:13px; margin-bottom:12px}
+.diagnostic .d-section{font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px; color:var(--secondary-purple)}
+.diagnostic.gold .d-section{color:#a0830a}
+.diagnostic.teal .d-section{color:#2e8a89}
+.diagnostic ul{margin:0; padding-left:18px; font-size:13px; line-height:1.55}
+
+/* Spectrum tabs */
+.sp-tabs{display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin:14px 0 18px}
+.sp-tab{
+  background:#fff; border:1px solid var(--line); border-radius:10px;
+  padding:16px; cursor:pointer; text-align:left;
+  font-family:inherit; transition:.15s;
+  border-top:4px solid transparent;
+}
+.sp-tab:hover{box-shadow:var(--shadow)}
+.sp-tab.vuln{border-top-color:var(--accent-orange)}
+.sp-tab.build{border-top-color:var(--accent-gold)}
+.sp-tab.resi{border-top-color:var(--accent)}
+.sp-tab.active{background:var(--secondary-green)}
+.sp-tab.vuln.active{background:var(--warn-bg)}
+.sp-tab.build.active{background:var(--primary-cream)}
+.sp-tab.resi.active{background:var(--secondary-green)}
+.sp-tab .sp-icon{
+  width:36px; height:36px; border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; margin-bottom:10px;
+}
+.sp-tab.vuln .sp-icon{background:var(--accent-orange)}
+.sp-tab.build .sp-icon{background:var(--accent-gold)}
+.sp-tab.resi .sp-icon{background:var(--accent)}
+.sp-tab .sp-icon svg{width:18px; height:18px}
+.sp-tab .sp-pct{font-size:12px; font-weight:700; opacity:.7; margin-bottom:2px}
+.sp-tab .sp-name{font-weight:700; font-size:15px; margin-bottom:8px}
+.sp-tab .sp-meta{font-size:12.5px; line-height:1.5}
+.sp-tab .sp-meta strong{display:inline-block; min-width:60px}
+
+.sp-detail{background:#fff; border:1px solid var(--line); border-radius:12px; padding:24px}
+.sp-pane{display:none}
+.sp-pane.active{display:block}
+.sp-pane .head{display:flex; align-items:center; gap:14px; padding-bottom:14px; border-bottom:1px solid var(--line); margin-bottom:14px}
+.sp-pane .head .icon{width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:#fff; flex-shrink:0}
+.sp-pane.vuln .head .icon{background:var(--accent-orange)}
+.sp-pane.build .head .icon{background:var(--accent-gold)}
+.sp-pane.resi .head .icon{background:var(--accent)}
+.sp-pane .head .icon svg{width:22px; height:22px}
+.sp-pane .head h3{font-size:18px; margin:0; color:var(--ink)}
+.sp-pane.vuln .head h3{color:var(--accent-orange)}
+.sp-pane.build .head h3{color:#a0830a}
+.sp-pane.resi .head h3{color:var(--accent)}
+.sp-pane .head .meta{font-size:12.5px; margin-top:2px}
+
+.sp-cols{display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:14px}
+.sp-cols h4{margin:0 0 8px; color:var(--secondary-purple)}
+.sp-cols.vuln h4{color:var(--accent-orange)}
+.sp-cols.build h4{color:#a0830a}
+.indicator-list{list-style:none; padding:0; margin:0}
+.indicator-list li{padding:5px 0 5px 18px; position:relative; font-size:13.5px; line-height:1.5}
+.indicator-list li:before{
+  content:"";
+  position:absolute; left:0; top:11px;
+  width:6px; height:6px; border-radius:999px;
+  background:var(--accent);
+}
+.sp-pane.vuln .indicator-list li:before{background:var(--accent-orange)}
+.sp-pane.build .indicator-list li:before{background:var(--accent-gold)}
+
+.intervention-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin-top:8px}
+.iv-item{background:#fff; border:1px solid var(--line); border-left:3px solid var(--accent); border-radius:8px; padding:12px}
+.iv-item .iv-title{font-weight:700; font-size:13px; margin-bottom:6px; color:var(--accent)}
+.iv-item ul{margin:0; padding-left:16px; font-size:12.5px; line-height:1.5}
+
+/* Size cards */
+.size-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; margin-top:8px}
+.size-card{background:#fff; border:1px solid var(--line); border-radius:10px; padding:18px; border-top:4px solid var(--accent)}
+.size-card h4{margin:0 0 12px; color:var(--secondary-purple); font-size:14px; text-transform:none; letter-spacing:0}
+.size-card .row{margin-bottom:10px; font-size:13px; line-height:1.5}
+.size-card .row strong{display:block; margin-bottom:2px}
 
 /* Self-Assessment */
-.assess{background:#fff; border:1px solid var(--line); border-radius:14px; padding:22px; box-shadow:var(--shadow)}
-.assess-question{padding:16px 0; border-bottom:1px dashed var(--line)}
-.assess-question:last-of-type{border-bottom:none}
-.q-title{font-weight:700; font-size:14px; color:var(--ink); margin-bottom:10px}
-.q-options{display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); gap:8px}
-.q-option{background:#fff; border:1px solid var(--line); border-radius:8px; padding:10px 12px; cursor:pointer; font-size:13px; color:var(--ink-2); transition:.2s; text-align:left}
-.q-option:hover{border-color:var(--brand-lbl); background:#f7fbfb}
-.q-option.selected{background:var(--brand-grn); color:#fff; border-color:var(--brand-grn); font-weight:700}
-.assess-button{display:inline-block; background:var(--brand-grn); color:#fff; border:none; padding:12px 24px; border-radius:10px; font-weight:800; cursor:pointer; margin-top:18px; font-family:inherit; font-size:14px}
-.assess-button:disabled{opacity:.4; cursor:not-allowed}
-.assess-results{display:none; margin-top:22px; padding:22px; background:linear-gradient(135deg, #f4fbf6, #f6f8fb); border-radius:14px; border:1px solid var(--line)}
-.assess-results.show{display:block}
-.r-title{font-size:22px; font-weight:800; margin-bottom:6px}
-.r-score{color:var(--muted); font-size:14px; margin-bottom:14px}
-.r-rec{background:#fff; padding:14px; border-radius:10px; margin-bottom:10px; border-left:3px solid var(--brand-grn)}
-.r-rec .rtitle{font-weight:800; color:var(--brand-dk); margin-bottom:4px; font-size:13px}
-.r-rec .rtext{font-size:13px; color:var(--ink-2); line-height:1.5}
-
-/* Mobile toggle */
-.menu-toggle{display:none; background:none; border:1px solid var(--line); border-radius:8px; padding:6px 10px; cursor:pointer; color:var(--ink); font-size:18px; line-height:1}
-
-/* Responsive: tablet */
-@media(max-width:1100px){
-  main{grid-template-columns:240px 1fr}
-  .grid-3{grid-template-columns:repeat(2, 1fr)}
-  .spectrum{grid-template-columns:1fr}
-  .transform-row .arrow-grid{grid-template-columns:1fr; gap:6px}
-  .transform-row .arrow{transform:rotate(90deg); margin:4px 0}
+.assess-card{
+  background:#fff; border:1px solid var(--line); border-radius:12px;
+  padding:32px;
+  max-width:780px; margin:0 auto;
+}
+.assess-progress-row{
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:14px;
+  font-size:13px; font-weight:600;
+}
+.assess-progress-bar{
+  height:6px; background:var(--soft-gray); border-radius:999px;
+  overflow:hidden; margin-bottom:30px;
+}
+.assess-progress-fill{
+  height:100%; background:var(--accent);
+  width:10%; transition:width .25s ease;
+  border-radius:999px;
+}
+.assess-q{display:none}
+.assess-q.active{display:block}
+.assess-q .q-text{
+  font-size:18px; font-weight:700; line-height:1.3;
+  margin-bottom:20px;
+}
+.assess-q .q-options{display:flex; flex-direction:column; gap:8px}
+.q-option{
+  background:#fff; border:1px solid var(--line);
+  border-radius:8px; padding:14px 16px;
+  cursor:pointer; font-size:14px;
+  font-family:inherit; transition:.15s;
+  display:flex; align-items:center; gap:10px;
+  text-align:left; color:var(--ink);
+}
+.q-option:hover{border-color:var(--accent); background:var(--secondary-green)}
+.q-option .opt-marker{
+  width:18px; height:18px; border-radius:999px;
+  border:2px solid var(--line-dark);
+  flex-shrink:0; transition:.15s;
+  position:relative;
+}
+.q-option:hover .opt-marker{border-color:var(--accent)}
+.q-option.selected{border-color:var(--accent); background:var(--secondary-green); font-weight:600}
+.q-option.selected .opt-marker{border-color:var(--accent); background:var(--accent)}
+.q-option.selected .opt-marker:after{
+  content:""; position:absolute; left:3px; top:3px;
+  width:8px; height:8px; border-radius:999px; background:#fff;
+}
+.assess-nav{
+  display:flex; justify-content:space-between; align-items:center;
+  margin-top:24px; padding-top:18px; border-top:1px solid var(--line);
 }
 
-/* Responsive: mobile */
+/* Results */
+.assess-results{display:none}
+.assess-results.show{display:block}
+.gauge-wrap{display:flex; flex-direction:column; align-items:center; margin:14px 0 24px}
+.gauge-svg{width:180px; height:180px}
+.gauge-bg{fill:none; stroke:var(--line); stroke-width:14}
+.gauge-fg{fill:none; stroke-width:14; stroke-linecap:round; transition:stroke-dashoffset .8s ease, stroke .3s}
+.gauge-text{font-size:32px; font-weight:800; text-anchor:middle; dominant-baseline:central}
+.r-stage{font-size:22px; font-weight:800; text-align:center; margin-top:4px}
+.r-recs{display:grid; gap:10px; margin-top:18px}
+.r-rec{background:var(--soft-cream); border-left:3px solid var(--accent); border-radius:8px; padding:14px 16px}
+.r-rec .rt{font-weight:700; font-size:14px; margin-bottom:4px; color:var(--accent)}
+.r-rec .rd{font-size:13px; line-height:1.55}
+
+/* Mobile menu toggle */
+.menu-toggle{display:none; background:none; border:1px solid var(--line-dark); border-radius:8px; padding:6px 10px; cursor:pointer; color:var(--ink); font-size:18px; line-height:1}
+
+/* Tablet */
+@media(max-width:1100px){
+  main{grid-template-columns:220px 1fr; gap:24px; padding:0 18px}
+  .content-frame{padding:24px 24px}
+  .tx-tabs{grid-template-columns:repeat(3, 1fr)}
+  .tx-flow{grid-template-columns:1fr}
+  .tx-col{margin-bottom:6px}
+  .stats, .intervention-grid, .size-grid, .areas, .diagnostics, .sp-tabs{grid-template-columns:1fr 1fr}
+  .regions{grid-template-columns:1fr 1fr}
+}
+
+/* Mobile */
 @media(max-width:768px){
   .menu-toggle{display:inline-flex}
-  main{grid-template-columns:1fr; padding:0 10px}
-  aside{position:fixed; left:-300px; top:56px; bottom:0; width:280px; z-index:90; transition:left .3s ease; border-radius:0; overflow-y:auto; height:calc(100vh - 56px); max-height:none}
+  main{grid-template-columns:1fr; padding:0 12px; gap:16px}
+  .content-frame{padding:20px 18px}
+  aside{position:fixed; left:-300px; top:62px; bottom:0; width:280px; z-index:90; transition:left .3s ease; border-radius:0; max-height:none; height:calc(100vh - 62px); border:none; border-right:1px solid var(--line)}
   aside.open{left:0; box-shadow:4px 0 20px rgba(0,0,0,.15)}
   .overlay{display:none; position:fixed; inset:0; background:rgba(0,0,0,.3); z-index:89}
   .overlay.open{display:block}
-  .grid-2, .grid-3{grid-template-columns:1fr}
-  .region-grid{grid-template-columns:1fr 1fr}
-  .wrap{padding:8px 10px}
+  .stats, .intervention-grid, .size-grid, .areas, .diagnostics, .sp-tabs, .tx-tabs, .uc-grid, .split, .sp-cols{grid-template-columns:1fr}
+  .regions{grid-template-columns:1fr 1fr}
+  .wrap{padding:10px 12px}
   .section h1{font-size:22px}
   .section h2{font-size:17px}
-  .q-options{grid-template-columns:1fr}
+  .assess-card{padding:22px 18px}
 }
 
 @media(max-width:480px){
-  .controls{gap:4px}
-  .btn{padding:7px 8px; font-size:13px}
-  .region-grid{grid-template-columns:1fr}
+  .controls{gap:6px}
+  .btn{padding:7px 10px; font-size:12px}
+  .regions{grid-template-columns:1fr}
 }
 
 /* Print */
 @media print{
-  header, aside, .controls, .menu-toggle { display:none !important; }
-  main{ grid-template-columns:1fr; }
+  header, aside, .controls, .menu-toggle{display:none !important}
+  main{grid-template-columns:1fr; padding:0}
   .section{display:block !important; page-break-after:always}
+  .content-frame{border:none; padding:0}
 }
 </style>
 </head>
 <body>
+
+<!-- Inline SVG icon library -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></symbol>
+    <symbol id="i-trend" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></symbol>
+    <symbol id="i-bar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></symbol>
+    <symbol id="i-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></symbol>
+    <symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2 H15 a1 1 0 0 1 1 1 V5 a1 1 0 0 1 -1 1 H9 a1 1 0 0 1 -1 -1 V3 a1 1 0 0 1 1 -1 z"></path><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></symbol>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></symbol>
+    <symbol id="i-dollar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></symbol>
+    <symbol id="i-pie" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></symbol>
+    <symbol id="i-printer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"></path><path d="M12 18v4"></path><path d="M4.93 4.93l2.83 2.83"></path><path d="M16.24 16.24l2.83 2.83"></path><path d="M2 12h4"></path><path d="M18 12h4"></path><path d="M4.93 19.07l2.83-2.83"></path><path d="M16.24 7.76l2.83-2.83"></path></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></symbol>
+    <symbol id="i-handshake" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 2 2a1 1 0 1 0 3-3"></path><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"></path><path d="m21 3 1 11h-2"></path><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"></path><path d="M3 4h8"></path></symbol>
+    <symbol id="i-network" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"></circle><circle cx="5" cy="5" r="2"></circle><circle cx="19" cy="5" r="2"></circle><circle cx="5" cy="19" r="2"></circle><circle cx="19" cy="19" r="2"></circle><line x1="6.5" y1="6.5" x2="10.5" y2="10.5"></line><line x1="13.5" y1="10.5" x2="17.5" y2="6.5"></line><line x1="13.5" y1="13.5" x2="17.5" y2="17.5"></line><line x1="6.5" y1="17.5" x2="10.5" y2="13.5"></line></symbol>
+    <symbol id="i-coin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M14 8h-3a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4h-3"></path><path d="M12 18V6"></path></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7a2 2 0 0 0-2-2H5a2 2 0 1 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4z"></path></symbol>
+    <symbol id="i-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></symbol>
+  </defs>
+</svg>
+
 <header>
   <div class="wrap">
-    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">&#9776;</button>
-    <div class="brand" aria-hidden="true"></div>
-    <div class="kicker">Atlanta Nonprofit Capital Ecosystem</div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open navigation"><svg width="18" height="18"><use href="#i-menu"/></svg></button>
+    <div class="brand-logo">
+      <div class="brand-mark" aria-hidden="true"></div>
+      <div class="kicker">Atlanta Nonprofit Capital Ecosystem</div>
+    </div>
     <div class="controls">
-      <button class="btn primary" id="resetView">Reset View</button>
-      <button class="btn" id="exportPrint">Print</button>
-      <button class="btn ghost" id="how">How to</button>
+      <button class="btn primary" id="resetView"><svg><use href="#i-refresh"/></svg> Reset View</button>
+      <button class="btn" id="exportPrint"><svg><use href="#i-printer"/></svg> Print</button>
+      <button class="btn" id="howBtn"><svg><use href="#i-help"/></svg> How to</button>
     </div>
   </div>
 </header>
@@ -248,12 +550,12 @@ aside{position:sticky; top:66px; align-self:start; background:#fff; border:1px s
 <main>
   <aside>
     <div class="nav">
-      <button class="active" data-view="spurred">Spurred to Action</button>
-      <button data-view="learnings">Roundtable Learnings</button>
-      <button data-view="transformation">Ecosystem Transformation</button>
-      <button data-view="data">Georgia's Data Reality</button>
-      <button data-view="spectrum">Financial Sustainability Spectrum</button>
-      <button data-view="assessment">Self-Assessment Tool</button>
+      <button class="active" data-view="spurred"><svg><use href="#i-zap"/></svg> Spurred to Action</button>
+      <button data-view="learnings"><svg><use href="#i-users"/></svg> Roundtable Learnings</button>
+      <button data-view="transformation"><svg><use href="#i-trend"/></svg> Ecosystem Transformation</button>
+      <button data-view="data"><svg><use href="#i-bar"/></svg> Georgia's Data Reality</button>
+      <button data-view="spectrum"><svg><use href="#i-pulse"/></svg> Sustainability Spectrum</button>
+      <button data-view="assessment"><svg><use href="#i-clipboard"/></svg> Self-Assessment Tool</button>
     </div>
 
     <div class="legend">
@@ -263,167 +565,161 @@ aside{position:sticky; top:66px; align-self:start; background:#fff; border:1px s
     </div>
 
     <div class="tip">
-      Use the tabs above to navigate. The <strong>Self-Assessment Tool</strong> helps you place your organization on the spectrum and get tailored next steps.
+      Use the tabs above to navigate. The Self-Assessment Tool helps you place your organization on the spectrum and get tailored next steps.
     </div>
   </aside>
 
-  <section>
+  <section class="content-frame">
+
     <!-- SPURRED TO ACTION -->
     <div id="view-spurred" class="section active">
-      <h1>Spurred to Action</h1>
-      <p class="subtitle">What catalyzed the Nonprofit Roundtable Series?</p>
+      <h1><svg><use href="#i-zap"/></svg> Spurred to Action</h1>
+      <p class="subtitle">What catalyzed the Nonprofit Roundtable Series.</p>
+
+      <p>Beginning in 2020, a small group of Atlanta funders started collaborating more deliberately around the financial pressures nonprofits face. During the COVID-19 crisis, several of those foundations coordinated funding and investment strategies. They seeded the <strong>Community Foundation for Greater Atlanta's Community Guarantee Pool</strong>, which helped unlock CDFI bridge lending to cover delayed government funding.</p>
+
+      <p>The group has closely watched pandemic-era funding streams taper off. That tapering left many nonprofits facing increased demand with fewer public resources. Several foundations co-funded a supplemental state-level analysis as part of the <strong>2025 Nonprofit Finance Fund National Survey</strong>.</p>
+
+      <p>With years of "collective muscle building" behind them, this small group of funders sprang into action in early 2025. The flurry of executive orders and related funding freezes created immediate threats to nonprofits and the communities they serve. After some discussion, the funders agreed to host a small roundtable series that brings together philanthropic leaders, nonprofit executives, CDFIs, and commercial lenders.</p>
+
+      <h2><svg><use href="#i-target"/></svg> Three Key Areas of Inquiry</h2>
+      <p>Funders hoped stakeholder and audience-specific conversations would uncover three key areas.</p>
+
+      <div class="areas">
+        <div class="area">
+          <div class="icon-circle"><svg><use href="#i-search"/></svg></div>
+          <div class="a-title">Understanding the Nonprofit Perspective</div>
+          <div class="a-meta">Current cash flow challenges and credit needs.</div>
+        </div>
+        <div class="area">
+          <div class="icon-circle"><svg><use href="#i-coin"/></svg></div>
+          <div class="a-title">Gauging the Current Lending Appetite</div>
+          <div class="a-meta">CDFI and banking interest in nonprofit lending.</div>
+        </div>
+        <div class="area">
+          <div class="icon-circle"><svg><use href="#i-handshake"/></svg></div>
+          <div class="a-title">Determining a Collaborative Path Forward</div>
+          <div class="a-meta">Models for unlocking credit for nonprofits.</div>
+        </div>
+      </div>
+
+      <h2><svg><use href="#i-clipboard"/></svg> Information-Gathering Steps</h2>
+      <p>From April to September 2025, we took the following steps to inform the group's understanding and the recommended future ecosystem interventions.</p>
 
       <div class="panel">
-        <p>Beginning in 2020, a small group of funders in Atlanta began collaborating more deliberately to respond to the financial pressures nonprofits face. During the COVID-19 crisis, several of the foundations within the group coordinated funding and investment strategies, including seeding the <strong>Community Foundation for Greater Atlanta's Community Guarantee Pool</strong>, which helped unlock CDFI bridge lending to cover delayed government funding.</p>
-        <p style="margin-top:12px">Subsequently, the group has closely monitored the tapering of pandemic-era funding streams, which have left many nonprofits facing increased demand with fewer public resources. In this vein, several foundations co-funded a supplemental state-level analysis as part of the <strong>2025 Nonprofit Finance Fund National Survey</strong>.</p>
-        <p style="margin-top:12px">Having years of "collective muscle building," this small group of funders sprang into action in early 2025, as the flurry of executive orders and related funding freezes created immediate threats to nonprofits and the communities they serve. After some discussion, the funders agreed to host a small roundtable series that brings together philanthropic leaders, nonprofit executives, CDFIs, and commercial lenders.</p>
-      </div>
-
-      <h2>Three Key Areas of Inquiry</h2>
-      <p style="color:var(--muted); margin-bottom:14px">Funders hoped that stakeholder and audience-specific conversations would uncover three key areas:</p>
-
-      <div class="grid-3">
-        <div class="card" style="border-left:4px solid var(--brand-grn)">
-          <div class="title">Understanding the Nonprofit Perspective</div>
-          <div class="meta" style="margin-top:8px; color:var(--ink-2); font-size:13px">Current cash flow challenges &amp; credit needs</div>
-        </div>
-        <div class="card" style="border-left:4px solid var(--brand-lbl)">
-          <div class="title">Gauging the Current Lending Appetite</div>
-          <div class="meta" style="margin-top:8px; color:var(--ink-2); font-size:13px">CDFI &amp; banking interest in nonprofit lending</div>
-        </div>
-        <div class="card" style="border-left:4px solid var(--brand-ylw)">
-          <div class="title">Determining a Collaborative Path Forward</div>
-          <div class="meta" style="margin-top:8px; color:var(--ink-2); font-size:13px">Models for unlocking credit for nonprofits</div>
-        </div>
-      </div>
-
-      <h2>Information-Gathering Steps</h2>
-      <p style="color:var(--muted); margin-bottom:14px">From April to September 2025, we undertook the following steps to inform the group's understanding and ultimately the recommended future ecosystem interventions:</p>
-
-      <div class="grid-2">
-        <div class="card">
-          <div class="title">Two 2-Hour Working Roundtables</div>
-          <div class="meta" style="margin-top:6px">Convened philanthropic leaders, nonprofit executives, CDFIs, and commercial lenders.</div>
-        </div>
-        <div class="card">
-          <div class="title">Five Nonprofit Leader Interviews</div>
-          <div class="meta" style="margin-top:6px">Conducted in-depth conversations to surface real-world cash flow and credit experiences.</div>
-        </div>
-        <div class="card">
-          <div class="title">Literature Review</div>
-          <div class="meta" style="margin-top:6px">Nonprofit financial indicators, sustainable business model features, bridge lending, and line-of-credit tools.</div>
-        </div>
-        <div class="card">
-          <div class="title">National Foundation Interviews</div>
-          <div class="meta" style="margin-top:6px">The Denver Foundation and MacArthur Foundation regarding their nonprofit bridge loan funds.</div>
-        </div>
-        <div class="card">
-          <div class="title">Capacity Builder Interviews</div>
-          <div class="meta" style="margin-top:6px">REDF Impact Investment Fund, Nonprofit Finance Fund, and Propel Nonprofits to determine capital absorption and readiness interventions.</div>
-        </div>
-        <div class="card">
-          <div class="title">Bi-Weekly Working Group Meetings</div>
-          <div class="meta" style="margin-top:6px">Atlanta foundation leaders shared updates, presented interim learnings, and made nimble design decisions.</div>
-        </div>
+        <ol class="steps">
+          <li><div class="step-body"><strong>Two 2-hour working roundtables.</strong> <span>Convened philanthropic leaders, nonprofit executives, CDFIs, and commercial lenders.</span></div></li>
+          <li><div class="step-body"><strong>Five nonprofit leader interviews.</strong> <span>Conducted in-depth conversations to surface real-world cash flow and credit experiences.</span></div></li>
+          <li><div class="step-body"><strong>Literature review.</strong> <span>Nonprofit financial indicators, sustainable business model features, bridge lending, and line-of-credit tools.</span></div></li>
+          <li><div class="step-body"><strong>National foundation interviews.</strong> <span>The Denver Foundation and MacArthur Foundation, focused on their nonprofit bridge loan funds.</span></div></li>
+          <li><div class="step-body"><strong>Capacity builder interviews.</strong> <span>REDF Impact Investment Fund, Nonprofit Finance Fund, and Propel Nonprofits, focused on capital absorption and readiness.</span></div></li>
+          <li><div class="step-body"><strong>Bi-weekly working group meetings.</strong> <span>Atlanta foundation leaders shared updates, presented interim learnings, and made nimble design decisions.</span></div></li>
+        </ol>
       </div>
     </div>
 
     <!-- ROUNDTABLE LEARNINGS -->
     <div id="view-learnings" class="section">
-      <h1>Roundtable Learnings</h1>
-      <p class="subtitle">What did we learn during the roundtable sessions?</p>
+      <h1><svg><use href="#i-users"/></svg> Roundtable Learnings</h1>
+      <p class="subtitle">What we heard during the roundtable sessions.</p>
 
-      <h2>Roundtable Session 1 &mdash; Field Context</h2>
-      <div class="panel">
-        <p>Atlanta's nonprofit sector finds itself in the eye of a perfect storm, as delayed reimbursements, uncertainty around key federal funding programs, growing expense levels, reserve draws, and escalating service demand converge to strain operations.</p>
-        <p style="margin-top:12px">It's important to acknowledge that structural challenges with government reimbursements and funding are not new. Nor are they limited to federal dollars. Challenges around cash-flow timing have long been built into the reimbursable model of government funding, which nonprofits often refer to as the <strong>"float"</strong> between service delivery and payment receipt.</p>
-        <p style="margin-top:12px">Even before recent federal budget uncertainties amplified delays, organizations routinely advanced payroll, rent, and program expenses while awaiting contract draws or grant reimbursements. Smaller agencies&mdash;without lines of credit or unrestricted reserves&mdash;sometimes waited 30 to 60 days for state or local payments, and reporting requirements could stretch that gap further.</p>
-      </div>
+      <h2><svg><use href="#i-flag"/></svg> Roundtable Session 1. Field Context</h2>
+
+      <p>Atlanta's nonprofit sector sits in the eye of a perfect storm. Delayed reimbursements, uncertainty around key federal funding programs, growing expenses, reserve draws, and escalating service demand all converge to strain operations.</p>
+
+      <p>Structural challenges with government reimbursements and funding are not new. They are not limited to federal dollars either. Cash-flow timing has long been built into the reimbursable model of government funding, what nonprofits often call the "float" between service delivery and payment receipt.</p>
+
+      <p>Even before recent federal budget uncertainties amplified delays, organizations routinely advanced payroll, rent, and program expenses while awaiting contract draws or grant reimbursements. Smaller agencies (without lines of credit or unrestricted reserves) sometimes waited 30 to 60 days for state or local payments, and reporting requirements could stretch that gap further.</p>
 
       <div class="panel warn">
-        <strong>Per the Nonprofit Finance Fund's 2022 State of the Nonprofit Sector Survey:</strong> About <strong>45% of U.S. nonprofits</strong> report having <strong>less than three months</strong> (~90 days) of cash on hand for operating expenses.
+        <strong>The Nonprofit Finance Fund's 2022 State of the Nonprofit Sector Survey</strong> found that about 45% of U.S. nonprofits have less than three months (around 90 days) of cash on hand for operating expenses.
       </div>
 
-      <h2>Common Cash Flow Challenges &mdash; Use Cases</h2>
+      <h3>Common Cash Flow Challenges and Use Cases</h3>
 
       <div class="usecase">
-        <div class="heading">
-          <span class="badge">Use Case 1</span>
-          <span class="title">Advancing or Bridging Reimbursable Funding</span>
+        <div class="head">
+          <span class="num">USE CASE 1</span>
+          <svg><use href="#i-clock"/></svg>
+          <span class="ttl">Advancing or Bridging Reimbursable Funding</span>
         </div>
-        <div class="grid-2">
-          <div class="col">
+        <div class="uc-grid">
+          <div>
             <h4>What we heard from nonprofits</h4>
-            <p>A twenty-year-old homelessness-focused nonprofit has been routinely awarded federal grants through both the VA and HUD. Federal reimbursements routinely arrive 60&ndash;90 days after invoicing. Over the past year, the nonprofit has tapped its reserves and incurred expensive short-term credit to cover payroll and fixed costs. The ideal solution would be a multi-year, simple, renewable bridge loan or working LOC.</p>
+            <p>A twenty-year-old homelessness-focused nonprofit has been routinely awarded federal grants through both the VA and HUD. Federal reimbursements routinely arrive 60 to 90 days after invoicing. Over the past year, the nonprofit has tapped its reserves and incurred expensive short-term credit to cover payroll and fixed costs. The ideal solution would be a multi-year, simple, renewable bridge loan or working LOC.</p>
           </div>
-          <div class="col">
+          <div>
             <h4>What the data says</h4>
-            <p>A GrantStation survey highlights that organizations routinely tap lines of credit to cover payroll and core expenses "when cash flow is low" due to delayed reimbursements. NFF's 2022 Survey found that <strong>55% of nonprofits</strong> reported needing external liquidity to manage timing gaps between service delivery and funding disbursements.</p>
+            <p>A GrantStation survey highlights that organizations routinely tap lines of credit to cover payroll and core expenses when cash flow is low due to delayed reimbursements. NFF's 2022 Survey found that <strong>55% of nonprofits</strong> needed external liquidity to manage timing gaps between service delivery and funding disbursements.</p>
           </div>
         </div>
       </div>
 
       <div class="usecase">
-        <div class="heading">
-          <span class="badge">Use Case 2</span>
-          <span class="title">Refinancing High-Cost Debt</span>
+        <div class="head">
+          <span class="num">USE CASE 2</span>
+          <svg><use href="#i-refresh"/></svg>
+          <span class="ttl">Refinancing High-Cost Debt</span>
         </div>
-        <div class="grid-2">
-          <div class="col">
+        <div class="uc-grid">
+          <div>
             <h4>What we heard from nonprofits</h4>
-            <p>A mental-health nonprofit holds a legacy line of credit at double-digit interest rates, originally secured to tide over pandemic-era revenue dips. With upcoming reductions in government funding and flat donor support, the organization seeks to refinance into a lower-cost, longer-term facility. The ideal solution blends CDFI-subsidized pricing with a streamlined approval process that doesn't require additional collateral.</p>
+            <p>A mental-health nonprofit holds a legacy line of credit at double-digit interest rates, originally secured to tide over pandemic-era revenue dips. With upcoming reductions in government funding and flat donor support, the organization wants to refinance into a lower-cost, longer-term facility. The ideal solution blends CDFI-subsidized pricing with a streamlined approval process that does not require additional collateral.</p>
           </div>
-          <div class="col">
+          <div>
             <h4>What the data says</h4>
-            <p>Refinancing high-cost legacy debt is significant. In the wake of pandemic emergency borrowing, roughly <strong>1 in 4 nonprofits carried lines of credit with double-digit interest rates well into 2023</strong>, according to Abrigo. These nonprofits&mdash;often mid-sized agencies with limited access to new collateral&mdash;are actively seeking lower-cost, longer-term facilities.</p>
+            <p>Refinancing high-cost legacy debt is significant. In the wake of pandemic emergency borrowing, roughly <strong>1 in 4 nonprofits carried lines of credit with double-digit interest rates well into 2023</strong>, according to Abrigo. These nonprofits, often mid-sized agencies with limited access to new collateral, are actively seeking lower-cost, longer-term facilities.</p>
           </div>
         </div>
       </div>
 
       <div class="usecase">
-        <div class="heading">
-          <span class="badge">Use Case 3</span>
-          <span class="title">"Smoothing Out Lumpy" Seasonal Revenue</span>
+        <div class="head">
+          <span class="num">USE CASE 3</span>
+          <svg><use href="#i-trend"/></svg>
+          <span class="ttl">Smoothing Out Lumpy Seasonal Revenue</span>
         </div>
-        <div class="grid-2">
-          <div class="col">
+        <div class="uc-grid">
+          <div>
             <h4>What we heard from nonprofits</h4>
-            <p>A local community development organization receives nearly half of its annual contributions during the December "giving surge" but operates year-round on programmatic commitments. Previous attempts to secure a revolving credit line were declined due to limited collateral and uneven cash flow. This use case calls for a risk-tolerant credit facility permitting draws during lean months.</p>
+            <p>A local community development organization receives nearly half of its annual contributions during the December giving surge but operates year-round on programmatic commitments. Previous attempts to secure a revolving credit line were declined due to limited collateral and uneven cash flow. This use case calls for a risk-tolerant credit facility that permits draws during lean months.</p>
           </div>
-          <div class="col">
+          <div>
             <h4>What the data says</h4>
             <p>Federal Reserve surveys of institutional lenders note that <strong>seasonal credit products are in high demand</strong> among any organization whose cash inflows cluster in particular months. CDFIs report fielding frequent inquiries from arts organizations, food banks, and other groups that need a revolving facility to tide them over until their next fundraising push.</p>
           </div>
         </div>
       </div>
 
-      <h2>Roundtable Session 2 &mdash; Lender Perspective</h2>
-      <div class="panel">
-        <p>Most of Atlanta's mission-driven lenders maintain some level of engagement with nonprofits. Still, those relationships tend to reflect each institution's broader strategic focus rather than a singular commitment to the nonprofit sector. Commercial banks commonly serve nonprofits as depositors, providing checking, payroll, and cash-management services. Real estate-oriented CDFIs (e.g., affordable housing) routinely underwrite loans to nonprofit developers. Entrepreneurship-focused CDFIs concentrate on small businesses, with nonprofits often appearing only in niches like childcare.</p>
-        <p style="margin-top:12px"><strong>What stands out in Atlanta's ecosystem is the absence of a lender whose primary mission and client base are exclusively nonprofits.</strong> No local CDFI exists today whose core charter is to underwrite working capital, bridge financing, or programmatic loans solely on behalf of mission-driven organizations.</p>
-      </div>
+      <h2><svg><use href="#i-flag"/></svg> Roundtable Session 2. Lender Perspective</h2>
+
+      <p>Most of Atlanta's mission-driven lenders engage with nonprofits to some degree. Those relationships reflect each institution's broader strategic focus more than a singular commitment to the nonprofit sector. Commercial banks commonly serve nonprofits as depositors, providing checking, payroll, and cash-management services. Real estate-oriented CDFIs (those targeting affordable housing) routinely underwrite loans to nonprofit developers. Entrepreneurship-focused CDFIs concentrate on small businesses, and nonprofit partners often appear only in niches like childcare.</p>
+
+      <p>Atlanta's ecosystem lacks a lender whose primary mission and client base are exclusively nonprofits. <strong>No local CDFI exists today whose core charter is to underwrite working capital, bridge financing, or programmatic loans solely on behalf of mission-driven organizations.</strong></p>
 
       <h3>Factors Limiting Greater In-Market Lending to Nonprofits</h3>
-      <div class="grid-2">
-        <div class="card">
-          <div class="title">Collateral-First Underwriting</div>
-          <div class="meta" style="margin-top:8px; color:var(--ink-2); font-size:13px">Non-depository lenders typically extend bridge and working-capital facilities only when secured by real estate or tangible collateral, maintaining conservative loss-reserve ratios.</div>
-        </div>
-        <div class="card">
-          <div class="title">Limited Operating Capital Interest</div>
-          <div class="meta" style="margin-top:8px; color:var(--ink-2); font-size:13px">CDFIs noted limited interest in providing operating capital for routine cash flow issues&mdash;though instances exist when key foundation/local partner involvement de-risks the facility.</div>
-        </div>
-        <div class="card">
-          <div class="title">Pledged Deposit Models</div>
-          <div class="meta" style="margin-top:8px; color:var(--ink-2); font-size:13px">Depositories can channel impact investor dollars into pledged (controlled) deposit accounts as guarantee backstops, raising their equity base and unlocking high-impact lending.</div>
-        </div>
-        <div class="card">
-          <div class="title">CDFI Sector Headwinds</div>
-          <div class="meta" style="margin-top:8px; color:var(--ink-2); font-size:13px">CDFIs are also navigating uncertain waters due to federal funding threats, cuts, and departmental downsizing&mdash;directly affecting their weighted average cost of capital and loan pricing.</div>
+      <div class="panel">
+        <div class="split">
+          <div class="item">
+            <div class="it-title"><svg><use href="#i-shield"/></svg> Collateral-First Underwriting</div>
+            <div class="it-desc">Non-depository lenders typically extend bridge and working-capital facilities only when secured by real estate or tangible collateral, maintaining conservative loss-reserve ratios.</div>
+          </div>
+          <div class="item">
+            <div class="it-title"><svg><use href="#i-coin"/></svg> Limited Operating Capital Interest</div>
+            <div class="it-desc">CDFIs noted limited interest in providing operating capital for routine cash flow issues. Instances do exist when key foundation or local partner involvement helps de-risk the facility.</div>
+          </div>
+          <div class="item">
+            <div class="it-title"><svg><use href="#i-wallet"/></svg> Pledged Deposit Models</div>
+            <div class="it-desc">Depositories can channel impact investor dollars into pledged (controlled) deposit accounts as guarantee backstops, raising their equity base and unlocking high-impact lending.</div>
+          </div>
+          <div class="item">
+            <div class="it-title"><svg><use href="#i-alert"/></svg> CDFI Sector Headwinds</div>
+            <div class="it-desc">CDFIs are also navigating uncertain waters due to federal funding threats, cuts, and departmental downsizing, all of which directly affect their weighted average cost of capital and loan pricing.</div>
+          </div>
         </div>
       </div>
 
-      <h2>Roundtable Summary</h2>
+      <h2><svg><use href="#i-clipboard"/></svg> Roundtable Summary</h2>
       <table class="tbl">
         <thead>
           <tr>
@@ -433,27 +729,42 @@ aside{position:sticky; top:66px; align-self:start; background:#fff; border:1px s
         </thead>
         <tbody>
           <tr>
-            <td><strong>Understand the Nonprofit Perspective</strong><br><span style="color:var(--muted); font-size:12px">How &amp; why do nonprofits experience cash flow challenges? What have they experienced applying for capital? Is there growing interest?</span></td>
             <td>
-              &bull; Three common use cases: current LOC refinancing, bridging government funding, working capital for long fundraising cycles<br>
-              &bull; Varied readiness to pursue investment capital<br>
-              &bull; Banking relationships are of limited value in terms of additional financial tools &amp; capital access
+              <strong>Understand the Nonprofit Perspective</strong>
+              <span class="meta-line">How and why do nonprofits experience cash flow challenges. What have they experienced applying for capital. Is there growing interest.</span>
+            </td>
+            <td>
+              <ul>
+                <li>Three common use cases. Current LOC refinancing, bridging government funding, and working capital for long fundraising cycles.</li>
+                <li>Varied readiness to pursue investment capital.</li>
+                <li>Banking relationships are of limited value in terms of additional financial tools and capital access.</li>
+              </ul>
             </td>
           </tr>
           <tr>
-            <td><strong>Gauge the Current Lending Appetite</strong><br><span style="color:var(--muted); font-size:12px">What is the current CDFI &amp; banking appetite? What prevents more activity? What conditions or tools would incentivize interest?</span></td>
             <td>
-              &bull; Limited current exposure to the nonprofit sector; greatest exposure to affordable housing-focused nonprofits<br>
-              &bull; Federal funding landscape is creating uncertainty for the CDFI sector and may impact risk tolerance and lending priorities<br>
-              &bull; Few current ecosystem partners are set up to administer LOCs; admin/back-office inefficiency limits creative lending
+              <strong>Gauge the Current Lending Appetite</strong>
+              <span class="meta-line">What is the current CDFI and banking appetite. What prevents more activity. What conditions or tools would incentivize interest.</span>
+            </td>
+            <td>
+              <ul>
+                <li>Limited current exposure to the nonprofit sector. Greatest exposure is to affordable housing-focused nonprofits.</li>
+                <li>Federal funding landscape is creating uncertainty for the CDFI sector and may impact risk tolerance and lending priorities.</li>
+                <li>Few current ecosystem partners are set up to administer LOCs. Admin and back-office inefficiency limits creative lending.</li>
+              </ul>
             </td>
           </tr>
           <tr>
-            <td><strong>Determine a Collaborative Path Forward</strong><br><span style="color:var(--muted); font-size:12px">Is there meaningful interest among funders, lenders, and nonprofits? What scale of resources might be mobilized? Which roles will partners play?</span></td>
             <td>
-              &bull; At the most zoomed-out level, stakeholders are aligned that nonprofits need more predictable sources of blended capital<br>
-              &bull; Although few of Atlanta's foundations are active impact investors, nonprofit bridge lending and guarantees are compelling enough to bring new stakeholders to the table<br>
-              &bull; CFGA has been informally thrust into an ecosystem organizing role; perhaps CFGA's most valuable role is as a <strong>blended capital aggregator</strong>&mdash;bringing grant funding for nonprofit TA &amp; education, grants &amp; impact investments for credit enhancements &amp; guarantees, and debt to recapitalize CDFIs that will offer nonprofits capital
+              <strong>Determine a Collaborative Path Forward</strong>
+              <span class="meta-line">Is there meaningful interest among funders, lenders, and nonprofits. What scale of resources might be mobilized. Which roles will partners play.</span>
+            </td>
+            <td>
+              <ul>
+                <li>At the most zoomed-out level, stakeholders are aligned that nonprofits need more predictable sources of blended capital.</li>
+                <li>Although few of Atlanta's foundations are active impact investors, nonprofit bridge lending and guarantees are compelling enough to bring new stakeholders to the table.</li>
+                <li>CFGA has been informally thrust into an ecosystem organizing role. Perhaps CFGA's most valuable role is as a <strong>blended capital aggregator</strong> that brings grant funding for nonprofit TA and education, grants and impact investments for credit enhancements and guarantees, and debt to recapitalize CDFIs that will offer nonprofits capital.</li>
+              </ul>
             </td>
           </tr>
         </tbody>
@@ -462,753 +773,323 @@ aside{position:sticky; top:66px; align-self:start; background:#fff; border:1px s
 
     <!-- ECOSYSTEM TRANSFORMATION -->
     <div id="view-transformation" class="section">
-      <h1>Ecosystem Transformation</h1>
+      <h1><svg><use href="#i-trend"/></svg> Ecosystem Transformation</h1>
       <p class="subtitle">Five layered ecosystem interventions to bring about a healthier, navigable nonprofit capital system.</p>
 
-      <div class="panel alert">
-        <strong>Systems change requires layered solutions.</strong> Local foundations expressed the view that Atlanta's nonprofit lending environment has persistent gaps that prevent a healthy, navigable system for nonprofits to access capital. To bring about a different system, foundations must simultaneously identify core "quarterbacking" partners and mechanisms <em>and</em> invest in layered solutions &amp; approaches.
+      <div class="panel success">
+        <strong>Systems change requires layered solutions.</strong> Local foundations expressed the view that Atlanta's nonprofit lending environment has persistent gaps that prevent a healthy, navigable system for nonprofits to access capital. To bring about a different system, foundations must simultaneously identify core "quarterbacking" partners and mechanisms <em>and</em> invest in layered solutions and approaches.
       </div>
 
-      <div class="transformation">
+      <p>Click any gap below to view the full intervention.</p>
 
-        <div class="transform-row">
-          <span class="gap-label">Gap 1</span>
-          <div class="arrow-grid">
-            <div class="col-box gap">
-              <h4>Today's Gap</h4>
-              <div class="ttl">Limited Nonprofit Capital Readiness</div>
-              <p>Most nonprofits, particularly small to midsize organizations, lack the in-house financial expertise, systems, or capacity required to engage with debt financing. While many CDFIs offer light-touch TA as part of the lending process, these offerings are often insufficient to meaningfully change a nonprofit's financial position.</p>
-            </div>
-            <div class="arrow">&rarr;</div>
-            <div class="col-box intervention">
-              <h4>Proposed Intervention</h4>
-              <div class="ttl">Invest in Structured TA, Coaching &amp; Loan Readiness Programs</div>
-              <p>Design and fund a robust nonprofit-focused technical assistance and coaching infrastructure that better positions nonprofits to examine their business and financial models. A structured, multi-modality educational learning and capacity-building program.</p>
-            </div>
-            <div class="arrow">&rarr;</div>
-            <div class="col-box future">
-              <h4>Future State</h4>
-              <div class="ttl">Centralized, coordinated, robust education &amp; training resources</div>
-              <p>Plus a formalized "Nerve Center" for ongoing coordination.</p>
-            </div>
-          </div>
-          <div class="deps">
-            <h4>Success Dependencies</h4>
-            <ul>
-              <li>A "nonprofit financial sustainability &amp; resilience" framework to guide the learning curriculum and planning</li>
-              <li>A centralized educational calendar fed by multiple key organizing partners; strong cross-promotion &amp; event marketing</li>
-              <li>Grant funding for educational partner programming expenses &amp; a well-funded Nonprofit Sector Sustainability Fund at CFGA</li>
-              <li>Curated calendar of publicly available webinars &amp; trainings; topical webinars for Georgia nonprofits; group and individualized coaching; loan readiness bootcamps; access to fractional CFO and back-office service providers</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="transform-row">
-          <span class="gap-label">Gap 2</span>
-          <div class="arrow-grid">
-            <div class="col-box gap">
-              <h4>Today's Gap</h4>
-              <div class="ttl">Zero Dedicated Nonprofit-Serving Lenders</div>
-              <p>While CDFIs are often the most flexible lenders in the market, many are not structured or staffed to consistently underwrite nonprofit borrowers. Their charters often prioritize small business development, housing, or consumer finance. Many lack deep experience working with nonprofit financials and board governance dynamics.</p>
-            </div>
-            <div class="arrow">&rarr;</div>
-            <div class="col-box intervention">
-              <h4>Proposed Intervention</h4>
-              <div class="ttl">Recruit &amp; Capitalize In-Market, Nonprofit-Focused Lending Partners</div>
-              <p>To address this structural gap, recruit and capitalize one or more lending institutions&mdash;either existing CDFIs or new entrants&mdash;to specialize in nonprofit working capital and programmatic lending.</p>
-            </div>
-            <div class="arrow">&rarr;</div>
-            <div class="col-box future">
-              <h4>Future State</h4>
-              <div class="ttl">New in-market CDFIs with dedicated nonprofit-tailored loan products &amp; programs</div>
-              <p>Plus a deep "bench" of sources of capital.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="transform-row">
-          <span class="gap-label">Gap 3</span>
-          <div class="arrow-grid">
-            <div class="col-box gap">
-              <h4>Today's Gap</h4>
-              <div class="ttl">Fragmented Enhancement Tools</div>
-              <p>Existing credit enhancement and guarantee resources are scattered across the ecosystem, making it difficult for lenders to find and utilize them efficiently for nonprofit lending.</p>
-            </div>
-            <div class="arrow">&rarr;</div>
-            <div class="col-box intervention">
-              <h4>Proposed Intervention</h4>
-              <div class="ttl">Retool &amp; Recapitalize the Community Guarantee Pool</div>
-              <p>To increase nonprofit access to loans (especially unsecured or bridge loans), funders capitalize a retooled tiered Community Guarantee Pool (CGP) at CFGA. Lower-risk tier continues 20% guarantees on state/local reimbursable grants; higher-risk tier covers two use cases: bridge lending for federal grant receivables, and non-collateralized working capital.</p>
-            </div>
-            <div class="arrow">&rarr;</div>
-            <div class="col-box future">
-              <h4>Future State</h4>
-              <div class="ttl">Centralized pool of credit enhancements &amp; guarantee resources</div>
-              <p>Centralized flexible funding pool to cover capacity building &amp; training, interest rate buy-down, etc.</p>
-            </div>
-          </div>
-          <div class="deps">
-            <h4>Success Dependencies</h4>
-            <ul>
-              <li>Grants to replenish the Interest Rate Buy-Down mechanism for the Tier 1 guarantee tranche</li>
-              <li>Grants to establish a loan loss reserve Tier 2 tranche to offset potential losses</li>
-              <li>Grants to support additional CGP operational management duties&mdash;leverage CFGA's new Impact Investing Analyst for underwriting support</li>
-              <li>CFGA may execute MOUs with participating CDFIs to establish permissible loan types, nonprofit borrower profile, guarantee structures, and expectations</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="transform-row">
-          <span class="gap-label">Gap 4</span>
-          <div class="arrow-grid">
-            <div class="col-box gap">
-              <h4>Today's Gap</h4>
-              <div class="ttl">Limited or Retreating Risk Tolerance</div>
-              <p>Many nonprofits face short-term cash flow shortfalls while waiting on government reimbursements, donor pledges, or delayed contract payments. These timing mismatches create real liquidity crises&mdash;leading to payroll stress, paused programs, or missed opportunities. Yet few flexible bridge loan products exist; traditional credit criteria don't work well in this context.</p>
-            </div>
-            <div class="arrow">&rarr;</div>
-            <div class="col-box intervention">
-              <h4>Proposed Intervention</h4>
-              <div class="ttl">Stand Up a Special Purpose Vehicle (SPV) for Nonprofit Bridge Lending</div>
-              <p>An SPV structure can serve as a nimble, standalone fund to deliver bridge loans to nonprofits, supported by philanthropic capital, recoverable grants, and CDFI participation.</p>
-            </div>
-            <div class="arrow">&rarr;</div>
-            <div class="col-box future">
-              <h4>Future State</h4>
-              <div class="ttl">Deep "bench" of sources of capital for nonprofits</div>
-              <p>Whether at existing CDFIs / in-market lenders or SPVs.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="transform-row">
-          <span class="gap-label">Gap 5</span>
-          <div class="arrow-grid">
-            <div class="col-box gap">
-              <h4>Today's Gap</h4>
-              <div class="ttl">Reactive, Crisis-Driven "Rush" to Coordinate</div>
-              <p>CFGA has been informally thrust into an ecosystem organizing role, but a more diffuse coordinated, networked approach&mdash;supported by but not anchored within CFGA&mdash;may result in more shared ownership and accountability from other players.</p>
-            </div>
-            <div class="arrow">&rarr;</div>
-            <div class="col-box intervention">
-              <h4>Proposed Intervention</h4>
-              <div class="ttl">Formalized, Engaged, Purposeful Leadership "Nerve Center"</div>
-              <p>A decentralized "nerve center" approach requires early, thoughtful vision alignment and governance discussions among committed partners.</p>
-            </div>
-            <div class="arrow">&rarr;</div>
-            <div class="col-box future">
-              <h4>Future State</h4>
-              <div class="ttl">Formalized "Nerve Center"</div>
-              <p>Pipeline development, promotion of resources, capacity building needs identification, new loan product &amp; underwriting prototyping, capital aggregation, partner recruitment.</p>
-            </div>
-          </div>
-          <div class="deps">
-            <h4>Success Dependencies</h4>
-            <ul>
-              <li>Grant/impact investment alignment with the recommendations (collectively or individually)</li>
-              <li>Referral pipeline for retooled CGP and for NFF/REDF product offerings</li>
-              <li>Design/implementation of SPV pilot fund for nonprofit bridge lending</li>
-            </ul>
-          </div>
-        </div>
-
+      <div class="tx-tabs" id="txTabs">
+        <button class="tx-tab active" data-gap="g1"><div class="gap-num">GAP 1</div><div class="gap-name">Limited Nonprofit Capital Readiness</div></button>
+        <button class="tx-tab" data-gap="g2"><div class="gap-num">GAP 2</div><div class="gap-name">Zero Dedicated Nonprofit-Serving Lenders</div></button>
+        <button class="tx-tab" data-gap="g3"><div class="gap-num">GAP 3</div><div class="gap-name">Fragmented Enhancement Tools</div></button>
+        <button class="tx-tab" data-gap="g4"><div class="gap-num">GAP 4</div><div class="gap-name">Limited or Retreating Risk Tolerance</div></button>
+        <button class="tx-tab" data-gap="g5"><div class="gap-num">GAP 5</div><div class="gap-name">Reactive, Crisis-Driven Coordination</div></button>
       </div>
+
+      <div class="tx-detail" id="txDetail"></div>
     </div>
 
-    <!-- GEORGIA'S DATA REALITY -->
+    <!-- GEORGIA DATA REALITY -->
     <div id="view-data" class="section">
-      <h1>Georgia's Data Reality</h1>
-      <p class="subtitle">Data from NFF's 2025 State of the Nonprofit Sector Survey reveals the financial pressures Georgia nonprofits face&mdash;and why this ecosystem transformation is urgent.</p>
+      <h1><svg><use href="#i-bar"/></svg> Georgia's Data Reality</h1>
+      <p class="subtitle">Data from NFF's 2025 State of the Nonprofit Sector Survey on the financial pressures Georgia nonprofits face, and why this ecosystem transformation is urgent.</p>
 
-      <div class="panel lbl">
-        <strong>Survey Overview:</strong> 323 Georgia nonprofits participated in NFF's 2025 survey, representing organizations across the state from all budget sizes and subsectors. The data paints a clear picture: while nonprofits are essential infrastructure for Georgia communities, they're operating under severe financial strain.
+      <div class="panel purpose">
+        NFF's 2025 survey reached 323 Georgia nonprofits across the state and across budget sizes and subsectors. The data paints a clear picture. Nonprofits are essential infrastructure for Georgia communities, and they are operating under severe financial strain.
       </div>
 
-      <h2>Key Financial Health Indicators</h2>
-      <div class="grid-3">
-        <div class="stat-card">
+      <h2><svg><use href="#i-pulse"/></svg> Key Financial Health Indicators</h2>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-head"><div class="stat-icon"><svg><use href="#i-trend"/></svg></div></div>
           <div class="num">38%</div>
           <div class="lbl">Operating Deficits</div>
           <div class="det">Over one-third of Georgia nonprofits ended 2024 with expenses exceeding revenue, slightly higher than the 36% national rate.</div>
         </div>
-        <div class="stat-card">
+        <div class="stat">
+          <div class="stat-head"><div class="stat-icon"><svg><use href="#i-clock"/></svg></div></div>
           <div class="num">21%</div>
           <div class="lbl">One Month or Less of Cash</div>
-          <div class="det">One in five organizations could survive just 30 days if all revenue stopped&mdash;leaving no cushion for emergencies.</div>
+          <div class="det">One in five organizations could survive just 30 days if all revenue stopped, leaving no cushion for emergencies.</div>
         </div>
-        <div class="stat-card">
+        <div class="stat">
+          <div class="stat-head"><div class="stat-icon"><svg><use href="#i-clock"/></svg></div></div>
           <div class="num">56%</div>
           <div class="lbl">Three Months or Less of Cash</div>
-          <div class="det">More than half lack the standard 3&ndash;6 month reserve recommended by financial experts.</div>
+          <div class="det">More than half lack the standard 3-6 month reserve recommended by financial experts.</div>
         </div>
-        <div class="stat-card">
+        <div class="stat">
+          <div class="stat-head"><div class="stat-icon"><svg><use href="#i-shield"/></svg></div></div>
           <div class="num">15%</div>
           <div class="lbl">Have 6+ Months Cash Reserves</div>
-          <div class="det">Only 15% of Georgia nonprofits vs. 21% nationally have adequate reserves to weather storms and invest strategically.</div>
+          <div class="det">Only 15% of Georgia nonprofits, compared with 21% nationally, have adequate reserves to weather storms and invest strategically.</div>
         </div>
-        <div class="stat-card">
+        <div class="stat">
+          <div class="stat-head"><div class="stat-icon"><svg><use href="#i-dollar"/></svg></div></div>
           <div class="num">80%</div>
           <div class="lbl">Struggle with Full-Cost Funding</div>
-          <div class="det">Four in five report raising funds that cover full costs is a challenge, with 48% calling it a major challenge.</div>
+          <div class="det">Four in five report raising funds that cover full costs is a challenge, and 48% call it a major challenge.</div>
         </div>
-        <div class="stat-card">
+        <div class="stat">
+          <div class="stat-head"><div class="stat-icon"><svg><use href="#i-users"/></svg></div></div>
           <div class="num">35%</div>
           <div class="lbl">Can Pay Living Wage to All Staff</div>
-          <div class="det">Only one-third can pay all full-time staff a living wage, compared to 43% nationally&mdash;contributing to burnout and turnover.</div>
+          <div class="det">Only one-third can pay all full-time staff a living wage, compared with 43% nationally, contributing to burnout and turnover.</div>
         </div>
       </div>
 
-      <h2>Regional Variations Across Georgia</h2>
-      <p style="color:var(--muted); margin-bottom:14px">Financial health challenges vary significantly across Georgia's regions:</p>
-      <div class="region-grid">
-        <div class="region-card">
+      <h2><svg><use href="#i-pie"/></svg> Regional Variations Across Georgia</h2>
+      <p>Financial health challenges vary significantly across Georgia's regions.</p>
+      <div class="regions">
+        <div class="region">
           <div class="rname">North Georgia</div>
-          <div class="rstat warn">33%</div>
-          <div class="rlabel">Operating Deficit Rate</div>
-          <div class="rstat danger">24%</div>
-          <div class="rlabel">≤1 Month Cash</div>
-          <div class="rstat">24%</div>
-          <div class="rlabel">Pay Living Wage</div>
+          <div class="rstat cash">33%</div><div class="rlabel">Operating Deficit Rate</div>
+          <div class="rstat deficit">24%</div><div class="rlabel">≤1 Month Cash</div>
+          <div class="rstat wage">24%</div><div class="rlabel">Pay Living Wage</div>
         </div>
-        <div class="region-card">
+        <div class="region">
           <div class="rname">Middle Georgia</div>
-          <div class="rstat danger">40%</div>
-          <div class="rlabel">Operating Deficit Rate</div>
-          <div class="rstat danger">30%</div>
-          <div class="rlabel">≤1 Month Cash</div>
-          <div class="rstat">33%</div>
-          <div class="rlabel">Pay Living Wage</div>
+          <div class="rstat deficit">40%</div><div class="rlabel">Operating Deficit Rate</div>
+          <div class="rstat deficit">30%</div><div class="rlabel">≤1 Month Cash</div>
+          <div class="rstat wage">33%</div><div class="rlabel">Pay Living Wage</div>
         </div>
-        <div class="region-card">
+        <div class="region">
           <div class="rname">Metro Atlanta</div>
-          <div class="rstat warn">39%</div>
-          <div class="rlabel">Operating Deficit Rate</div>
-          <div class="rstat warn">20%</div>
-          <div class="rlabel">≤1 Month Cash</div>
-          <div class="rstat">36%</div>
-          <div class="rlabel">Pay Living Wage</div>
+          <div class="rstat cash">39%</div><div class="rlabel">Operating Deficit Rate</div>
+          <div class="rstat cash">20%</div><div class="rlabel">≤1 Month Cash</div>
+          <div class="rstat wage">36%</div><div class="rlabel">Pay Living Wage</div>
         </div>
-        <div class="region-card">
+        <div class="region">
           <div class="rname">South Georgia</div>
-          <div class="rstat">28%</div>
-          <div class="rlabel">Operating Deficit Rate</div>
-          <div class="rstat">14%</div>
-          <div class="rlabel">≤1 Month Cash</div>
-          <div class="rstat">38%</div>
-          <div class="rlabel">Pay Living Wage</div>
+          <div class="rstat wage">28%</div><div class="rlabel">Operating Deficit Rate</div>
+          <div class="rstat wage">14%</div><div class="rlabel">≤1 Month Cash</div>
+          <div class="rstat wage">38%</div><div class="rlabel">Pay Living Wage</div>
         </div>
       </div>
 
-      <h2>Service Demand &amp; Capacity Crisis</h2>
-      <div class="grid-3">
-        <div class="stat-card">
+      <h2><svg><use href="#i-trend"/></svg> Service Demand and Capacity Crisis</h2>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-head"><div class="stat-icon"><svg><use href="#i-trend"/></svg></div></div>
           <div class="num">85%</div>
           <div class="lbl">Increasing Service Demand</div>
           <div class="det">Demand increased in 2024 and is expected to increase again in 2025.</div>
         </div>
-        <div class="stat-card">
+        <div class="stat">
+          <div class="stat-head"><div class="stat-icon"><svg><use href="#i-alert"/></svg></div></div>
           <div class="num">57%</div>
-          <div class="lbl">Can't Meet Demand</div>
-          <div class="det">More than half don't expect to meet service demand in 2025 due to resource constraints.</div>
+          <div class="lbl">Cannot Meet Demand</div>
+          <div class="det">More than half do not expect to meet service demand in 2025 due to resource constraints.</div>
         </div>
-        <div class="stat-card">
+        <div class="stat">
+          <div class="stat-head"><div class="stat-icon"><svg><use href="#i-users"/></svg></div></div>
           <div class="num">67%</div>
           <div class="lbl">Serve Lower-Income Communities</div>
           <div class="det">Two-thirds exclusively or primarily serve people with lower incomes.</div>
         </div>
       </div>
 
-      <h2>Funding Challenges</h2>
-      <div class="grid-2">
-        <div class="card">
-          <div class="title">Government Funding Issues</div>
-          <ul class="indicator-list" style="margin-top:8px">
-            <li>71% rely on government funding (federal, state, or local)</li>
-            <li>Only 40% receive government payments on time</li>
-            <li>15% receive payments more than 90 days late</li>
-            <li>78% can only charge indirect rates of 10% or less</li>
-            <li>33% limited to indirect rates of 0&ndash;5%</li>
-            <li>81% expect government funding to decrease post-2024 elections</li>
-          </ul>
-        </div>
-        <div class="card">
-          <div class="title">Foundation Funding Trends</div>
-          <ul class="indicator-list" style="margin-top:8px">
-            <li>79% receive foundation funding</li>
-            <li>Only 30% report funders being less restrictive since 2022</li>
-            <li>Only 16% see more multi-year grants (vs. 27% nationally)</li>
-            <li>Only 10% report grants getting larger</li>
-            <li>Georgia nonprofits less likely to experience supportive practices vs. national peers</li>
-          </ul>
+      <h2><svg><use href="#i-coin"/></svg> Funding Challenges</h2>
+      <div class="panel">
+        <div class="split">
+          <div class="item">
+            <div class="it-title"><svg><use href="#i-flag"/></svg> Government Funding Issues</div>
+            <ul class="indicator-list">
+              <li>71% rely on government funding (federal, state, or local)</li>
+              <li>Only 40% receive government payments on time</li>
+              <li>15% receive payments more than 90 days late</li>
+              <li>78% can only charge indirect rates of 10% or less</li>
+              <li>33% are limited to indirect rates of 0-5%</li>
+              <li>81% expect government funding to decrease post-2024 elections</li>
+            </ul>
+          </div>
+          <div class="item">
+            <div class="it-title"><svg><use href="#i-handshake"/></svg> Foundation Funding Trends</div>
+            <ul class="indicator-list">
+              <li>79% receive foundation funding</li>
+              <li>Only 30% report funders being less restrictive since 2022</li>
+              <li>Only 16% see more multi-year grants (vs. 27% nationally)</li>
+              <li>Only 10% report grants getting larger</li>
+              <li>Georgia nonprofits less likely to experience supportive practices than national peers</li>
+            </ul>
+          </div>
         </div>
       </div>
 
-      <h2>Workforce Challenges</h2>
-      <div class="grid-3">
-        <div class="stat-card">
+      <h2><svg><use href="#i-briefcase"/></svg> Workforce Challenges</h2>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-head"><div class="stat-icon"><svg><use href="#i-alert"/></svg></div></div>
           <div class="num">74%</div>
           <div class="lbl">Major Management Challenge</div>
           <div class="det">Employing enough staff (40%) and staff burnout (69%) top the list.</div>
         </div>
-        <div class="stat-card">
+        <div class="stat">
+          <div class="stat-head"><div class="stat-icon"><svg><use href="#i-shield"/></svg></div></div>
           <div class="num">60%</div>
           <div class="lbl">Offer Health Insurance</div>
-          <div class="det">Lower than 68% national rate, making recruitment harder in a competitive market.</div>
+          <div class="det">Lower than the 68% national rate, making recruitment harder in a competitive market.</div>
         </div>
-        <div class="stat-card">
+        <div class="stat">
+          <div class="stat-head"><div class="stat-icon"><svg><use href="#i-wallet"/></svg></div></div>
           <div class="num">48%</div>
           <div class="lbl">Offer Retirement Benefits</div>
-          <div class="det">Less than half can offer retirement contributions, vs. 55% nationally.</div>
+          <div class="det">Less than half can offer retirement contributions, compared with 55% nationally.</div>
         </div>
       </div>
 
-      <div class="panel alert" style="margin-top:24px">
-        <strong>What this data tells us:</strong> Georgia nonprofits aren't failing&mdash;they're being failed by a funding system that doesn't cover true costs, pays late, and restricts how funds can be used. The ecosystem we're building addresses these systemic issues through patient capital, flexible funding, and coordinated support that meets nonprofits where they are.
+      <div class="panel success" style="margin-top:24px">
+        <strong>What this data tells us.</strong> Georgia nonprofits are not failing. They are being failed by a funding system that does not cover true costs, pays late, and restricts how funds can be used. The ecosystem we are building addresses these systemic issues through patient capital, flexible funding, and coordinated support that meets nonprofits where they are.
       </div>
     </div>
 
-    <!-- FINANCIAL SUSTAINABILITY SPECTRUM -->
+    <!-- SUSTAINABILITY SPECTRUM -->
     <div id="view-spectrum" class="section">
-      <h1>Nonprofit Financial Sustainability Spectrum</h1>
-      <p class="subtitle">A diagnostic framework for funders, CDFIs, and capacity builders to assess where nonprofits sit on the financial stability spectrum&mdash;and design targeted interventions that move the needle.</p>
+      <h1><svg><use href="#i-pulse"/></svg> Nonprofit Financial Sustainability Spectrum</h1>
+      <p class="subtitle">A diagnostic framework for funders, CDFIs, and capacity builders to assess where nonprofits sit on the financial stability spectrum and to design targeted interventions that move the needle.</p>
 
-      <div class="panel lbl">
-        <strong>Purpose:</strong> Every nonprofit falls somewhere on the continuum from crisis to sustainability. Understanding these stages&mdash;and what support works at each level&mdash;is essential for deploying technical assistance and capital effectively. This isn't about judging organizations; it's about meeting them where they are with what they actually need.
+      <div class="panel purpose">
+        Every nonprofit falls somewhere on the continuum from crisis to sustainability. Understanding these stages, and what support works at each level, lets you deploy technical assistance and capital effectively. Use it to meet organizations where they are with what they actually need.
       </div>
 
-      <h2>Understanding Your Financial Position</h2>
-      <p style="color:var(--muted); margin-bottom:14px">Three quick diagnostics every nonprofit (and their funders) should know:</p>
-      <div class="grid-3">
-        <div class="stat-card" style="border-top:4px solid var(--brand-grn)">
-          <div class="lbl" style="font-size:14px; font-weight:800">Days Cash on Hand Calculator</div>
-          <div class="det" style="margin:8px 0 12px"><strong>(Unrestricted Cash + Short-term Investments)</strong> &divide; <strong>(Annual Operating Expenses &divide; 365)</strong></div>
-          <div style="font-size:13px; color:var(--ink-2)">
-            <strong>Georgia Benchmarks:</strong>
-            <ul class="indicator-list" style="margin-top:6px">
-              <li>21% have ≤30 days <em>(crisis)</em></li>
-              <li>35% have 31&ndash;90 days <em>(vulnerable)</em></li>
-              <li>29% have 91&ndash;180 days <em>(building)</em></li>
-              <li>15% have 180+ days <em>(resilient)</em></li>
-            </ul>
-          </div>
-        </div>
+      <h2><svg><use href="#i-search"/></svg> Understanding Your Financial Position</h2>
+      <p>Three quick diagnostics every nonprofit (and their funders) should know.</p>
 
-        <div class="stat-card" style="border-top:4px solid var(--brand-ylw)">
-          <div class="lbl" style="font-size:14px; font-weight:800">Working Capital Health</div>
-          <div class="det" style="margin:8px 0 12px"><strong>Current Assets &minus; Current Liabilities</strong> = Your cushion for cash flow gaps</div>
-          <div style="font-size:13px; color:var(--ink-2)">
-            <strong>Warning Signs:</strong>
-            <ul class="indicator-list" style="margin-top:6px">
-              <li>Negative working capital</li>
-              <li>Can't cover payroll without new grants</li>
-              <li>Vendor payments consistently late</li>
-              <li>Using restricted funds for operations</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="stat-card" style="border-top:4px solid var(--brand-lbl)">
-          <div class="lbl" style="font-size:14px; font-weight:800">Revenue Concentration Risk</div>
-          <div class="det" style="margin:8px 0 12px">What % comes from your largest funder? <strong>High concentration = high risk</strong></div>
-          <div style="font-size:13px; color:var(--ink-2)">
-            <strong>Healthy Targets:</strong>
-            <ul class="indicator-list" style="margin-top:6px">
-              <li>No single source &gt;40%</li>
-              <li>Government funding &lt;60%</li>
-              <li>4+ diverse revenue streams</li>
-              <li>Some unrestricted revenue</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <h2>The Financial Health Spectrum at a Glance</h2>
-      <p style="color:var(--muted); margin-bottom:14px">Based on NFF 2025 data, Georgia nonprofits cluster into three distinct stages:</p>
-      <div class="spectrum">
-        <div class="stage vuln">
-          <div class="pct">~40&ndash;50%</div>
-          <div class="label">Financially Vulnerable</div>
+      <div class="diagnostics">
+        <div class="diagnostic">
+          <div class="d-icon"><svg><use href="#i-clock"/></svg></div>
+          <div class="d-title">Days Cash on Hand Calculator</div>
+          <div class="d-formula">(Unrestricted Cash + Short-term Investments) &divide; (Annual Operating Expenses &divide; 365)</div>
+          <div class="d-section">Georgia Benchmarks</div>
           <ul>
-            <li><strong>Reserves:</strong> 0&ndash;30 days</li>
-            <li><strong>Revenue:</strong> 1&ndash;2 sources, &gt;70% concentration</li>
-            <li><strong>Systems:</strong> Minimal to none</li>
-            <li><strong>Reality:</strong> Living grant to grant</li>
+            <li>21% have ≤30 days (crisis)</li>
+            <li>35% have 31-90 days (vulnerable)</li>
+            <li>29% have 91-180 days (building)</li>
+            <li>15% have 180+ days (resilient)</li>
           </ul>
-          <div style="margin-top:10px; font-weight:700; color:var(--danger); font-size:13px">Cannot absorb any shock</div>
         </div>
-        <div class="stage build">
-          <div class="pct">~35&ndash;40%</div>
-          <div class="label">Building Stability</div>
+
+        <div class="diagnostic gold">
+          <div class="d-icon"><svg><use href="#i-wallet"/></svg></div>
+          <div class="d-title">Working Capital Health</div>
+          <div class="d-formula">Current Assets minus Current Liabilities. Your cushion for cash flow gaps.</div>
+          <div class="d-section">Warning Signs</div>
           <ul>
-            <li><strong>Reserves:</strong> 1&ndash;3 months</li>
-            <li><strong>Revenue:</strong> 2&ndash;4 sources, 40&ndash;70% concentration</li>
-            <li><strong>Systems:</strong> Basic budgeting &amp; tracking</li>
-            <li><strong>Reality:</strong> Making progress but fragile</li>
+            <li>Negative working capital</li>
+            <li>Cannot cover payroll without new grants</li>
+            <li>Vendor payments consistently late</li>
+            <li>Using restricted funds for operations</li>
           </ul>
-          <div style="margin-top:10px; font-weight:700; color:var(--warn); font-size:13px">Can handle minor disruptions</div>
         </div>
-        <div class="stage resi">
-          <div class="pct">~10&ndash;20%</div>
-          <div class="label">Financially Resilient</div>
+
+        <div class="diagnostic teal">
+          <div class="d-icon"><svg><use href="#i-pie"/></svg></div>
+          <div class="d-title">Revenue Concentration Risk</div>
+          <div class="d-formula">What percentage comes from your largest funder. High concentration equals high risk.</div>
+          <div class="d-section">Healthy Targets</div>
           <ul>
-            <li><strong>Reserves:</strong> 6+ months</li>
-            <li><strong>Revenue:</strong> 4+ sources, &lt;40% concentration</li>
-            <li><strong>Systems:</strong> Professional finance function</li>
-            <li><strong>Reality:</strong> Can weather storms &amp; invest</li>
+            <li>No single source over 40%</li>
+            <li>Government funding under 60%</li>
+            <li>4+ diverse revenue streams</li>
+            <li>Some unrestricted revenue</li>
           </ul>
-          <div style="margin-top:10px; font-weight:700; color:var(--good); font-size:13px">Thrives through cycles</div>
         </div>
       </div>
 
-      <h2>Deep Dive: What You'll See at Each Stage</h2>
+      <h2><svg><use href="#i-pulse"/></svg> The Financial Health Spectrum at a Glance</h2>
+      <p>Based on NFF 2025 data, Georgia nonprofits cluster into three distinct stages. Click a stage below to see the deep dive.</p>
 
-      <!-- Vulnerable -->
-      <div class="stage-detail vuln">
-        <div class="head">
-          <div class="icon">!</div>
-          <div>
-            <div class="htitle">Financially Vulnerable Organizations</div>
-            <div class="meta-row"><strong>Typical Size:</strong> Often under $500K (but can be any size) &nbsp;&middot;&nbsp; <strong>Prevalence:</strong> 40&ndash;50% of sector</div>
-          </div>
+      <div class="sp-tabs" id="spTabs">
+        <button class="sp-tab vuln active" data-stage="vuln">
+          <div class="sp-icon"><svg><use href="#i-alert"/></svg></div>
+          <div class="sp-pct">~40-50%</div>
+          <div class="sp-name">Financially Vulnerable</div>
+          <div class="sp-meta">Reserves 0-30 days. One or two revenue sources. Living grant to grant.</div>
+        </button>
+        <button class="sp-tab build" data-stage="build">
+          <div class="sp-icon"><svg><use href="#i-trend"/></svg></div>
+          <div class="sp-pct">~35-40%</div>
+          <div class="sp-name">Building Stability</div>
+          <div class="sp-meta">Reserves 1-3 months. Two to four revenue sources. Making progress but still fragile.</div>
+        </button>
+        <button class="sp-tab resi" data-stage="resi">
+          <div class="sp-icon"><svg><use href="#i-shield"/></svg></div>
+          <div class="sp-pct">~10-20%</div>
+          <div class="sp-name">Financially Resilient</div>
+          <div class="sp-meta">Reserves 6+ months. Four or more revenue sources. Can weather storms and invest.</div>
+        </button>
+      </div>
+
+      <div class="sp-detail" id="spDetail"></div>
+
+      <h2><svg><use href="#i-briefcase"/></svg> How Size Influences but Doesn't Determine Financial Health</h2>
+      <p>A $300K grassroots org can be more stable than a $10M institution. Context matters.</p>
+      <div class="size-grid">
+        <div class="size-card">
+          <h4>Under $1M Budget</h4>
+          <div class="row"><strong>Strengths.</strong> Low overhead, volunteer power, community trust.</div>
+          <div class="row"><strong>Challenges.</strong> No finance staff, founder dependency, limited systems.</div>
+          <div class="row"><strong>Where to focus.</strong> Basic financial literacy, simple templates, emergency reserves.</div>
+          <div class="row"><strong>Success metric.</strong> 60 days cash on hand is a huge win.</div>
         </div>
-
-        <div class="grid-2">
-          <div>
-            <h4>Key Indicators You'll Observe</h4>
-            <ul class="indicator-list">
-              <li>Payroll anxiety is constant&mdash;ED loses sleep over it</li>
-              <li>One funder departure would force major cuts</li>
-              <li>Board doesn't review financials (or doesn't understand them)</li>
-              <li>No written budget or it's ignored after creation</li>
-              <li>Invoices paid late, vendor relationships strained</li>
-              <li>Grant applications are desperate, not strategic</li>
-            </ul>
-          </div>
-          <div>
-            <h4>What the Numbers Show</h4>
-            <ul class="indicator-list">
-              <li>Days cash on hand: 0&ndash;30 (median ~15)</li>
-              <li>Working capital often negative</li>
-              <li>36% probability of deficit in any year (per NFF)</li>
-              <li>Debt service coverage ratio below 1.0</li>
-              <li>Revenue timing mismatched with expenses</li>
-              <li>No board-designated reserves</li>
-            </ul>
-          </div>
+        <div class="size-card">
+          <h4>$1M to $10M Budget</h4>
+          <div class="row"><strong>Strengths.</strong> Growing professionalization, program evidence, fundraising momentum.</div>
+          <div class="row"><strong>Challenges.</strong> Systems lagging growth, middle management gaps.</div>
+          <div class="row"><strong>Where to focus.</strong> Infrastructure investment, staff development, capital readiness.</div>
+          <div class="row"><strong>Success metric.</strong> Positive working capital and growing reserves.</div>
         </div>
-
-        <div class="panel warn" style="margin-top:14px; margin-bottom:0">
-          <strong>Common Funder Mistake:</strong> Offering strategic planning or evaluation support when the organization can't make payroll. These nonprofits need emergency stabilization and basic financial literacy <em>before</em> they can think strategically. Advanced planning without financial stability is building on sand.
-        </div>
-
-        <div class="intervention-box">
-          <h4>What Actually Helps at This Stage</h4>
-          <div class="intervention-grid">
-            <div class="intervention-item">
-              <div class="type">Immediate Stabilization</div>
-              <div class="desc">Emergency operating support (unrestricted) &middot; Bridge funding during cash gaps &middot; Payroll protection grants &middot; Vendor payment assistance</div>
-            </div>
-            <div class="intervention-item">
-              <div class="type">Basic Financial Literacy</div>
-              <div class="desc">Cash flow forecasting training &middot; QuickBooks setup &middot; Monthly financial review templates &middot; Board treasurer bootcamp</div>
-            </div>
-            <div class="intervention-item">
-              <div class="type">Simple Systems</div>
-              <div class="desc">Basic budget templates &middot; Invoice tracking spreadsheets &middot; Monthly dashboard creation &middot; Financial policies template</div>
-            </div>
-          </div>
+        <div class="size-card">
+          <h4>Over $10M Budget</h4>
+          <div class="row"><strong>Strengths.</strong> Professional staff, complex funding, market position.</div>
+          <div class="row"><strong>Challenges.</strong> High fixed costs, bureaucracy, innovation resistance.</div>
+          <div class="row"><strong>Where to focus.</strong> Sophisticated capital structures, merger opportunities, systems change.</div>
+          <div class="row"><strong>Success metric.</strong> Efficiency ratios and impact per dollar.</div>
         </div>
       </div>
 
-      <!-- Building -->
-      <div class="stage-detail build">
-        <div class="head">
-          <div class="icon">↑</div>
-          <div>
-            <div class="htitle">Organizations Building Stability</div>
-            <div class="meta-row"><strong>Typical Size:</strong> $500K&ndash;$5M common range &nbsp;&middot;&nbsp; <strong>Prevalence:</strong> 35&ndash;40% of sector</div>
-          </div>
-        </div>
-
-        <div class="grid-2">
-          <div>
-            <h4>Key Indicators You'll Observe</h4>
-            <ul class="indicator-list">
-              <li>Organization has survived at least one funding loss</li>
-              <li>Board finance committee meets regularly</li>
-              <li>Annual budgets with quarterly review</li>
-              <li>Beginning to say no to restricted grants that don't fit</li>
-              <li>Exploring earned revenue but still learning</li>
-              <li>Part-time finance staff or consultant in place</li>
-            </ul>
-          </div>
-          <div>
-            <h4>What the Numbers Show</h4>
-            <ul class="indicator-list">
-              <li>Days cash on hand: 30&ndash;90 (building toward more)</li>
-              <li>Working capital positive but thin</li>
-              <li>20&ndash;25% deficit probability (improving)</li>
-              <li>Revenue concentration dropping below 60%</li>
-              <li>Small but growing reserves (1&ndash;3 months)</li>
-              <li>Beginning to track cost per outcome</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="panel warn" style="margin-top:14px; margin-bottom:0">
-          <strong>Common Funder Mistake:</strong> Pushing for rapid growth before systems are ready. These organizations need to strengthen infrastructure <em>before</em> scaling. Fund their back office, not just programs. The unsexy investments in finance systems and fundraising capacity pay the biggest dividends here.
-        </div>
-
-        <div class="intervention-box">
-          <h4>What Actually Helps at This Stage</h4>
-          <div class="intervention-grid">
-            <div class="intervention-item">
-              <div class="type">Infrastructure Investment</div>
-              <div class="desc">Multi-year operating support &middot; Capacity building grants for systems &middot; Finance staff salary support &middot; CRM and accounting software upgrades</div>
-            </div>
-            <div class="intervention-item">
-              <div class="type">Advanced Financial Training</div>
-              <div class="desc">Scenario planning workshops &middot; Cost allocation methodology &middot; Reserve policy development &middot; Financial dashboard design</div>
-            </div>
-            <div class="intervention-item">
-              <div class="type">Capital Access Readiness</div>
-              <div class="desc">Line of credit preparation &middot; Credit history building &middot; Loan readiness assessment &middot; Introduction to CDFIs</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Resilient -->
-      <div class="stage-detail resi">
-        <div class="head">
-          <div class="icon">★</div>
-          <div>
-            <div class="htitle">Financially Resilient Organizations</div>
-            <div class="meta-row"><strong>Typical Size:</strong> Often $5M+ but size isn't determinant &nbsp;&middot;&nbsp; <strong>Prevalence:</strong> 10&ndash;20% of sector</div>
-          </div>
-        </div>
-
-        <div class="grid-2">
-          <div>
-            <h4>Key Indicators You'll Observe</h4>
-            <ul class="indicator-list">
-              <li>COVID didn't force layoffs&mdash;they adapted</li>
-              <li>Board includes financial professionals</li>
-              <li>CFO or equivalent leading finance function</li>
-              <li>Multiple revenue streams by design, not accident</li>
-              <li>Comfortable using debt as a strategic tool</li>
-              <li>Can turn down "bad money" that doesn't fit mission</li>
-            </ul>
-          </div>
-          <div>
-            <h4>What the Numbers Show</h4>
-            <ul class="indicator-list">
-              <li>Days cash on hand: 180+ (per CompassPoint)</li>
-              <li>Working capital covers 3&ndash;6 months</li>
-              <li>Less than 10% deficit probability</li>
-              <li>No revenue source exceeds 30&ndash;40%</li>
-              <li>Debt-to-asset ratio actively managed</li>
-              <li>Efficiency ratios tracked and optimized</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="intervention-box">
-          <h4>What Actually Helps at This Stage</h4>
-          <div class="intervention-grid">
-            <div class="intervention-item">
-              <div class="type">Growth Capital</div>
-              <div class="desc">Program-related investments (PRIs) &middot; Loan guarantees for expansion &middot; Working capital lines of credit &middot; Bond issuance support</div>
-            </div>
-            <div class="intervention-item">
-              <div class="type">Strategic Opportunities</div>
-              <div class="desc">Merger &amp; acquisition support &middot; Social enterprise development &middot; Endowment building campaigns &middot; National expansion funding</div>
-            </div>
-            <div class="intervention-item">
-              <div class="type">Ecosystem Leadership</div>
-              <div class="desc">Fiscal sponsorship programs &middot; Peer mentoring initiatives &middot; Shared services development &middot; Field-building investments</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <h2>How Size Influences (But Doesn't Determine) Financial Health</h2>
-      <p style="color:var(--muted); margin-bottom:14px">A $300K grassroots org can be more stable than a $10M institution&mdash;context matters.</p>
-      <div class="grid-3">
-        <div class="card">
-          <div class="title" style="color:var(--brand-grn)">Under $1M Budget</div>
-          <div style="margin-top:10px; font-size:13px; color:var(--ink-2); line-height:1.6">
-            <strong>Strengths:</strong> Low overhead, volunteer power, community trust<br><br>
-            <strong>Challenges:</strong> No finance staff, founder dependency, limited systems<br><br>
-            <strong>Intervention focus:</strong> Basic financial literacy, simple templates, emergency reserves<br><br>
-            <strong>Success metric:</strong> 60 days cash on hand is a huge win
-          </div>
-        </div>
-        <div class="card">
-          <div class="title" style="color:var(--brand-grn)">$1M&ndash;$10M Budget</div>
-          <div style="margin-top:10px; font-size:13px; color:var(--ink-2); line-height:1.6">
-            <strong>Strengths:</strong> Growing professionalization, program evidence, fundraising momentum<br><br>
-            <strong>Challenges:</strong> Systems lagging growth, middle management gaps<br><br>
-            <strong>Intervention focus:</strong> Infrastructure investment, staff development, capital readiness<br><br>
-            <strong>Success metric:</strong> Positive working capital and growing reserves
-          </div>
-        </div>
-        <div class="card">
-          <div class="title" style="color:var(--brand-grn)">Over $10M Budget</div>
-          <div style="margin-top:10px; font-size:13px; color:var(--ink-2); line-height:1.6">
-            <strong>Strengths:</strong> Professional staff, complex funding, market position<br><br>
-            <strong>Challenges:</strong> High fixed costs, bureaucracy, innovation resistance<br><br>
-            <strong>Intervention focus:</strong> Sophisticated capital structures, merger opportunities, systems change<br><br>
-            <strong>Success metric:</strong> Efficiency ratios and impact per dollar
-          </div>
-        </div>
-      </div>
-
-      <div class="panel" style="margin-top:24px; text-align:center; background:var(--surface)">
-        <h3 style="margin:0 0 6px">Remember: This is a Diagnostic Tool, Not a Judgment</h3>
-        <p style="color:var(--ink-2); margin:0; line-height:1.6">Organizations end up financially vulnerable for systemic reasons&mdash;decades of starvation funding, restricted grants that don't cover true costs, and funders' unwillingness to invest in infrastructure. The goal isn't to make every nonprofit look the same; it's to help each one build the financial resilience that fits their mission, model, and community.</p>
+      <div class="panel success" style="margin-top:24px">
+        <strong>This is a diagnostic tool, not a judgment.</strong> Organizations end up financially vulnerable for systemic reasons. Decades of starvation funding, restricted grants that do not cover true costs, and funders' unwillingness to invest in infrastructure. The goal is to help each one build the financial resilience that fits their mission, model, and community.
       </div>
     </div>
 
-    <!-- SELF-ASSESSMENT -->
+    <!-- SELF-ASSESSMENT TOOL -->
     <div id="view-assessment" class="section">
-      <h1>Self-Assessment Tool</h1>
-      <p class="subtitle">Answer 10 quick questions to understand your organization's current financial health stage and get targeted recommendations for building resilience.</p>
+      <h1><svg><use href="#i-clipboard"/></svg> Self-Assessment Tool</h1>
+      <p class="subtitle">Answer 10 quick questions to understand your organization's current financial health stage and get targeted recommendations for building resilience. Takes about 3 minutes.</p>
 
-      <div class="assess">
-        <div class="panel lbl" style="margin:0 0 18px">
-          <strong>Quick Financial Health Check.</strong> This 10-question assessment takes about 3 minutes and provides immediate, actionable insights based on Georgia nonprofit data.
+      <div class="assess-card" id="assessCard">
+        <div class="assess-progress-row">
+          <div id="qProgress">Question 1 of 10</div>
+          <div id="qPercent" style="color:var(--accent)">10%</div>
         </div>
+        <div class="assess-progress-bar"><div class="assess-progress-fill" id="progressFill"></div></div>
 
-        <div id="assess-questions">
-          <div class="assess-question">
-            <div class="q-title">1. How many days of cash on hand does your organization have?</div>
-            <div class="q-options">
-              <div class="q-option" data-score="0">0&ndash;15 days</div>
-              <div class="q-option" data-score="1">16&ndash;30 days</div>
-              <div class="q-option" data-score="2">31&ndash;60 days</div>
-              <div class="q-option" data-score="3">61&ndash;90 days</div>
-              <div class="q-option" data-score="4">91&ndash;180 days</div>
-              <div class="q-option" data-score="5">More than 180 days</div>
-            </div>
-          </div>
+        <div id="assessQuestions"></div>
 
-          <div class="assess-question">
-            <div class="q-title">2. Did your organization end the last fiscal year with a surplus or deficit?</div>
-            <div class="q-options">
-              <div class="q-option" data-score="0">Deficit greater than 10%</div>
-              <div class="q-option" data-score="1">Deficit 5&ndash;10%</div>
-              <div class="q-option" data-score="2">Deficit less than 5%</div>
-              <div class="q-option" data-score="3">Broke even</div>
-              <div class="q-option" data-score="4">Surplus less than 10%</div>
-              <div class="q-option" data-score="5">Surplus greater than 10%</div>
-            </div>
-          </div>
-
-          <div class="assess-question">
-            <div class="q-title">3. What percentage of your revenue comes from your largest funding source?</div>
-            <div class="q-options">
-              <div class="q-option" data-score="0">More than 80%</div>
-              <div class="q-option" data-score="1">70&ndash;80%</div>
-              <div class="q-option" data-score="2">60&ndash;70%</div>
-              <div class="q-option" data-score="3">50&ndash;60%</div>
-              <div class="q-option" data-score="4">40&ndash;50%</div>
-              <div class="q-option" data-score="5">Less than 40%</div>
-            </div>
-          </div>
-
-          <div class="assess-question">
-            <div class="q-title">4. Can you pay all full-time staff a living wage for your area?</div>
-            <div class="q-options">
-              <div class="q-option" data-score="0">No staff receive living wage</div>
-              <div class="q-option" data-score="1">Less than 25% receive living wage</div>
-              <div class="q-option" data-score="2">25&ndash;50% receive living wage</div>
-              <div class="q-option" data-score="3">50&ndash;75% receive living wage</div>
-              <div class="q-option" data-score="4">More than 75% receive living wage</div>
-              <div class="q-option" data-score="5">All staff receive living wage</div>
-            </div>
-          </div>
-
-          <div class="assess-question">
-            <div class="q-title">5. Does your organization have board-designated operating reserves?</div>
-            <div class="q-options">
-              <div class="q-option" data-score="0">No reserves</div>
-              <div class="q-option" data-score="1">Informal reserves (not board-designated)</div>
-              <div class="q-option" data-score="2">Less than 1 month reserves</div>
-              <div class="q-option" data-score="3">1&ndash;3 months reserves</div>
-              <div class="q-option" data-score="4">3&ndash;6 months reserves</div>
-              <div class="q-option" data-score="5">More than 6 months reserves</div>
-            </div>
-          </div>
-
-          <div class="assess-question">
-            <div class="q-title">6. How often does your board review financial statements?</div>
-            <div class="q-options">
-              <div class="q-option" data-score="0">Never or rarely</div>
-              <div class="q-option" data-score="1">Annually</div>
-              <div class="q-option" data-score="2">Semi-annually</div>
-              <div class="q-option" data-score="3">Quarterly</div>
-              <div class="q-option" data-score="4">Bi-monthly</div>
-              <div class="q-option" data-score="5">Monthly</div>
-            </div>
-          </div>
-
-          <div class="assess-question">
-            <div class="q-title">7. Do you have dedicated finance staff or consultants?</div>
-            <div class="q-options">
-              <div class="q-option" data-score="0">No dedicated finance function</div>
-              <div class="q-option" data-score="1">ED handles all finances</div>
-              <div class="q-option" data-score="2">Part-time bookkeeper</div>
-              <div class="q-option" data-score="3">Regular finance consultant</div>
-              <div class="q-option" data-score="4">Full-time finance staff</div>
-              <div class="q-option" data-score="5">CFO or finance team</div>
-            </div>
-          </div>
-
-          <div class="assess-question">
-            <div class="q-title">8. How long do government funders typically take to pay you?</div>
-            <div class="q-options">
-              <div class="q-option" data-score="5">We don't have government funding</div>
-              <div class="q-option" data-score="4">On time / within 30 days</div>
-              <div class="q-option" data-score="3">31&ndash;60 days late</div>
-              <div class="q-option" data-score="2">61&ndash;90 days late</div>
-              <div class="q-option" data-score="1">More than 90 days late</div>
-              <div class="q-option" data-score="0">Unpredictable / varies widely</div>
-            </div>
-          </div>
-
-          <div class="assess-question">
-            <div class="q-title">9. What indirect/overhead rate can you typically charge on grants?</div>
-            <div class="q-options">
-              <div class="q-option" data-score="0">0&ndash;5%</div>
-              <div class="q-option" data-score="1">6&ndash;10%</div>
-              <div class="q-option" data-score="2">11&ndash;15%</div>
-              <div class="q-option" data-score="3">16&ndash;20%</div>
-              <div class="q-option" data-score="4">21&ndash;25%</div>
-              <div class="q-option" data-score="5">More than 25% or de minimis 10%</div>
-            </div>
-          </div>
-
-          <div class="assess-question">
-            <div class="q-title">10. Have you ever used non-grant capital (loans, lines of credit)?</div>
-            <div class="q-options">
-              <div class="q-option" data-score="0">No, and wouldn't know how</div>
-              <div class="q-option" data-score="1">No, but considering it</div>
-              <div class="q-option" data-score="2">Applied but was declined</div>
-              <div class="q-option" data-score="3">Yes, in emergency only</div>
-              <div class="q-option" data-score="4">Yes, occasionally for cash flow</div>
-              <div class="q-option" data-score="5">Yes, strategically as part of financial planning</div>
-            </div>
-          </div>
+        <div class="assess-nav">
+          <button class="btn" id="prevBtn" disabled><svg><use href="#i-arrow-left"/></svg> Back</button>
+          <button class="btn primary" id="nextBtn" disabled>Next <svg><use href="#i-arrow-right"/></svg></button>
         </div>
+      </div>
 
-        <button class="assess-button" id="calculate-results" disabled>Calculate My Results</button>
-
-        <div class="assess-results" id="assess-results">
-          <div class="r-title" id="r-title"></div>
-          <div class="r-score" id="r-score"></div>
-          <div id="r-recommendations"></div>
-          <button class="assess-button" onclick="resetAssessment()" style="margin-top:18px">Take Assessment Again</button>
+      <div class="assess-card assess-results" id="assessResults" style="margin-top:18px">
+        <div class="gauge-wrap">
+          <svg class="gauge-svg" viewBox="0 0 200 200">
+            <circle class="gauge-bg" cx="100" cy="100" r="80"></circle>
+            <circle class="gauge-fg" id="gaugeFg" cx="100" cy="100" r="80" stroke="var(--accent)" stroke-dasharray="502.65" stroke-dashoffset="502.65" transform="rotate(-90 100 100)"></circle>
+            <text class="gauge-text" id="gaugeText" x="100" y="100" fill="var(--accent)">0%</text>
+          </svg>
+          <div class="r-stage" id="rStage"></div>
+          <div style="text-align:center; font-size:13px; margin-top:4px" id="rScore"></div>
+        </div>
+        <div class="r-recs" id="rRecs"></div>
+        <div style="text-align:center; margin-top:18px">
+          <button class="btn" onclick="resetAssessment()"><svg><use href="#i-refresh"/></svg> Take Assessment Again</button>
         </div>
       </div>
     </div>
@@ -1217,114 +1098,371 @@ aside{position:sticky; top:66px; align-self:start; background:#fff; border:1px s
 </main>
 
 <script>
-// Mobile menu toggle
+// ---------- Mobile menu ----------
 (function(){
   var toggle = document.getElementById('menuToggle');
   var aside = document.querySelector('aside');
   var overlay = document.getElementById('menuOverlay');
-  function closeMenu(){ aside.classList.remove('open'); overlay.classList.remove('open'); }
-  function openMenu(){ aside.classList.add('open'); overlay.classList.add('open'); }
-  toggle.addEventListener('click', function(){ aside.classList.contains('open') ? closeMenu() : openMenu() });
-  overlay.addEventListener('click', closeMenu);
-  aside.querySelectorAll('.nav button').forEach(function(btn){ btn.addEventListener('click', closeMenu) });
+  function close(){ aside.classList.remove('open'); overlay.classList.remove('open'); }
+  function open(){ aside.classList.add('open'); overlay.classList.add('open'); }
+  toggle.addEventListener('click', function(){ aside.classList.contains('open') ? close() : open(); });
+  overlay.addEventListener('click', close);
+  aside.querySelectorAll('.nav button').forEach(function(b){ b.addEventListener('click', close); });
 })();
 
-// Tab navigation
+// ---------- Tab navigation ----------
 function switchView(view){
-  document.querySelectorAll('aside .nav button').forEach(function(b){ b.classList.remove('active') });
+  document.querySelectorAll('aside .nav button').forEach(function(b){ b.classList.remove('active'); });
   var btn = document.querySelector('aside .nav button[data-view="'+view+'"]');
   if(btn) btn.classList.add('active');
-  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active') });
+  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
   var target = document.getElementById('view-'+view);
   if(target) target.classList.add('active');
   window.scrollTo({top:0, behavior:'smooth'});
 }
-document.querySelectorAll('aside .nav button').forEach(function(btn){
-  btn.addEventListener('click', function(){ switchView(btn.dataset.view) });
+document.querySelectorAll('aside .nav button').forEach(function(b){
+  b.addEventListener('click', function(){ switchView(b.dataset.view); });
 });
 
-// Reset, Print, How-to
-document.getElementById('exportPrint').addEventListener('click', function(){ window.print() });
+// ---------- Header buttons ----------
+document.getElementById('exportPrint').addEventListener('click', function(){ window.print(); });
 document.getElementById('resetView').addEventListener('click', function(){
   switchView('spurred');
   resetAssessment();
+  selectGap('g1');
+  selectStage('vuln');
 });
-document.getElementById('how').addEventListener('click', function(){
-  alert('How to use this tool:\n\n1. Use the left sidebar to navigate between tabs.\n2. The Self-Assessment Tool gives you a tailored snapshot of your organization\'s financial health.\n3. Refer to the Financial Sustainability Spectrum to understand the stages and what interventions help.\n4. Use Print to save any tab as a PDF for sharing.');
+document.getElementById('howBtn').addEventListener('click', function(){
+  alert('How to use this tool.\n\n1. Use the left sidebar to navigate between tabs.\n2. Each tab covers a different layer of the work, from why we started, to what we learned, to where we are headed.\n3. The Self-Assessment Tool gives you a tailored snapshot of your organization\'s financial health.\n4. Use Print to save any tab as a PDF for sharing.');
 });
 
-// Self-Assessment
-var assessmentScores = {};
-var assessmentQuestions = document.querySelectorAll('.assess-question');
-var calculateButton = document.getElementById('calculate-results');
-var resultsSection = document.getElementById('assess-results');
+// ---------- Ecosystem Transformation: gap detail ----------
+var gapData = {
+  g1: {
+    num:'GAP 1',
+    gap:{title:'Limited Nonprofit Capital Readiness', desc:'Most nonprofits, particularly small to midsize organizations, lack the in-house financial expertise, systems, or capacity required to engage with debt financing. While many CDFIs offer light-touch TA as part of the lending process, these offerings are often insufficient to meaningfully change a nonprofit\'s financial position.'},
+    intervention:{title:'Invest in Structured TA, Coaching, and Loan Readiness Programs', desc:'Design and fund a robust nonprofit-focused technical assistance and coaching infrastructure that better positions nonprofits to examine their business and financial models. A structured, multi-modality educational learning and capacity-building program.'},
+    future:{title:'Centralized, coordinated, robust education and training resources', desc:'Plus a formalized "Nerve Center" for ongoing coordination.'},
+    deps:[
+      'A "nonprofit financial sustainability and resilience" framework to guide the learning curriculum and planning',
+      'A centralized educational calendar fed by multiple key organizing partners with strong cross-promotion and event marketing',
+      'Grant funding for educational partner programming expenses and a well-funded Nonprofit Sector Sustainability Fund at CFGA',
+      'Curated calendar of publicly available webinars and trainings, topical webinars for Georgia nonprofits, group and individualized coaching, loan readiness bootcamps, and access to fractional CFO and back-office service providers'
+    ]
+  },
+  g2: {
+    num:'GAP 2',
+    gap:{title:'Zero Dedicated Nonprofit-Serving Lenders', desc:'While CDFIs are often the most flexible lenders in the market, many are not structured or staffed to consistently underwrite nonprofit borrowers. Their charters often prioritize small business development, housing, or consumer finance. Many lack deep experience working with nonprofit financials and board governance dynamics.'},
+    intervention:{title:'Recruit and Capitalize In-Market, Nonprofit-Focused Lending Partners', desc:'To address this structural gap, recruit and capitalize one or more lending institutions, either existing CDFIs or new entrants, to specialize in nonprofit working capital and programmatic lending.'},
+    future:{title:'New in-market CDFIs with dedicated nonprofit-tailored loan products and programs', desc:'Plus a deep "bench" of sources of capital.'},
+    deps:[]
+  },
+  g3: {
+    num:'GAP 3',
+    gap:{title:'Fragmented Enhancement Tools', desc:'Existing credit enhancement and guarantee resources are scattered across the ecosystem, making it difficult for lenders to find and use them efficiently for nonprofit lending.'},
+    intervention:{title:'Retool and Recapitalize the Community Guarantee Pool', desc:'To increase nonprofit access to loans (especially unsecured or bridge loans), funders capitalize a retooled tiered Community Guarantee Pool (CGP) at CFGA. Lower-risk tier continues 20% guarantees on state/local reimbursable grants. Higher-risk tier covers two use cases. Bridge lending for federal grant receivables, and non-collateralized working capital.'},
+    future:{title:'Centralized pool of credit enhancements and guarantee resources', desc:'Centralized flexible funding pool to cover capacity building and training, interest rate buy-down, and more.'},
+    deps:[
+      'Grants to replenish the Interest Rate Buy-Down mechanism for the Tier 1 guarantee tranche',
+      'Grants to establish a loan loss reserve Tier 2 tranche to offset potential losses',
+      'Grants to support additional CGP operational management duties, leveraging CFGA\'s new Impact Investing Analyst for underwriting support',
+      'CFGA may execute MOUs with participating CDFIs to establish permissible loan types, nonprofit borrower profile, guarantee structures, and expectations'
+    ]
+  },
+  g4: {
+    num:'GAP 4',
+    gap:{title:'Limited or Retreating Risk Tolerance', desc:'Many nonprofits face short-term cash flow shortfalls while waiting on government reimbursements, donor pledges, or delayed contract payments. These timing mismatches create real liquidity crises, leading to payroll stress, paused programs, or missed opportunities. Yet few flexible bridge loan products exist. Traditional credit criteria do not work well in this context.'},
+    intervention:{title:'Stand Up a Special Purpose Vehicle (SPV) for Nonprofit Bridge Lending', desc:'An SPV structure can serve as a nimble, standalone fund to deliver bridge loans to nonprofits, supported by philanthropic capital, recoverable grants, and CDFI participation.'},
+    future:{title:'Deep "bench" of sources of capital for nonprofits', desc:'Whether at existing CDFIs, in-market lenders, or SPVs.'},
+    deps:[]
+  },
+  g5: {
+    num:'GAP 5',
+    gap:{title:'Reactive, Crisis-Driven Coordination', desc:'CFGA has been informally thrust into an ecosystem organizing role. A more diffuse coordinated, networked approach (supported by but not anchored within CFGA) may result in more shared ownership and accountability from other players.'},
+    intervention:{title:'Formalized, Engaged, Purposeful Leadership "Nerve Center"', desc:'A decentralized "nerve center" approach requires early, thoughtful vision alignment and governance discussions among committed partners.'},
+    future:{title:'Formalized "Nerve Center"', desc:'Pipeline development, promotion of resources, capacity building needs identification, new loan product and underwriting prototyping, capital aggregation, and partner recruitment.'},
+    deps:[
+      'Grant or impact investment alignment with the recommendations (collectively or individually)',
+      'Referral pipeline for retooled CGP and for NFF/REDF product offerings',
+      'Design and implementation of SPV pilot fund for nonprofit bridge lending'
+    ]
+  }
+};
 
-document.querySelectorAll('.q-option').forEach(function(option){
-  option.addEventListener('click', function(){
-    var question = this.closest('.assess-question');
-    var idx = Array.from(assessmentQuestions).indexOf(question);
-    question.querySelectorAll('.q-option').forEach(function(opt){ opt.classList.remove('selected') });
-    this.classList.add('selected');
-    assessmentScores[idx] = parseInt(this.dataset.score);
-    if(Object.keys(assessmentScores).length === assessmentQuestions.length){
-      calculateButton.disabled = false;
-    }
+function selectGap(g){
+  document.querySelectorAll('.tx-tab').forEach(function(b){
+    b.classList.toggle('active', b.dataset.gap === g);
   });
+  var d = gapData[g];
+  var deps = d.deps.length ?
+    '<div class="tx-deps"><h4>Success Dependencies</h4><ul>' + d.deps.map(function(x){return '<li>'+x+'</li>'}).join('') + '</ul></div>' : '';
+  document.getElementById('txDetail').innerHTML =
+    '<div class="tx-flow">' +
+      '<div class="tx-col gap"><div class="label"><svg><use href="#i-alert"/></svg> Today\'s Gap</div><div class="name">'+d.gap.title+'</div><div class="desc">'+d.gap.desc+'</div></div>' +
+      '<div class="tx-col intervention"><div class="label"><svg><use href="#i-spark"/></svg> Proposed Intervention</div><div class="name">'+d.intervention.title+'</div><div class="desc">'+d.intervention.desc+'</div></div>' +
+      '<div class="tx-col future"><div class="label"><svg><use href="#i-shield"/></svg> Future State</div><div class="name">'+d.future.title+'</div><div class="desc">'+d.future.desc+'</div></div>' +
+    '</div>' + deps;
+}
+document.querySelectorAll('.tx-tab').forEach(function(b){
+  b.addEventListener('click', function(){ selectGap(b.dataset.gap); });
+});
+selectGap('g1');
+
+// ---------- Sustainability Spectrum: stage detail ----------
+var stageData = {
+  vuln: {
+    title:'Financially Vulnerable Organizations',
+    icon:'i-alert',
+    meta:'Typical Size. Often under $500K but can be any size. Prevalence. 40-50% of sector.',
+    indicators:[
+      'Payroll anxiety is constant. ED loses sleep over it.',
+      'One funder departure would force major cuts.',
+      'Board does not review financials (or does not understand them).',
+      'No written budget, or it is ignored after creation.',
+      'Invoices paid late, vendor relationships strained.',
+      'Grant applications are desperate, not strategic.'
+    ],
+    numbers:[
+      'Days cash on hand. 0-30 (median around 15).',
+      'Working capital often negative.',
+      '36% probability of deficit in any year (per NFF).',
+      'Debt service coverage ratio below 1.0.',
+      'Revenue timing mismatched with expenses.',
+      'No board-designated reserves.'
+    ],
+    mistake:'Offering strategic planning or evaluation support when the organization cannot make payroll. These nonprofits need emergency stabilization and basic financial literacy before they can think strategically. Advanced planning without financial stability is building on sand.',
+    interventions:[
+      {title:'Immediate Stabilization', items:['Emergency operating support (unrestricted)', 'Bridge funding during cash gaps', 'Payroll protection grants', 'Vendor payment assistance']},
+      {title:'Basic Financial Literacy', items:['Cash flow forecasting training', 'QuickBooks setup', 'Monthly financial review templates', 'Board treasurer bootcamp']},
+      {title:'Simple Systems', items:['Basic budget templates', 'Invoice tracking spreadsheets', 'Monthly dashboard creation', 'Financial policies template']}
+    ]
+  },
+  build: {
+    title:'Organizations Building Stability',
+    icon:'i-trend',
+    meta:'Typical Size. $500K to $5M common range. Prevalence. 35-40% of sector.',
+    indicators:[
+      'Organization has survived at least one funding loss.',
+      'Board finance committee meets regularly.',
+      'Annual budgets with quarterly review.',
+      'Beginning to say no to restricted grants that do not fit.',
+      'Exploring earned revenue but still learning.',
+      'Part-time finance staff or consultant in place.'
+    ],
+    numbers:[
+      'Days cash on hand. 30-90 (building toward more).',
+      'Working capital positive but thin.',
+      '20-25% deficit probability (improving).',
+      'Revenue concentration dropping below 60%.',
+      'Small but growing reserves (1-3 months).',
+      'Beginning to track cost per outcome.'
+    ],
+    mistake:'Pushing for rapid growth before systems are ready. These organizations need to strengthen infrastructure before scaling. Fund their back office, not just their programs. The unsexy investments in finance systems and fundraising capacity pay the biggest dividends here.',
+    interventions:[
+      {title:'Infrastructure Investment', items:['Multi-year operating support', 'Capacity building grants for systems', 'Finance staff salary support', 'CRM and accounting software upgrades']},
+      {title:'Advanced Financial Training', items:['Scenario planning workshops', 'Cost allocation methodology', 'Reserve policy development', 'Financial dashboard design']},
+      {title:'Capital Access Readiness', items:['Line of credit preparation', 'Credit history building', 'Loan readiness assessment', 'Introduction to CDFIs']}
+    ]
+  },
+  resi: {
+    title:'Financially Resilient Organizations',
+    icon:'i-shield',
+    meta:'Typical Size. Often $5M+ but size is not determinant. Prevalence. 10-20% of sector.',
+    indicators:[
+      'COVID did not force layoffs. They adapted.',
+      'Board includes financial professionals.',
+      'CFO or equivalent leading finance function.',
+      'Multiple revenue streams by design, not accident.',
+      'Comfortable using debt as a strategic tool.',
+      'Can turn down "bad money" that does not fit mission.'
+    ],
+    numbers:[
+      'Days cash on hand. 180+ (per CompassPoint).',
+      'Working capital covers 3-6 months.',
+      'Less than 10% deficit probability.',
+      'No revenue source exceeds 30-40%.',
+      'Debt-to-asset ratio actively managed.',
+      'Efficiency ratios tracked and optimized.'
+    ],
+    mistake:'',
+    interventions:[
+      {title:'Growth Capital', items:['Program-related investments (PRIs)', 'Loan guarantees for expansion', 'Working capital lines of credit', 'Bond issuance support']},
+      {title:'Strategic Opportunities', items:['Merger and acquisition support', 'Social enterprise development', 'Endowment building campaigns', 'National expansion funding']},
+      {title:'Ecosystem Leadership', items:['Fiscal sponsorship programs', 'Peer mentoring initiatives', 'Shared services development', 'Field-building investments']}
+    ]
+  }
+};
+
+function selectStage(s){
+  document.querySelectorAll('.sp-tab').forEach(function(b){
+    b.classList.toggle('active', b.dataset.stage === s);
+  });
+  var d = stageData[s];
+  var indicators = '<ul class="indicator-list">' + d.indicators.map(function(x){return '<li>'+x+'</li>'}).join('') + '</ul>';
+  var numbers = '<ul class="indicator-list">' + d.numbers.map(function(x){return '<li>'+x+'</li>'}).join('') + '</ul>';
+  var mistake = d.mistake ? '<div class="panel warn"><strong>Common Funder Mistake.</strong> ' + d.mistake + '</div>' : '';
+  var interventions = '<div class="intervention-grid">' + d.interventions.map(function(iv){
+    return '<div class="iv-item"><div class="iv-title">'+iv.title+'</div><ul>' + iv.items.map(function(it){return '<li>'+it+'</li>'}).join('') + '</ul></div>';
+  }).join('') + '</div>';
+  document.getElementById('spDetail').innerHTML =
+    '<div class="sp-pane '+s+' active">' +
+      '<div class="head"><div class="icon"><svg><use href="#'+d.icon+'"/></svg></div><div><h3>'+d.title+'</h3><div class="meta">'+d.meta+'</div></div></div>' +
+      '<div class="sp-cols '+s+'"><div><h4>Key Indicators You Will Observe</h4>'+indicators+'</div><div><h4>What the Numbers Show</h4>'+numbers+'</div></div>' +
+      mistake +
+      '<h4 style="margin-top:14px">What Actually Helps at This Stage</h4>' + interventions +
+    '</div>';
+}
+document.querySelectorAll('.sp-tab').forEach(function(b){
+  b.addEventListener('click', function(){ selectStage(b.dataset.stage); });
+});
+selectStage('vuln');
+
+// ---------- Self-Assessment Tool ----------
+var questions = [
+  {q:'How many days of cash on hand does your organization have?', opts:[
+    ['0-15 days', 0],['16-30 days', 1],['31-60 days', 2],['61-90 days', 3],['91-180 days', 4],['More than 180 days', 5]
+  ]},
+  {q:'Did your organization end the last fiscal year with a surplus or deficit?', opts:[
+    ['Deficit greater than 10%', 0],['Deficit 5-10%', 1],['Deficit less than 5%', 2],['Broke even', 3],['Surplus less than 10%', 4],['Surplus greater than 10%', 5]
+  ]},
+  {q:'What percentage of your revenue comes from your largest funding source?', opts:[
+    ['More than 80%', 0],['70-80%', 1],['60-70%', 2],['50-60%', 3],['40-50%', 4],['Less than 40%', 5]
+  ]},
+  {q:'Can you pay all full-time staff a living wage for your area?', opts:[
+    ['No staff receive living wage', 0],['Less than 25% receive living wage', 1],['25-50% receive living wage', 2],['50-75% receive living wage', 3],['More than 75% receive living wage', 4],['All staff receive living wage', 5]
+  ]},
+  {q:'Does your organization have board-designated operating reserves?', opts:[
+    ['No reserves', 0],['Informal reserves (not board-designated)', 1],['Less than 1 month reserves', 2],['1-3 months reserves', 3],['3-6 months reserves', 4],['More than 6 months reserves', 5]
+  ]},
+  {q:'How often does your board review financial statements?', opts:[
+    ['Never or rarely', 0],['Annually', 1],['Semi-annually', 2],['Quarterly', 3],['Bi-monthly', 4],['Monthly', 5]
+  ]},
+  {q:'Do you have dedicated finance staff or consultants?', opts:[
+    ['No dedicated finance function', 0],['ED handles all finances', 1],['Part-time bookkeeper', 2],['Regular finance consultant', 3],['Full-time finance staff', 4],['CFO or finance team', 5]
+  ]},
+  {q:'How long do government funders typically take to pay you?', opts:[
+    ['We do not have government funding', 5],['On time or within 30 days', 4],['31-60 days late', 3],['61-90 days late', 2],['More than 90 days late', 1],['Unpredictable, varies widely', 0]
+  ]},
+  {q:'What indirect or overhead rate can you typically charge on grants?', opts:[
+    ['0-5%', 0],['6-10%', 1],['11-15%', 2],['16-20%', 3],['21-25%', 4],['More than 25% or de minimis 10%', 5]
+  ]},
+  {q:'Have you ever used non-grant capital (loans or lines of credit)?', opts:[
+    ['No, and would not know how', 0],['No, but considering it', 1],['Applied but was declined', 2],['Yes, in emergency only', 3],['Yes, occasionally for cash flow', 4],['Yes, strategically as part of financial planning', 5]
+  ]}
+];
+
+var scores = {};
+var currentQ = 0;
+
+function buildQuestions(){
+  var qContainer = document.getElementById('assessQuestions');
+  qContainer.innerHTML = questions.map(function(q, i){
+    var optsHtml = q.opts.map(function(opt, j){
+      return '<button class="q-option" data-q="'+i+'" data-score="'+opt[1]+'"><span class="opt-marker"></span><span>'+opt[0]+'</span></button>';
+    }).join('');
+    return '<div class="assess-q'+(i===0?' active':'')+'" data-q="'+i+'"><div class="q-text">'+q.q+'</div><div class="q-options">'+optsHtml+'</div></div>';
+  }).join('');
+
+  qContainer.querySelectorAll('.q-option').forEach(function(opt){
+    opt.addEventListener('click', function(){
+      var qIdx = parseInt(this.dataset.q);
+      var qPanel = this.closest('.assess-q');
+      qPanel.querySelectorAll('.q-option').forEach(function(o){ o.classList.remove('selected'); });
+      this.classList.add('selected');
+      scores[qIdx] = parseInt(this.dataset.score);
+      document.getElementById('nextBtn').disabled = false;
+    });
+  });
+}
+buildQuestions();
+
+function showQuestion(idx){
+  document.querySelectorAll('.assess-q').forEach(function(q){
+    q.classList.toggle('active', parseInt(q.dataset.q) === idx);
+  });
+  document.getElementById('qProgress').textContent = 'Question ' + (idx+1) + ' of ' + questions.length;
+  var pct = Math.round(((idx+1)/questions.length)*100);
+  document.getElementById('qPercent').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('prevBtn').disabled = (idx === 0);
+  document.getElementById('nextBtn').disabled = (scores[idx] === undefined);
+  document.getElementById('nextBtn').innerHTML = (idx === questions.length-1)
+    ? 'See Results <svg><use href="#i-check"/></svg>'
+    : 'Next <svg><use href="#i-arrow-right"/></svg>';
+}
+showQuestion(0);
+
+document.getElementById('prevBtn').addEventListener('click', function(){
+  if(currentQ > 0){ currentQ--; showQuestion(currentQ); }
+});
+document.getElementById('nextBtn').addEventListener('click', function(){
+  if(currentQ < questions.length-1){ currentQ++; showQuestion(currentQ); }
+  else { showResults(); }
 });
 
-calculateButton.addEventListener('click', function(){
-  var totalScore = Object.values(assessmentScores).reduce(function(a,b){return a+b}, 0);
-  var maxScore = assessmentQuestions.length * 5;
-  var percentage = (totalScore/maxScore) * 100;
-  var stage, stageColor, recommendations;
+function showResults(){
+  var total = Object.values(scores).reduce(function(a,b){return a+b;}, 0);
+  var max = questions.length * 5;
+  var pct = Math.round((total/max)*100);
 
-  if(percentage < 33){
-    stage = "Financially Vulnerable";
-    stageColor = "var(--danger)";
-    recommendations = [
-      {title:"Immediate Priority: Stabilize Cash Flow", text:"Your organization needs emergency support. Apply for bridge funding through CFGA's emergency fund. Focus on securing unrestricted operating support and accelerating receivables."},
-      {title:"Build Basic Financial Systems", text:"Enroll in the Financial Foundations Cohort (starting early 2026). You'll learn cash flow forecasting, budget development, and basic financial management. $500 stipend available."},
-      {title:"Board Development", text:"Your board needs financial literacy training. CFGA offers free board treasurer bootcamps quarterly. At least one board member should understand financials."},
-      {title:"Revenue Diversification", text:"With high concentration risk, you need to diversify funding sources. Start by identifying 2-3 new potential funders and one earned revenue opportunity."}
+  var stage, color, recs;
+  if(pct < 33){
+    stage = 'Financially Vulnerable';
+    color = '#f15922';
+    recs = [
+      {t:'Stabilize Cash Flow First', d:'Your organization needs emergency support. Apply for bridge funding through CFGA\'s emergency fund. Focus on securing unrestricted operating support and accelerating receivables.'},
+      {t:'Build Basic Financial Systems', d:'Enroll in the Financial Foundations Cohort (starting early 2026). You will learn cash flow forecasting, budget development, and basic financial management. $500 stipend available.'},
+      {t:'Board Development', d:'Your board needs financial literacy training. CFGA offers free board treasurer bootcamps quarterly. At least one board member should understand financials.'},
+      {t:'Revenue Diversification', d:'With high concentration risk, you need to diversify funding sources. Start by identifying 2 or 3 new potential funders and one earned revenue opportunity.'}
     ];
-  } else if(percentage < 66){
-    stage = "Building Stability";
-    stageColor = "var(--warn)";
-    recommendations = [
-      {title:"Next Step: Build Reserves", text:"You're making progress but need a cushion. Set a goal of 3 months operating reserves within 18 months. Consider a reserve-building campaign."},
-      {title:"Explore Capital Tools", text:"You're approaching readiness for non-grant capital. Attend CFGA's Capital Readiness Intensive to understand lines of credit and term loans."},
-      {title:"Strengthen Infrastructure", text:"Invest in finance staff and systems. Consider fractional CFO services or upgrading to nonprofit-specific accounting software."},
-      {title:"Strategic Planning", text:"With basic stability achieved, develop a 3-year strategic plan with financial projections. Include scenarios for growth and contingencies."}
+  } else if(pct < 66){
+    stage = 'Building Stability';
+    color = '#eec61a';
+    recs = [
+      {t:'Build Reserves', d:'You are making progress but need a cushion. Set a goal of 3 months operating reserves within 18 months. Consider a reserve-building campaign.'},
+      {t:'Explore Capital Tools', d:'You are approaching readiness for non-grant capital. Attend CFGA\'s Capital Readiness Intensive to understand lines of credit and term loans.'},
+      {t:'Strengthen Infrastructure', d:'Invest in finance staff and systems. Consider fractional CFO services or upgrading to nonprofit-specific accounting software.'},
+      {t:'Strategic Planning', d:'With basic stability achieved, develop a 3-year strategic plan with financial projections. Include scenarios for growth and contingencies.'}
     ];
   } else {
-    stage = "Financially Resilient";
-    stageColor = "var(--good)";
-    recommendations = [
-      {title:"Leverage Your Strength", text:"You're in the top 15% of Georgia nonprofits. Consider mentoring other organizations or serving as a fiscal sponsor."},
-      {title:"Strategic Growth", text:"Explore growth capital options like PRIs or bond financing for major initiatives. NFF can structure complex deals for expansion."},
-      {title:"Systems Leadership", text:"Join CFGA's Nerve Center to help shape the ecosystem. Your expertise can guide policy and support sector-wide improvements."},
-      {title:"Innovation Opportunities", text:"With strong financial health, you can take calculated risks. Consider social enterprise ventures or merger/acquisition opportunities."}
+    stage = 'Financially Resilient';
+    color = '#149a49';
+    recs = [
+      {t:'Use Your Strength', d:'You are in the top 15% of Georgia nonprofits. Consider mentoring other organizations or serving as a fiscal sponsor.'},
+      {t:'Strategic Growth', d:'Explore growth capital options like PRIs or bond financing for major initiatives. NFF can structure complex deals for expansion.'},
+      {t:'Systems Leadership', d:'Join CFGA\'s Nerve Center to help shape the ecosystem. Your expertise can guide policy and support sector-wide improvements.'},
+      {t:'Innovation Opportunities', d:'With strong financial health, you can take calculated risks. Consider social enterprise ventures or merger or acquisition opportunities.'}
     ];
   }
 
-  document.getElementById('r-title').textContent = stage;
-  document.getElementById('r-title').style.color = stageColor;
-  document.getElementById('r-score').textContent = "Your score: " + totalScore + "/" + maxScore + " (" + Math.round(percentage) + "%)";
+  document.getElementById('rStage').textContent = stage;
+  document.getElementById('rStage').style.color = color;
+  document.getElementById('rScore').textContent = 'Score ' + total + ' of ' + max;
 
-  var html = recommendations.map(function(rec){
-    return '<div class="r-rec"><div class="rtitle">'+rec.title+'</div><div class="rtext">'+rec.text+'</div></div>';
+  var circumference = 2 * Math.PI * 80;
+  var offset = circumference - (pct/100) * circumference;
+  var fg = document.getElementById('gaugeFg');
+  fg.style.strokeDashoffset = offset;
+  fg.setAttribute('stroke', color);
+  document.getElementById('gaugeText').setAttribute('fill', color);
+  document.getElementById('gaugeText').textContent = pct + '%';
+
+  document.getElementById('rRecs').innerHTML = recs.map(function(r){
+    return '<div class="r-rec"><div class="rt">'+r.t+'</div><div class="rd">'+r.d+'</div></div>';
   }).join('');
-  document.getElementById('r-recommendations').innerHTML = html;
 
-  resultsSection.classList.add('show');
-  resultsSection.scrollIntoView({behavior:'smooth', block:'start'});
-});
+  document.getElementById('assessCard').style.display = 'none';
+  document.getElementById('assessResults').classList.add('show');
+  document.getElementById('assessResults').scrollIntoView({behavior:'smooth', block:'start'});
+}
 
 function resetAssessment(){
-  assessmentScores = {};
-  document.querySelectorAll('.q-option').forEach(function(opt){ opt.classList.remove('selected') });
-  calculateButton.disabled = true;
-  resultsSection.classList.remove('show');
+  scores = {};
+  currentQ = 0;
+  document.querySelectorAll('.q-option').forEach(function(o){ o.classList.remove('selected'); });
+  document.getElementById('assessCard').style.display = 'block';
+  document.getElementById('assessResults').classList.remove('show');
+  showQuestion(0);
 }
 </script>
 </body>
