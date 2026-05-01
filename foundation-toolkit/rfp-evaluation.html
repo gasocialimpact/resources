@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Investment Advisor RFP Evaluation Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#149a49;
+  --secondary-purple:#4750a2;
+  --accent-gold:#eec61a;
+  --accent-teal:#53c3c2;
+  --accent-orange:#f15922;
+  --soft-cream:#fcf3cf;
+  --soft-gray:#f4f5f7;
+  --secondary-green:#e0f1d9;
+  --warn-bg:#f8dcd3;
+  --primary-blue:#dde0fe;
+  --ink:#000;
+  --line:#e6e8ec;
+  --line-dark:#cfd2d8;
+}
+*{margin:0; padding:0; box-sizing:border-box}
+body{
+  font-family:'Familjen Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background:#fff;
+  color:var(--ink);
+  font-size:15px;
+  line-height:1.4;
+}
+.container{max-width:1300px; margin:0 auto; padding:24px}
+
+.header{
+  background:#fff; padding:24px 28px; border-radius:12px;
+  margin-bottom:18px; border:1px solid var(--line);
+}
+.header h1{
+  font-size:24px; font-weight:800; color:var(--accent); margin-bottom:6px;
+}
+.header p{color:var(--ink); font-size:14px}
+
+.progress-bar{
+  background:#fff; padding:18px 28px; border-radius:12px;
+  margin-bottom:18px; border:1px solid var(--line);
+}
+.progress-stats{display:flex; gap:36px; flex-wrap:wrap}
+.stat{display:flex; flex-direction:column}
+.stat-label{
+  font-size:11px; text-transform:uppercase; letter-spacing:.05em;
+  color:var(--secondary-purple); margin-bottom:4px; font-weight:700;
+}
+.stat-value{font-size:22px; font-weight:800; color:var(--accent); line-height:1}
+
+.tabs{
+  display:flex; gap:4px; margin-bottom:18px;
+  border-bottom:2px solid var(--line);
+}
+.tab{
+  padding:10px 18px; background:transparent; border:none;
+  font-family:inherit; font-size:14px; font-weight:600; cursor:pointer;
+  color:var(--ink); border-bottom:2px solid transparent;
+  margin-bottom:-2px; transition:.15s;
+}
+.tab:hover{color:var(--accent)}
+.tab.active{color:var(--accent); border-bottom-color:var(--accent)}
+
+.main-layout{display:grid; grid-template-columns:300px 1fr; gap:18px}
+
+.sidebar{
+  background:#fff; border-radius:12px; padding:18px;
+  border:1px solid var(--line); height:fit-content;
+  position:sticky; top:18px;
+}
+.sidebar h3{
+  font-size:14px; font-weight:700; color:var(--secondary-purple);
+  margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--line);
+  text-transform:uppercase; letter-spacing:.05em;
+}
+.proposal-list{max-height:calc(100vh - 240px); overflow-y:auto}
+.proposal-item{
+  padding:12px; margin-bottom:8px; border-radius:8px;
+  cursor:pointer; transition:.15s; border:1px solid var(--line);
+  background:#fff;
+}
+.proposal-item:hover{background:var(--secondary-green); border-color:var(--accent)}
+.proposal-item.active{background:var(--accent); color:#fff; border-color:var(--accent)}
+.proposal-item.screened-out{opacity:.55; background:var(--warn-bg)}
+.proposal-item.interview{border-left:3px solid var(--accent)}
+.proposal-name{font-weight:600; font-size:14px; margin-bottom:4px}
+.proposal-status{font-size:12px; opacity:.85}
+
+.main-content{
+  background:#fff; border-radius:12px; padding:26px;
+  border:1px solid var(--line);
+}
+
+.evaluation-section{margin-bottom:30px}
+.section-header{
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:16px; padding-bottom:10px;
+  border-bottom:1px solid var(--line);
+}
+.section-title{font-size:17px; font-weight:700; color:var(--secondary-purple)}
+.section-subtitle{font-size:12px; color:var(--ink); margin-top:4px; opacity:.75}
+
+.criteria-group{margin-bottom:20px}
+.criteria-label{font-size:14px; font-weight:600; margin-bottom:8px; display:block; color:var(--ink)}
+.criteria-description{font-size:13px; color:var(--ink); margin-bottom:12px}
+.criteria-description ul{margin-top:6px; padding-left:20px}
+.criteria-description li{margin-bottom:4px}
+
+.assessment-options{display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap}
+.assessment-btn{
+  flex:1; min-width:110px; padding:11px 14px;
+  border:1px solid var(--line); background:#fff;
+  border-radius:8px; cursor:pointer;
+  font-family:inherit; font-size:13px; font-weight:600; color:var(--ink);
+  transition:.15s;
+}
+.assessment-btn:hover{border-color:var(--accent); background:var(--secondary-green)}
+.assessment-btn.selected{background:var(--secondary-purple); color:#fff; border-color:var(--secondary-purple)}
+.assessment-btn.strong{background:var(--accent); color:#fff; border-color:var(--accent)}
+.assessment-btn.weak{background:var(--accent-orange); color:#fff; border-color:var(--accent-orange)}
+
+.notes-area{
+  width:100%; min-height:90px; padding:11px 14px;
+  border:1px solid var(--line); border-radius:8px;
+  font-family:inherit; font-size:14px; resize:vertical;
+  color:var(--ink); background:#fff;
+}
+.notes-area:focus{outline:none; border-color:var(--accent)}
+
+.quick-tags{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px}
+.tag{
+  padding:5px 11px; background:var(--soft-gray); color:var(--ink);
+  border-radius:999px; font-size:12px; cursor:pointer;
+  transition:.15s; border:1px solid var(--line);
+}
+.tag:hover{background:var(--accent); color:#fff; border-color:var(--accent)}
+.tag.active{background:var(--accent); color:#fff; border-color:var(--accent)}
+
+.action-buttons{
+  display:flex; gap:10px; margin-top:24px; padding-top:20px;
+  border-top:1px solid var(--line); flex-wrap:wrap;
+}
+.btn{
+  padding:11px 20px; border:1px solid var(--line-dark);
+  background:#fff; color:var(--ink); border-radius:8px;
+  font-family:inherit; font-size:13px; font-weight:600; cursor:pointer;
+  transition:.15s;
+}
+.btn:hover{background:var(--secondary-green); border-color:var(--accent)}
+.btn-primary{background:var(--accent); color:#fff; border-color:var(--accent)}
+.btn-primary:hover{background:#117a3a; border-color:#117a3a}
+.btn-success{background:var(--accent); color:#fff; border-color:var(--accent)}
+.btn-success:hover{background:#117a3a; border-color:#117a3a}
+.btn-danger{background:var(--accent-orange); color:#fff; border-color:var(--accent-orange)}
+.btn-danger:hover{background:#c64516; border-color:#c64516}
+.btn-secondary{background:var(--soft-gray); color:var(--ink); border-color:var(--line-dark)}
+.btn-secondary:hover{background:#e8eaee}
+
+.export-section{
+  background:var(--soft-cream); padding:18px;
+  border-radius:10px; margin-top:24px;
+  border-left:4px solid var(--accent-gold);
+}
+.export-section h4{font-size:14px; font-weight:700; color:var(--secondary-purple); margin-bottom:10px}
+
+.comparison-view{display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:14px; margin-top:18px}
+.comparison-card{
+  border:1px solid var(--line); border-radius:10px; padding:16px; background:#fff;
+}
+.comparison-card h4{font-size:14px; font-weight:700; color:var(--secondary-purple); margin-bottom:10px}
+
+.add-proposal-section{
+  background:#fff; padding:24px; border-radius:12px;
+  border:1px solid var(--line); margin-bottom:18px;
+}
+
+.form-group{margin-bottom:14px}
+.form-label{display:block; font-size:13px; font-weight:600; margin-bottom:6px; color:var(--ink)}
+.form-input{
+  width:100%; padding:10px 14px; border:1px solid var(--line);
+  border-radius:8px; font-family:inherit; font-size:14px; color:var(--ink);
+}
+.form-input:focus{outline:none; border-color:var(--accent)}
+
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(0,0,0,.4);
+  display:flex; align-items:flex-start; justify-content:center;
+  padding-top:6vh; z-index:1000; overflow-y:auto;
+}
+.modal{
+  background:#fff; border-radius:12px; padding:28px;
+  max-width:600px; width:92%; max-height:88vh; overflow-y:auto;
+}
+.modal h3{font-size:18px; font-weight:700; color:var(--accent); margin-bottom:16px}
+
+.feedback-preview{
+  background:var(--soft-gray); padding:18px; border-radius:10px;
+  margin:16px 0; font-size:14px; line-height:1.7;
+  white-space:pre-wrap; color:var(--ink);
+}
+
+.empty-state{
+  text-align:center; padding:50px 20px; color:var(--ink); opacity:.55;
+}
+.empty-state svg{width:48px; height:48px; margin-bottom:14px; opacity:.4; stroke:var(--secondary-purple)}
+
+.signal-info{
+  font-size:12px; color:var(--ink); margin-top:10px;
+  padding:12px 14px; background:var(--soft-gray); border-radius:8px; line-height:1.55;
+}
+.signal-info strong{color:var(--accent)}
+
+.result-pass{
+  padding:16px 20px; background:var(--secondary-green);
+  border-left:4px solid var(--accent); border-radius:8px;
+  margin-top:24px; font-size:14px;
+}
+.result-pass strong{color:var(--accent); font-size:15px}
+.result-fail{
+  padding:16px 20px; background:var(--warn-bg);
+  border-left:4px solid var(--accent-orange); border-radius:8px;
+  margin-top:24px; font-size:14px;
+}
+.result-fail strong{color:var(--accent-orange); font-size:15px}
+
+@media(max-width:900px){
+  .main-layout{grid-template-columns:1fr}
+  .sidebar{position:static; max-height:none}
+  .progress-stats{gap:18px}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const RFP_CRITERIA = {
+  screening: [
+    {
+      id:'technical',
+      label:'Technical Capability',
+      description:'Foundation impact investing experience, understands PRIs, MRIs, and ESG, and addresses all of your project objectives.',
+      questions:[
+        'Do they demonstrate experience advising private foundations?',
+        'Do they understand the specific tools (PRIs, MRIs, ESG)?',
+        'Did they address all of your project objectives (education, strategy, implementation)?'
+      ]
+    },
+    {
+      id:'execution',
+      label:'Practical Execution',
+      description:'Realistic timeline, budget alignment, clear deliverables, and a strong stakeholder facilitation approach.',
+      questions:[
+        'Is the proposed timeline realistic for your engagement window?',
+        'Does the budget align with the range you set in your RFP?',
+        'Are deliverables specific and tied to your stated objectives?',
+        'Do they show understanding of board education needs?'
+      ]
+    },
+    {
+      id:'communication',
+      label:'Communication Quality',
+      description:'Professional presentation, clear writing, organized structure, and respect for the page limits in your RFP.',
+      questions:[
+        'Is the proposal well-organized and easy to follow?',
+        'Does it stay within the page limits you set?',
+        'Is the tone professional without excessive jargon?',
+        'Can you understand their approach?'
+      ]
+    }
+  ],
+  detailed:[
+    {
+      id:'fit', category:'Fit & Understanding', weight:'35%',
+      dimensions:[
+        {id:'strategic_alignment', label:'Strategic Alignment', prompts:[
+          'How well do they understand your foundation\'s stage of development?',
+          'Do they connect their approach to your mission and program areas?',
+          'Do they acknowledge your foundation\'s existing impact investing journey?'
+        ]},
+        {id:'methodology', label:'Methodological Approach', prompts:[
+          'Is their approach well-sequenced and thoughtful?',
+          'Does it balance education with strategy development?',
+          'Do they show flexibility for your board\'s learning pace?',
+          'How sophisticated is their stakeholder engagement process?'
+        ]},
+        {id:'culture', label:'Cultural Fit', prompts:[
+          'Does their communication style feel aligned?',
+          'Do they demonstrate a collaborative approach?',
+          'Do they show understanding of family or community foundation dynamics?'
+        ]}
+      ]
+    },
+    {
+      id:'expertise', category:'Expertise & Experience', weight:'30%',
+      dimensions:[
+        {id:'foundation_experience', label:'Foundation Strategy Experience', prompts:[
+          'How many relevant foundation impact investing strategy projects?',
+          'Do they show examples of similar scope?',
+          'Evidence of long-term client relationships?',
+          'Is this primarily foundation work or asset management?'
+        ]},
+        {id:'facilitation', label:'Education & Facilitation', prompts:[
+          'Examples of board education work?',
+          'Peer learning facilitation experience?',
+          'Multi-stakeholder engagement with family or community foundations?'
+        ]},
+        {id:'regional', label:'Regional Knowledge', prompts:[
+          'Knowledge of your local impact investing ecosystem?',
+          'Relationships with relevant local peers and intermediaries?',
+          'Understanding of your regional context?'
+        ]}
+      ]
+    },
+    {
+      id:'deliverables', category:'Quality of Deliverables', weight:'25%',
+      dimensions:[
+        {id:'strategy_tools', label:'Strategy Development Tools', prompts:[
+          'Quality of proposed strategy framework?',
+          'Do they include allocation modeling?',
+          'Clear impact measurement approach?',
+          'How sophisticated are the sample tools?'
+        ]},
+        {id:'implementation', label:'Implementation Support', prompts:[
+          'Detail in implementation framework?',
+          'IPS update approach?',
+          'Decision-making processes outlined?',
+          'Advisor evaluation criteria?',
+          'Multi-year work plan quality?'
+        ]},
+        {id:'learning', label:'Learning Materials', prompts:[
+          'Quality of curated learning materials?',
+          'Workshop content customization?',
+          'Access to tools and templates?'
+        ]}
+      ]
+    },
+    {
+      id:'logistics', category:'Cost & Timeline', weight:'10%',
+      dimensions:[
+        {id:'budget', label:'Budget Reasonableness', prompts:[
+          'Within or near the budget range you set?',
+          'Clear value for cost?',
+          'Transparent pricing structure?',
+          'If over budget, is it justified?'
+        ]},
+        {id:'timeline', label:'Timeline Feasibility', prompts:[
+          'Meets the milestones you set in your RFP?',
+          'Shows understanding of your board schedule constraints?',
+          'Appropriate review periods built in?'
+        ]}
+      ]
+    }
+  ]
+};
+
+const QUICK_TAGS = {
+  strengths: ['Strong methodology', 'Deep foundation experience', 'Excellent examples', 'Regional knowledge', 'Great facilitation approach', 'Innovative tools', 'Comprehensive deliverables', 'On budget', 'Realistic timeline'],
+  concerns: ['Limited foundation work', 'Vague methodology', 'Over budget', 'Unrealistic timeline', 'Missing program area focus', 'No implementation support', 'Asset management push', 'Generic approach', 'Poor examples'],
+  assetMgmt: ['Has asset management', 'Strategy focus clear', 'Potential conflict', 'Implementation advantage', 'Need to probe']
+};
+
+function App(){
+  const [view, setView] = useState('evaluate');
+  const [proposals, setProposals] = useState(() => {
+    const saved = localStorage.getItem('foundationToolkitRfpProposals');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [currentProposal, setCurrentProposal] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [feedbackProposal, setFeedbackProposal] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem('foundationToolkitRfpProposals', JSON.stringify(proposals));
+  }, [proposals]);
+
+  const addProposal = (name) => {
+    const newProposal = {
+      id: Date.now(), name, dateAdded: new Date().toISOString(),
+      screening:{}, screeningNotes:{}, screeningPassed:null,
+      detailed:{}, detailedNotes:{}, overallNotes:'',
+      tags:[], decision:null,
+      assetManagement:{ hasCapability:null, signal:null, notes:'' }
+    };
+    setProposals([...proposals, newProposal]);
+    setCurrentProposal(newProposal);
+    setShowAddModal(false);
+  };
+
+  const updateProposal = (updates) => {
+    const updated = { ...currentProposal, ...updates };
+    setCurrentProposal(updated);
+    setProposals(proposals.map(p => p.id === updated.id ? updated : p));
+  };
+
+  const updateScreening = (criteriaId, value) => {
+    const screening = { ...currentProposal.screening, [criteriaId]: value };
+    const allAnswered = RFP_CRITERIA.screening.every(c => screening[c.id] !== undefined);
+    const allPass = RFP_CRITERIA.screening.every(c => screening[c.id] === 'pass');
+    updateProposal({ screening, screeningPassed: allAnswered ? allPass : null });
+  };
+
+  const updateDetailed = (categoryId, dimensionId, assessment) => {
+    const detailed = { ...currentProposal.detailed, [`${categoryId}_${dimensionId}`]: assessment };
+    updateProposal({ detailed });
+  };
+
+  const toggleTag = (tag) => {
+    const tags = currentProposal.tags.includes(tag)
+      ? currentProposal.tags.filter(t => t !== tag)
+      : [...currentProposal.tags, tag];
+    updateProposal({ tags });
+  };
+
+  const generateFeedback = (proposal) => {
+    if(!proposal.screeningPassed){
+      return `Dear ${proposal.name} team,
+
+Thank you for submitting a proposal for our impact investing strategy consulting project. We appreciate the time and effort you invested in responding to our RFP.
+
+After careful review of all submissions, we have decided to move forward with other consultants whose experience and approach more closely align with our specific needs at this stage of our impact investing journey.
+
+We wish you continued success in your work supporting foundations in the impact investing field.
+
+Regards,
+[Your Name]
+[Your Foundation]`;
+    }
+    if(proposal.decision === 'interview'){
+      return `Dear ${proposal.name} team,
+
+Thank you for your thoughtful proposal for our impact investing strategy consulting project. After thorough review, we would like to invite you to the interview stage of our selection process.
+
+Your proposal demonstrated strong alignment with our needs, particularly in.
+${proposal.tags.filter(t => QUICK_TAGS.strengths.includes(t)).map(t => `• ${t}`).join('\n')}
+
+We will be in touch shortly to schedule a conversation with our selection committee.
+
+Regards,
+[Your Name]
+[Your Foundation]`;
+    }
+    return `Dear ${proposal.name} team,
+
+Thank you for your comprehensive proposal for our impact investing strategy consulting project. We received many strong submissions and made difficult choices based on specific experience criteria and strategic fit.
+
+After careful consideration, we have decided to move forward with other consultants for this particular engagement. We appreciate your interest in supporting our impact investing journey and wish you continued success in your important work.
+
+Regards,
+[Your Name]
+[Your Foundation]`;
+  };
+
+  const stats = {
+    total: proposals.length,
+    screened: proposals.filter(p => p.screeningPassed !== null).length,
+    qualified: proposals.filter(p => p.screeningPassed === true).length,
+    interview: proposals.filter(p => p.decision === 'interview').length
+  };
+
+  return (
+    <div className="container">
+      <div className="header">
+        <h1>Investment Advisor RFP Evaluation</h1>
+        <p>A general-purpose evaluation tool for foundations sourcing impact investing strategy advisors.</p>
+      </div>
+
+      <div className="progress-bar">
+        <div className="progress-stats">
+          <div className="stat"><div className="stat-label">Total Proposals</div><div className="stat-value">{stats.total}</div></div>
+          <div className="stat"><div className="stat-label">Screened</div><div className="stat-value">{stats.screened}</div></div>
+          <div className="stat"><div className="stat-label">Qualified</div><div className="stat-value">{stats.qualified}</div></div>
+          <div className="stat"><div className="stat-label">Interview</div><div className="stat-value">{stats.interview}</div></div>
+        </div>
+      </div>
+
+      <div className="tabs">
+        <button className={`tab ${view === 'evaluate' ? 'active' : ''}`} onClick={() => setView('evaluate')}>Evaluate</button>
+        <button className={`tab ${view === 'compare' ? 'active' : ''}`} onClick={() => setView('compare')}>Compare</button>
+        <button className={`tab ${view === 'export' ? 'active' : ''}`} onClick={() => setView('export')}>Export & Feedback</button>
+      </div>
+
+      {view === 'evaluate' && (
+        <div className="main-layout">
+          <div className="sidebar">
+            <h3>Proposals</h3>
+            <button className="btn btn-primary" style={{width:'100%', marginBottom:'14px'}} onClick={() => setShowAddModal(true)}>Add Proposal</button>
+            <div className="proposal-list">
+              {proposals.map(proposal => (
+                <div key={proposal.id}
+                  className={`proposal-item ${currentProposal?.id === proposal.id ? 'active' : ''} ${proposal.screeningPassed === false ? 'screened-out' : ''} ${proposal.decision === 'interview' ? 'interview' : ''}`}
+                  onClick={() => setCurrentProposal(proposal)}>
+                  <div className="proposal-name">{proposal.name}</div>
+                  <div className="proposal-status">
+                    {proposal.screeningPassed === false && 'Not Qualified'}
+                    {proposal.screeningPassed === true && proposal.decision === 'interview' && 'Interview'}
+                    {proposal.screeningPassed === true && proposal.decision === 'decline' && 'Decline'}
+                    {proposal.screeningPassed === true && !proposal.decision && 'Qualified'}
+                    {proposal.screeningPassed === null && 'Not Screened'}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="main-content">
+            {currentProposal ? (
+              <ProposalEvaluation
+                proposal={currentProposal}
+                updateScreening={updateScreening}
+                updateDetailed={updateDetailed}
+                updateProposal={updateProposal}
+                toggleTag={toggleTag}
+                onGenerateFeedback={() => { setFeedbackProposal(currentProposal); setShowFeedbackModal(true); }}
+              />
+            ) : (
+              <div className="empty-state">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                <p>Select a proposal to begin evaluation, or add your first proposal.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {view === 'compare' && <CompareView proposals={proposals.filter(p => p.screeningPassed === true)} />}
+
+      {view === 'export' && (
+        <ExportView proposals={proposals}
+          onGenerateFeedback={(p) => { setFeedbackProposal(p); setShowFeedbackModal(true); }} />
+      )}
+
+      {showAddModal && <AddProposalModal onAdd={addProposal} onClose={() => setShowAddModal(false)} />}
+      {showFeedbackModal && feedbackProposal && (
+        <FeedbackModal proposal={feedbackProposal} feedback={generateFeedback(feedbackProposal)}
+          onClose={() => { setShowFeedbackModal(false); setFeedbackProposal(null); }} />
+      )}
+    </div>
+  );
+}
+
+function ProposalEvaluation({ proposal, updateScreening, updateDetailed, updateProposal, toggleTag, onGenerateFeedback }){
+  const [phase, setPhase] = useState('screening');
+  return (
+    <div>
+      <div style={{display:'flex', justifyContent:'space-between', alignItems:'start', marginBottom:'24px', flexWrap:'wrap', gap:'12px'}}>
+        <div>
+          <h2 style={{fontSize:'22px', fontWeight:800, marginBottom:'4px', color:'var(--accent)'}}>{proposal.name}</h2>
+          <p style={{color:'var(--ink)', fontSize:'13px', opacity:.75}}>Added {new Date(proposal.dateAdded).toLocaleDateString()}</p>
+        </div>
+        <div style={{display:'flex', gap:'8px', flexWrap:'wrap'}}>
+          <button className={`btn ${phase === 'screening' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setPhase('screening')}>Screening</button>
+          <button className={`btn ${phase === 'detailed' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setPhase('detailed')} disabled={!proposal.screeningPassed}>Detailed Review</button>
+          <button className={`btn ${phase === 'decision' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setPhase('decision')}>Decision</button>
+        </div>
+      </div>
+
+      {phase === 'screening' && <ScreeningPhase proposal={proposal} updateScreening={updateScreening} updateProposal={updateProposal} />}
+      {phase === 'detailed' && <DetailedPhase proposal={proposal} updateDetailed={updateDetailed} updateProposal={updateProposal} toggleTag={toggleTag} />}
+      {phase === 'decision' && <DecisionPhase proposal={proposal} updateProposal={updateProposal} toggleTag={toggleTag} onGenerateFeedback={onGenerateFeedback} />}
+    </div>
+  );
+}
+
+function ScreeningPhase({ proposal, updateScreening, updateProposal }){
+  return (
+    <div>
+      {RFP_CRITERIA.screening.map(criteria => (
+        <div key={criteria.id} className="evaluation-section">
+          <div className="section-header">
+            <div>
+              <div className="section-title">{criteria.label}</div>
+              <div className="section-subtitle">{criteria.description}</div>
+            </div>
+          </div>
+          <div className="criteria-group">
+            <div className="criteria-description">
+              <strong>Key Questions</strong>
+              <ul>{criteria.questions.map((q, i) => <li key={i}>{q}</li>)}</ul>
+            </div>
+            <div className="assessment-options">
+              <button className={`assessment-btn ${proposal.screening[criteria.id] === 'pass' ? 'strong' : ''}`}
+                onClick={() => updateScreening(criteria.id, 'pass')}>Pass</button>
+              <button className={`assessment-btn ${proposal.screening[criteria.id] === 'fail' ? 'weak' : ''}`}
+                onClick={() => updateScreening(criteria.id, 'fail')}>Fail</button>
+            </div>
+            <textarea className="notes-area" placeholder="Notes and observations..."
+              value={proposal.screeningNotes[criteria.id] || ''}
+              onChange={(e) => updateProposal({ screeningNotes: { ...proposal.screeningNotes, [criteria.id]: e.target.value } })} />
+          </div>
+        </div>
+      ))}
+      {proposal.screeningPassed !== null && (
+        <div className={proposal.screeningPassed ? 'result-pass' : 'result-fail'}>
+          <strong>{proposal.screeningPassed ? '✓ Qualifies for Detailed Review' : '✗ Does Not Qualify'}</strong>
+          <p style={{marginTop:'6px'}}>{proposal.screeningPassed
+            ? 'This proposal meets threshold criteria and should advance to detailed evaluation.'
+            : 'This proposal does not meet one or more threshold criteria.'}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function DetailedPhase({ proposal, updateDetailed, updateProposal, toggleTag }){
+  return (
+    <div>
+      {RFP_CRITERIA.detailed.map(category => (
+        <div key={category.id} className="evaluation-section">
+          <div className="section-header">
+            <div>
+              <div className="section-title">{category.category}</div>
+              <div className="section-subtitle">RFP Weight {category.weight}</div>
+            </div>
+          </div>
+          {category.dimensions.map(dimension => (
+            <div key={dimension.id} className="criteria-group">
+              <label className="criteria-label">{dimension.label}</label>
+              <div className="criteria-description">
+                <strong>Consider</strong>
+                <ul>{dimension.prompts.map((p, i) => <li key={i}>{p}</li>)}</ul>
+              </div>
+              <div className="assessment-options">
+                <button className={`assessment-btn ${proposal.detailed[`${category.id}_${dimension.id}`] === 'strong' ? 'strong' : ''}`}
+                  onClick={() => updateDetailed(category.id, dimension.id, 'strong')}>Strong</button>
+                <button className={`assessment-btn ${proposal.detailed[`${category.id}_${dimension.id}`] === 'solid' ? 'selected' : ''}`}
+                  onClick={() => updateDetailed(category.id, dimension.id, 'solid')}>Solid</button>
+                <button className={`assessment-btn ${proposal.detailed[`${category.id}_${dimension.id}`] === 'weak' ? 'weak' : ''}`}
+                  onClick={() => updateDetailed(category.id, dimension.id, 'weak')}>Weak</button>
+              </div>
+              <textarea className="notes-area" placeholder="Evidence, examples, specific observations..."
+                value={proposal.detailedNotes[`${category.id}_${dimension.id}`] || ''}
+                onChange={(e) => updateProposal({ detailedNotes: { ...proposal.detailedNotes, [`${category.id}_${dimension.id}`]: e.target.value } })} />
+            </div>
+          ))}
+        </div>
+      ))}
+
+      <div className="evaluation-section">
+        <div className="section-header"><div className="section-title">Quick Tags</div></div>
+        <div style={{marginBottom:'18px'}}>
+          <strong style={{fontSize:'13px', color:'var(--accent)'}}>Strengths</strong>
+          <div className="quick-tags">
+            {QUICK_TAGS.strengths.map(tag => (
+              <span key={tag} className={`tag ${proposal.tags.includes(tag) ? 'active' : ''}`} onClick={() => toggleTag(tag)}>{tag}</span>
+            ))}
+          </div>
+        </div>
+        <div style={{marginBottom:'18px'}}>
+          <strong style={{fontSize:'13px', color:'var(--accent-orange)'}}>Concerns</strong>
+          <div className="quick-tags">
+            {QUICK_TAGS.concerns.map(tag => (
+              <span key={tag} className={`tag ${proposal.tags.includes(tag) ? 'active' : ''}`} onClick={() => toggleTag(tag)}>{tag}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DecisionPhase({ proposal, updateProposal, toggleTag, onGenerateFeedback }){
+  return (
+    <div>
+      <div className="evaluation-section">
+        <div className="section-header"><div className="section-title">Asset Management Considerations</div></div>
+        <div className="criteria-group">
+          <label className="criteria-label">Does this firm have asset management capabilities?</label>
+          <div className="assessment-options">
+            <button className={`assessment-btn ${proposal.assetManagement.hasCapability === true ? 'selected' : ''}`}
+              onClick={() => updateProposal({ assetManagement: { ...proposal.assetManagement, hasCapability:true }})}>Yes</button>
+            <button className={`assessment-btn ${proposal.assetManagement.hasCapability === false ? 'selected' : ''}`}
+              onClick={() => updateProposal({ assetManagement: { ...proposal.assetManagement, hasCapability:false }})}>No</button>
+          </div>
+        </div>
+        {proposal.assetManagement.hasCapability && (
+          <div className="criteria-group">
+            <label className="criteria-label">Signal Assessment</label>
+            <div className="assessment-options">
+              <button className={`assessment-btn ${proposal.assetManagement.signal === 'green' ? 'strong' : ''}`}
+                onClick={() => updateProposal({ assetManagement: { ...proposal.assetManagement, signal:'green' }})}>Green Light</button>
+              <button className={`assessment-btn ${proposal.assetManagement.signal === 'yellow' ? 'selected' : ''}`}
+                onClick={() => updateProposal({ assetManagement: { ...proposal.assetManagement, signal:'yellow' }})}>Yellow Light</button>
+              <button className={`assessment-btn ${proposal.assetManagement.signal === 'red' ? 'weak' : ''}`}
+                onClick={() => updateProposal({ assetManagement: { ...proposal.assetManagement, signal:'red' }})}>Red Light</button>
+            </div>
+            <div className="signal-info">
+              <strong>Green.</strong> Separated services, no sales pitch, could accelerate alignment.<br/>
+              <strong>Yellow.</strong> Mentions capabilities but does not push, needs probing.<br/>
+              <strong>Red.</strong> Reads like lead generation, predetermined recommendations.
+            </div>
+            <textarea className="notes-area" style={{marginTop:'12px'}} placeholder="Asset management observations, concerns, interview questions..."
+              value={proposal.assetManagement.notes}
+              onChange={(e) => updateProposal({ assetManagement: { ...proposal.assetManagement, notes:e.target.value }})} />
+          </div>
+        )}
+        <div style={{marginTop:'18px'}}>
+          <strong style={{fontSize:'13px', color:'var(--secondary-purple)'}}>Asset Management Tags</strong>
+          <div className="quick-tags">
+            {QUICK_TAGS.assetMgmt.map(tag => (
+              <span key={tag} className={`tag ${proposal.tags.includes(tag) ? 'active' : ''}`} onClick={() => toggleTag(tag)}>{tag}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="evaluation-section">
+        <div className="section-header"><div className="section-title">Overall Assessment & Decision</div></div>
+        <div className="criteria-group">
+          <textarea className="notes-area" style={{minHeight:'140px'}} placeholder="Overall synthesis, key differentiators, final thoughts..."
+            value={proposal.overallNotes}
+            onChange={(e) => updateProposal({ overallNotes: e.target.value })} />
+        </div>
+      </div>
+
+      <div className="action-buttons">
+        <button className={`btn ${proposal.decision === 'interview' ? 'btn-success' : 'btn-secondary'}`}
+          onClick={() => updateProposal({ decision: proposal.decision === 'interview' ? null : 'interview' })}>
+          {proposal.decision === 'interview' ? '✓ ' : ''}Invite to Interview
+        </button>
+        <button className={`btn ${proposal.decision === 'maybe' ? 'btn-primary' : 'btn-secondary'}`}
+          onClick={() => updateProposal({ decision: proposal.decision === 'maybe' ? null : 'maybe' })}>
+          {proposal.decision === 'maybe' ? '✓ ' : ''}Maybe / Reserve
+        </button>
+        <button className={`btn ${proposal.decision === 'decline' ? 'btn-danger' : 'btn-secondary'}`}
+          onClick={() => updateProposal({ decision: proposal.decision === 'decline' ? null : 'decline' })}>
+          {proposal.decision === 'decline' ? '✓ ' : ''}Decline
+        </button>
+        <button className="btn btn-secondary" onClick={onGenerateFeedback} style={{marginLeft:'auto'}}>Generate Feedback</button>
+      </div>
+    </div>
+  );
+}
+
+function CompareView({ proposals }){
+  if(proposals.length === 0){
+    return (<div className="main-content"><div className="empty-state"><p>No qualified proposals to compare yet.</p></div></div>);
+  }
+  return (
+    <div className="main-content">
+      <h2 style={{fontSize:'18px', fontWeight:800, marginBottom:'16px', color:'var(--accent)'}}>Qualified Proposals Comparison</h2>
+      <div className="comparison-view">
+        {proposals.map(proposal => (
+          <div key={proposal.id} className="comparison-card">
+            <h4>{proposal.name}</h4>
+            <div style={{marginTop:'10px', fontSize:'13px'}}><strong>Decision.</strong> {proposal.decision || 'Pending'}</div>
+            {proposal.tags.length > 0 && (
+              <div style={{marginTop:'10px'}}>
+                <strong style={{fontSize:'13px'}}>Tags</strong>
+                <div className="quick-tags" style={{marginTop:'6px'}}>
+                  {proposal.tags.slice(0, 5).map(tag => (<span key={tag} className="tag" style={{cursor:'default'}}>{tag}</span>))}
+                </div>
+              </div>
+            )}
+            {proposal.assetManagement.hasCapability && (
+              <div style={{marginTop:'10px', padding:'8px 12px', borderRadius:'6px', fontSize:'12px',
+                background: proposal.assetManagement.signal === 'green' ? 'var(--secondary-green)' : proposal.assetManagement.signal === 'yellow' ? 'var(--soft-cream)' : 'var(--warn-bg)'}}>
+                Asset Mgmt. {proposal.assetManagement.signal?.toUpperCase() || 'Not Assessed'}
+              </div>
+            )}
+            {proposal.overallNotes && (
+              <div style={{marginTop:'12px', fontSize:'13px', color:'var(--ink)', borderTop:'1px solid var(--line)', paddingTop:'10px'}}>
+                {proposal.overallNotes.slice(0, 150)}...
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ExportView({ proposals, onGenerateFeedback }){
+  const downloadJSON = () => {
+    const dataStr = JSON.stringify(proposals, null, 2);
+    const blob = new Blob([dataStr], { type:'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `rfp-evaluation-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+  };
+
+  const downloadCSV = () => {
+    const headers = ['Name', 'Screening', 'Decision', 'Asset Mgmt', 'Tags', 'Overall Notes'];
+    const rows = proposals.map(p => [
+      p.name,
+      p.screeningPassed ? 'Qualified' : 'Not Qualified',
+      p.decision || 'Pending',
+      p.assetManagement.hasCapability ? p.assetManagement.signal || 'Yes' : 'No',
+      p.tags.join('; '),
+      p.overallNotes.replace(/"/g, '""')
+    ]);
+    const csv = [headers.join(','), ...rows.map(row => row.map(cell => `"${cell}"`).join(','))].join('\n');
+    const blob = new Blob([csv], { type:'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `rfp-evaluation-${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+  };
+
+  return (
+    <div className="main-content">
+      <h2 style={{fontSize:'18px', fontWeight:800, marginBottom:'16px', color:'var(--accent)'}}>Export & Feedback Generation</h2>
+      <div className="export-section">
+        <h4>Export All Data</h4>
+        <div style={{display:'flex', gap:'10px', marginTop:'10px'}}>
+          <button className="btn btn-primary" onClick={downloadJSON}>Download JSON</button>
+          <button className="btn btn-primary" onClick={downloadCSV}>Download CSV</button>
+        </div>
+      </div>
+      <div style={{marginTop:'24px'}}>
+        <h3 style={{fontSize:'16px', fontWeight:700, color:'var(--secondary-purple)', marginBottom:'14px'}}>Generate Feedback Letters</h3>
+        {['interview', 'decline', null].map(status => {
+          const filtered = proposals.filter(p => status === null
+            ? (p.screeningPassed === false || (!p.decision && p.screeningPassed))
+            : p.decision === status);
+          if(filtered.length === 0) return null;
+          const label = status === 'interview' ? 'Interview Invitations' : status === 'decline' ? 'Decline Letters' : 'Not Qualified';
+          return (
+            <div key={status || 'notqualified'} style={{marginBottom:'18px'}}>
+              <h4 style={{fontSize:'14px', fontWeight:700, marginBottom:'10px'}}>{label} ({filtered.length})</h4>
+              {filtered.map(proposal => (
+                <div key={proposal.id} style={{display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 14px', background:'var(--soft-gray)', borderRadius:'8px', marginBottom:'6px'}}>
+                  <span style={{fontSize:'14px'}}>{proposal.name}</span>
+                  <button className="btn btn-secondary" onClick={() => onGenerateFeedback(proposal)}>Generate</button>
+                </div>
+              ))}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function AddProposalModal({ onAdd, onClose }){
+  const [name, setName] = useState('');
+  const handleSubmit = (e) => { e.preventDefault(); if(name.trim()){ onAdd(name.trim()); setName(''); } };
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
+        <h3>Add New Proposal</h3>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label className="form-label">Consultant or Firm Name</label>
+            <input type="text" className="form-input" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter consultant or firm name" autoFocus />
+          </div>
+          <div style={{display:'flex', gap:'10px', marginTop:'18px'}}>
+            <button type="submit" className="btn btn-primary">Add Proposal</button>
+            <button type="button" className="btn btn-secondary" onClick={onClose}>Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+function FeedbackModal({ proposal, feedback, onClose }){
+  const copyToClipboard = () => navigator.clipboard.writeText(feedback);
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
+        <h3>Feedback Letter. {proposal.name}</h3>
+        <div className="feedback-preview">{feedback}</div>
+        <div style={{display:'flex', gap:'10px'}}>
+          <button className="btn btn-primary" onClick={copyToClipboard}>Copy to Clipboard</button>
+          <button className="btn btn-secondary" onClick={onClose}>Close</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.render(<App />, document.getElementById('root'));
+</script>
+</body>
+</html>
