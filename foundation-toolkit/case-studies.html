@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Georgia Foundation Impact Investor Case Studies</title>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#149a49;
+  --secondary-purple:#4750a2;
+  --accent-gold:#eec61a;
+  --accent-teal:#53c3c2;
+  --accent-orange:#f15922;
+  --soft-cream:#fcf3cf;
+  --soft-gray:#f4f5f7;
+  --secondary-green:#e0f1d9;
+  --warn-bg:#f8dcd3;
+  --primary-blue:#dde0fe;
+  --ink:#000;
+  --line:#e6e8ec;
+  --line-dark:#cfd2d8;
+  --shadow:0 4px 14px rgba(0,0,0,.05);
+}
+*{margin:0; padding:0; box-sizing:border-box}
+body{
+  font-family:'Familjen Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background:#fff;
+  color:var(--ink);
+  font-size:15px;
+  line-height:1.4;
+}
+.container{max-width:1200px; margin:0 auto; padding:24px}
+
+header{
+  background:#fff;
+  border-bottom:1px solid var(--line);
+  padding:32px 0;
+  margin-bottom:24px;
+}
+header h1{
+  font-size:26px; font-weight:800; color:var(--accent);
+  text-align:center; margin-bottom:10px; line-height:1.2;
+}
+.header-subtitle{
+  text-align:center; font-size:15px; color:var(--ink);
+  max-width:780px; margin:0 auto;
+}
+
+.foundation-selector{
+  display:grid; grid-template-columns:repeat(4, 1fr); gap:10px;
+  margin-bottom:30px;
+}
+.foundation-button{
+  padding:16px 14px; background:#fff; border:1px solid var(--line);
+  border-radius:10px; cursor:pointer; transition:.15s;
+  font-family:inherit; text-align:left; color:var(--ink);
+}
+.foundation-button:hover{background:var(--secondary-green); border-color:var(--accent)}
+.foundation-button.active{background:var(--accent); color:#fff; border-color:var(--accent)}
+.foundation-button h4{margin-bottom:6px; font-size:14px; font-weight:700; line-height:1.25}
+.foundation-button p{font-size:12px; opacity:.85}
+
+.foundation-content{display:none}
+.foundation-content.active{display:block; animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)}}
+
+.profile-header{
+  background:#fff; border:1px solid var(--line); border-radius:12px;
+  overflow:hidden; margin-bottom:20px;
+}
+.profile-title-bar{
+  background:var(--accent); color:#fff; padding:22px 26px;
+}
+.profile-title{font-size:24px; font-weight:800; margin:0}
+.profile-grid{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
+  gap:18px; padding:22px 26px; background:var(--soft-gray);
+}
+.profile-item{display:flex; flex-direction:column}
+.profile-label{
+  font-size:11px; color:var(--secondary-purple); margin-bottom:4px;
+  text-transform:uppercase; letter-spacing:.06em; font-weight:700;
+}
+.profile-value{font-weight:600; color:var(--ink); font-size:14px}
+
+.section{
+  background:#fff; padding:24px 26px; border-radius:12px;
+  margin-bottom:18px; border:1px solid var(--line);
+}
+.section-title{
+  font-size:18px; font-weight:700; color:var(--secondary-purple);
+  margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--line);
+}
+
+.motivation-list{list-style:none; padding:0}
+.motivation-item{
+  padding:18px 20px; margin-bottom:14px;
+  background:#fff; border:1px solid var(--line);
+  border-left:3px solid var(--accent); border-radius:8px;
+  font-size:14px; line-height:1.55;
+}
+.motivation-item h4{
+  color:var(--accent); margin-bottom:8px; font-size:15px; font-weight:700;
+}
+
+.investment-overview{
+  background:var(--soft-cream);
+  border:1px solid #f0e5a8; border-left:4px solid var(--accent-gold);
+  padding:20px; border-radius:10px; margin:16px 0;
+}
+.investment-overview h4{
+  color:var(--secondary-purple); margin-bottom:8px; font-size:15px; font-weight:700;
+}
+
+.investment-terms{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));
+  gap:12px; margin-top:14px;
+}
+.term-item{
+  text-align:center; padding:14px 12px;
+  background:#fff; border-radius:8px; border:1px solid var(--line);
+}
+.term-value{
+  font-size:22px; font-weight:800; color:var(--accent-gold);
+  line-height:1; margin-bottom:6px;
+}
+.term-label{font-size:12px; color:var(--ink); font-weight:600}
+
+.investment-list{list-style:none; padding:0; margin-top:14px}
+.investment-list li{
+  padding:12px 16px; margin-bottom:8px; background:#fff;
+  border:1px solid var(--line); border-left:3px solid var(--accent-gold);
+  border-radius:8px; font-size:14px;
+}
+
+.process-steps{counter-reset:step-counter; list-style:none; padding:0}
+.process-step{
+  position:relative; padding-left:42px; margin-bottom:14px;
+  counter-increment:step-counter; font-size:14px; line-height:1.55;
+}
+.process-step:before{
+  content:counter(step-counter);
+  position:absolute; left:0; top:0;
+  width:28px; height:28px; background:var(--accent); color:#fff;
+  border-radius:6px; display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:13px;
+}
+
+.lesson-card{
+  background:var(--soft-cream); border-left:4px solid var(--accent-gold);
+  padding:18px 20px; border-radius:8px; margin-bottom:14px;
+}
+.lesson-title{
+  font-weight:700; color:var(--accent-orange); margin-bottom:10px;
+  font-size:15px; line-height:1.3;
+}
+.lesson-content{color:var(--ink); line-height:1.55; font-size:14px}
+
+.impact-metrics{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
+  gap:12px; margin:18px 0;
+}
+.metric-card{
+  background:#fff; padding:16px; border-radius:10px; text-align:center;
+  border:1px solid var(--line);
+}
+.metric-value{
+  font-size:26px; font-weight:800; color:var(--accent);
+  line-height:1; margin-bottom:6px;
+}
+.metric-label{color:var(--ink); font-size:12px; font-weight:600}
+
+.fund-comparison{overflow-x:auto; margin:18px 0}
+.fund-table{
+  width:100%; border-collapse:collapse; background:#fff;
+  border-radius:10px; overflow:hidden; border:1px solid var(--line);
+}
+.fund-table th{
+  background:var(--soft-gray); color:var(--secondary-purple);
+  padding:12px 14px; text-align:left; font-weight:700; font-size:12px;
+  text-transform:uppercase; letter-spacing:.05em;
+  border-bottom:1px solid var(--line);
+}
+.fund-table td{
+  padding:12px 14px; border-bottom:1px solid var(--line);
+  font-size:14px; vertical-align:top;
+}
+.fund-table tr:last-child td{border-bottom:none}
+.fund-table tr:hover{background:var(--soft-gray)}
+
+.highlight-box{
+  background:var(--primary-blue); border:1px solid #bfc4f3;
+  border-left:4px solid var(--secondary-purple);
+  padding:18px 20px; border-radius:10px; margin:16px 0;
+}
+.highlight-box h4{
+  color:var(--secondary-purple); margin-bottom:8px; font-size:15px; font-weight:700;
+}
+
+.portfolio-item{
+  padding:18px 20px; background:#fff; border:1px solid var(--line);
+  border-left:3px solid var(--secondary-purple);
+  border-radius:8px; margin-bottom:12px; font-size:14px; line-height:1.55;
+}
+.portfolio-item h4{
+  color:var(--secondary-purple); margin-bottom:8px; font-size:15px; font-weight:700;
+}
+
+ul{padding-left:20px; margin:10px 0}
+li{margin-bottom:6px; line-height:1.55; font-size:14px}
+
+@media(max-width:900px){
+  .foundation-selector{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .foundation-selector{grid-template-columns:1fr}
+  .container{padding:16px}
+  header{padding:22px 0}
+  header h1{font-size:22px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <h1>Georgia Foundation Impact Investor Case Studies</h1>
+    <p class="header-subtitle">Exploring how four Georgia foundations have pioneered impact investing through diverse approaches, capital strategies, and lessons learned.</p>
+  </div>
+</header>
+
+<div class="container">
+  <div class="foundation-selector">
+    <button class="foundation-button active" onclick="showFoundation('sapelo', this)">
+      <h4>The Sapelo Foundation</h4>
+      <p>$35M Private Foundation. Rural Focus.</p>
+    </button>
+    <button class="foundation-button" onclick="showFoundation('cfga', this)">
+      <h4>Community Foundation for Greater Atlanta</h4>
+      <p>$1.2B Community Foundation. Metro Atlanta.</p>
+    </button>
+    <button class="foundation-button" onclick="showFoundation('bradley', this)">
+      <h4>Bradley-Turner Foundation</h4>
+      <p>$105M Private Foundation. Chattahoochee Valley.</p>
+    </button>
+    <button class="foundation-button" onclick="showFoundation('william', this)">
+      <h4>William Josef Foundation</h4>
+      <p>$48M Private Foundation. Metro Atlanta.</p>
+    </button>
+  </div>
+
+  <!-- SAPELO FOUNDATION -->
+  <div id="sapelo" class="foundation-content active">
+    <div class="profile-header">
+      <div class="profile-title-bar"><h2 class="profile-title">The Sapelo Foundation</h2></div>
+      <div class="profile-grid">
+        <div class="profile-item"><span class="profile-label">Location</span><span class="profile-value">Savannah, GA</span></div>
+        <div class="profile-item"><span class="profile-label">Foundation Type</span><span class="profile-value">Private Foundation (Family)</span></div>
+        <div class="profile-item"><span class="profile-label">Founded</span><span class="profile-value">1949</span></div>
+        <div class="profile-item"><span class="profile-label">Asset Size</span><span class="profile-value">$35 Million</span></div>
+        <div class="profile-item"><span class="profile-label">Geographic Focus</span><span class="profile-value">State of Georgia (Rural Focus)</span></div>
+        <div class="profile-item"><span class="profile-label">Staff Size</span><span class="profile-value">2 FTEs</span></div>
+        <div class="profile-item"><span class="profile-label">Impact Investing Since</span><span class="profile-value">2020</span></div>
+        <div class="profile-item"><span class="profile-label">Strategy</span><span class="profile-value">Local Impact Investing (PRIs)</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">What Motivated This Foundation to Become an Impact Investor?</h3>
+      <ul class="motivation-list">
+        <li class="motivation-item">
+          <h4>Acknowledging grant dollars alone cannot accomplish systemic change</h4>
+          Under prior strategic plans, The Sapelo Foundation leveraged its grantmaking, public policy, and advocacy tools to fulfill its mission of a "just Georgia, whereby all Georgians, especially marginalized communities, communities of color, and rural communities, live in healthy environments, have access to the resources they need to thrive, and engage in a just democracy." In 2019, the Foundation adopted a five-year strategic plan that reasserted its commitment to systemic change and identified that investment assets, in addition to grant dollars, must be marshalled for mission fulfillment.
+        </li>
+        <li class="motivation-item">
+          <h4>Tapping into the interest of individual board champions</h4>
+          The Sapelo Foundation, Z. Smith Reynolds Foundation, and Mary Reynolds Babcock Foundation are all philanthropic institutions rooted in the wealth generated by the R.J. Reynolds Tobacco Company. Each foundation operates independently with its own mission and geographic focus. Sapelo in Georgia, Z. Smith Reynolds in North Carolina, and Mary Reynolds Babcock across the broader Southern region. They share a common legacy, and in some cases, board-level overlap across the institutions. Several family members, including those with connections to MRBF, gained exposure to the field-level growth of philanthropic impact investing, and these champions became important internal advocates for The Sapelo Foundation to embrace the practice.
+        </li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">Where Does the Capital Come From?</h3>
+      <p>In 2019, the Board of Trustees laid the groundwork for a complete mission-aligned approach. While the Foundation's journey is just beginning, it's committed to aligning 100% of its capital, grants (at least 5% of financial capital), endowment (95% of financial capital), human, partnership, advocacy, convening, and more, with mission.</p>
+
+      <div class="investment-overview">
+        <h4>Initial PRI Program Structure</h4>
+        <p>The Foundation elected to carve out a fixed amount of its endowment ($600,000) to make PRI loans. As part of this process, the Foundation created a supplemental PRI Policy to establish.</p>
+        <div class="investment-terms">
+          <div class="term-item"><div class="term-value">$100K</div><div class="term-label">Maximum Loan</div></div>
+          <div class="term-item"><div class="term-value">3 Years</div><div class="term-label">Standard Term</div></div>
+          <div class="term-item"><div class="term-value">1%</div><div class="term-label">Interest Rate</div></div>
+          <div class="term-item"><div class="term-value">$600K</div><div class="term-label">Total Allocated</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">What Types of Investments Are They Making?</h3>
+      <p>The Sapelo Foundation provides low-interest loans to qualified non-profit organizations to further its charitable mission by investing in organizations and programs that provide sustainable benefits for communities, especially the underserved, that align with its mission to increase environmental protection, social prosperity, and civic power in Georgia.</p>
+
+      <div class="highlight-box">
+        <h4>Strategic Benefits of CDFI Focus</h4>
+        <ul>
+          <li>Allows The Sapelo Foundation to leverage its modest investments alongside other sources of public and private capital.</li>
+          <li>CDFIs and capital intermediaries have professional investment management systems, providing peace of mind that repayment, investment monitoring, and required investor reporting will be delivered as expected.</li>
+        </ul>
+      </div>
+
+      <h4 style="margin-top:20px; color:var(--secondary-purple); font-size:15px; font-weight:700">Current PRI Portfolio (as of 2024)</h4>
+      <ul class="investment-list">
+        <li>Access to Capital for Entrepreneurs (ACE)</li>
+        <li>Albany Community Together</li>
+        <li>Capital Good Fund</li>
+        <li>Georgia Micro Enterprise Network</li>
+        <li>NeighborWorks Columbus</li>
+        <li>Working Farms Fund</li>
+      </ul>
+
+      <div class="portfolio-item" style="margin-top:18px">
+        <h4>Case Study. Albany Community Together (ACT!)</h4>
+        <p>In May 2018, The Sapelo Foundation awarded a collaborative grant to both ACT! and its sister CDFI, Access to Capital for Entrepreneurs (ACE). Then, in October 2019, staff and trustees traveled to Albany for a site visit with ACT! In September 2020, The Sapelo Foundation awarded ACT! with its first Program Related Investment (PRI), in the form of a $100,000 loan, for a duration of three years.</p>
+        <p style="margin-top:10px"><strong>Impact.</strong> This capital infusion allowed ACT! to grow its entrepreneurial lending activity and enhanced ACT!'s capital raising efforts. Ultimately, the Foundation's modest $100,000 loan helped ACT! secure an additional $2.1M of private investment and $250,000 of grant support from the Nathan Cummings Foundation.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">How Are Investment Decisions Made?</h3>
+      <ol class="process-steps">
+        <li class="process-step">Available PRI funding is determined annually during the Foundation's budgeting process. The Foundation invests in batches based on capital availability.</li>
+        <li class="process-step">Interested prospective investment partners must submit a Letter of Introduction by July 15.</li>
+        <li class="process-step">Organizations deemed to be a good fit will be asked to submit a full application with additional financial information and join the Foundation for a virtual site visit.</li>
+        <li class="process-step">Historically, the Foundation has engaged external impact investing advisors to conduct formal due diligence.</li>
+        <li class="process-step">The Board of Trustees makes all investment decisions.</li>
+        <li class="process-step">Foundation staff communicate investment decisions to prospective investees (generally in November).</li>
+      </ol>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">Important Lessons Learned</h3>
+      <div class="lesson-card">
+        <div class="lesson-title">Managing expectations around OCIO or investment manager involvement with MRIs and PRIs</div>
+        <div class="lesson-content">As a family foundation staffed by a small team, The Sapelo Foundation relies on OCIOs and external investment advisors for endowment management. Early on, the Foundation assumed that the OCIO could, rather easily, support future MRI investing as well as ESG or socially responsible portfolio construction. Despite the OCIO's willingness and interest, it became clear that the traditional investment management model does not necessarily facilitate this. OCIO and investment management firms often lack the bandwidth to source mission-aligned investment opportunities, especially for place-based foundations. In response, the Foundation recognizes that both staff and board members may be asked to take a more proactive role in sourcing prospective MRIs.</div>
+      </div>
+      <div class="lesson-card">
+        <div class="lesson-title">Right-sizing impact investment guardrails to the source of funds</div>
+        <div class="lesson-content">During its most recent strategic planning process, the Foundation conducted interviews with its PRI recipients. Several smaller partners highlighted how PRIs were an important leverage factor for raising additional capital. Other partners, often with larger balance sheets and longer operating tenures, reflected that small investment amounts have a somewhat limited impact on their ability to grow and scale programming and lending. <br><br>Moving forward, the Foundation is reconsidering not just the amount of the endowment allocated for PRIs but also the size of single transactions. In essence, the Foundation is asking, "Is it better to invest smaller amounts in a greater number of partners, or should we drive more capital into fewer, more targeted partners?" There isn't a right answer, but philanthropic impact investors have a "clean slate" when designing impact investing programs. It's important to hold space for reflection and reiteration over time.</div>
+      </div>
+      <div class="lesson-card">
+        <div class="lesson-title">Growing the broader impact investing ecosystem is important for smaller-dollar investors</div>
+        <div class="lesson-content">Given its relatively modest endowment, The Sapelo Foundation acknowledges it may never be able to invest large amounts of capital in single PRI transactions. As such, it's in the Foundation's interest to grow a robust pool of philanthropic impact investors across Georgia. The Foundation has supported field-building efforts and frequently plugs into networks like the Georgia Social Impact Collaborative, Mission Investors Exchange, and Georgia Grantmakers Alliance. Moving forward, The Sapelo Foundation may double down on these efforts to help peer foundations embrace impact investing practices. More philanthropic co-investors will enable the Foundation to continue making smaller investments, and more deals can get done across Georgia.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMMUNITY FOUNDATION FOR GREATER ATLANTA -->
+  <div id="cfga" class="foundation-content">
+    <div class="profile-header">
+      <div class="profile-title-bar"><h2 class="profile-title">Community Foundation for Greater Atlanta</h2></div>
+      <div class="profile-grid">
+        <div class="profile-item"><span class="profile-label">Location</span><span class="profile-value">Atlanta, GA</span></div>
+        <div class="profile-item"><span class="profile-label">Foundation Type</span><span class="profile-value">Community Foundation</span></div>
+        <div class="profile-item"><span class="profile-label">Founded</span><span class="profile-value">1951</span></div>
+        <div class="profile-item"><span class="profile-label">Asset Size</span><span class="profile-value">$1.2 Billion</span></div>
+        <div class="profile-item"><span class="profile-label">Geographic Focus</span><span class="profile-value">Metro Atlanta Region</span></div>
+        <div class="profile-item"><span class="profile-label">Staff Size</span><span class="profile-value">59 FTEs</span></div>
+        <div class="profile-item"><span class="profile-label">Impact Investing Since</span><span class="profile-value">2018</span></div>
+        <div class="profile-item"><span class="profile-label">Strategy</span><span class="profile-value">Local Impact Investing. Socially Responsible.</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">What Motivated This Foundation to Become an Impact Investor?</h3>
+      <ul class="motivation-list">
+        <li class="motivation-item">
+          <h4>Bringing a different tool to critical community leadership issues</h4>
+          CFGA recognized that some community challenges, like housing, food security, and growing local businesses, are better suited for investing than grantmaking. In its community leadership capacity, CFGA identified that it could play an outsized role as an aggregator and provider of flexible, catalytic investment resources, particularly in the areas of affordable housing, community development, and placemaking.
+        </li>
+        <li class="motivation-item">
+          <h4>Growing pools of discretionary capital</h4>
+          CFGA, like many community foundations, sees local impact investing as a strategic tool to grow its pools of discretionary capital, which are often far less available than donor-advised funds and designated giving areas. By deploying capital into mission-aligned, financial return-generating projects, they not only address pressing local needs but also demonstrate the value of flexible, discretionary funds. Successful investments can generate both social returns and modest financial gains, which in turn help to replenish or grow discretionary funds over time. This creates a virtuous cycle. As impact investments prove their worth, foundations can attract new contributions earmarked for similar efforts.
+        </li>
+        <li class="motivation-item">
+          <h4>Capitalizing on donor interest</h4>
+          Across the country, including in Atlanta, donors are increasingly looking to community foundations to have greater impact and to be innovative. A 2020 survey conducted by the University of New Hampshire revealed that, on average, DAFs would allocate 18.5% of their investable assets toward mission-fulfilling investing. CFGA recognized a business and mission opportunity to seize.
+        </li>
+        <li class="motivation-item">
+          <h4>Modeling innovation and leadership among the Southeast regional landscape</h4>
+          Relative to other regions across the country, the Southeast has lagged slightly behind in terms of adopting impact investing practices, particularly by community foundations. CFGA recognized there was an opportunity to model a different type of community foundation leadership, and impact investing innovation might distinguish the foundation as a regional or even national philanthropic leader in this space.
+        </li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">Where Does the Capital Come From?</h3>
+      <div class="highlight-box">
+        <h4>GoATL Fund Evolution</h4>
+        <p>CFGA's earliest impact investing effort, the GoATL Fund, launched in 2018. GoATL was initially structured as a pooled investment offering for internal CFGA fundholders.</p>
+      </div>
+      <div class="impact-metrics">
+        <div class="metric-card"><div class="metric-value">$14.325M</div><div class="metric-label">Total Raised and Deployed</div></div>
+        <div class="metric-card"><div class="metric-value">$10M</div><div class="metric-label">CFGA Discretionary Capital</div></div>
+        <div class="metric-card"><div class="metric-value">$4.325M</div><div class="metric-label">From Leading DAFs</div></div>
+      </div>
+      <p style="margin-top:18px">As a proof of concept, the first iteration of GoATL demonstrated that donors would allocate portions of DAF investable assets for local impact investing. Additionally, it proved that there was demand from CDFIs and financial intermediaries for patient and low-cost debt, and CFGA staff had the requisite skills and relationships to develop an investment pipeline as well as assess, execute, and monitor impact investments.</p>
+      <p style="margin-top:10px">Given the success of the GoATL Fund, in 2022, the Foundation went "all-in" on impact investing. Today, CFGA operates multiple funds within the GoATL Evolution strategy.</p>
+
+      <h4 style="margin-top:20px; color:var(--secondary-purple); font-size:15px; font-weight:700">Current Fund Structures</h4>
+      <div class="fund-comparison">
+        <table class="fund-table">
+          <thead>
+            <tr><th>Fund Details</th><th>GoATL Community Capacity Fund</th><th>GoATL Affordable Housing Fund</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Structure</strong></td><td>Wholly owned LLC subsidiary of CFGA</td><td>Delaware limited partnership (LP)</td></tr>
+            <tr><td><strong>Minimum Investment</strong></td><td>$25K (internal). $50K (external)</td><td>$1M (institution). $250K (individual)</td></tr>
+            <tr><td><strong>Term</strong></td><td>5 years</td><td>10-15 years</td></tr>
+            <tr><td><strong>Anticipated Return</strong></td><td>1.5% (net of fees)</td><td>2-3% IRR (net of fees)</td></tr>
+            <tr><td><strong>Fees</strong></td><td>70 bp (internal). 1% (external)</td><td>1.5% AUM-based fee</td></tr>
+            <tr><td><strong>Investment Size</strong></td><td>$250K to $2M loans</td><td>$1M to $5M deals</td></tr>
+            <tr><td><strong>Investment Terms</strong></td><td>5-7 years at 3-3.5%</td><td>Up to 15 years at 3-6.5%</td></tr>
+            <tr><td><strong>Investee Type</strong></td><td>Nonprofit CDFIs and intermediaries</td><td>Nonprofit and For-Profit developers</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">What Types of Investments Are They Making?</h3>
+      <h4 style="color:var(--secondary-purple); font-size:15px; font-weight:700; margin-bottom:6px">GoATL Community Capacity Fund</h4>
+      <p>A diversified fund-of-funds, meaning desired investment partners are CDFIs and nonprofit financial intermediaries. CFGA issues patient, impact-first, below-market-rate loans to investment partners. In turn, investment partners relend CFGA's capital to support affordable housing, entrepreneurship, childcare and educational facilities, food systems businesses and farmers, and more.</p>
+
+      <h4 style="margin-top:18px; color:var(--secondary-purple); font-size:15px; font-weight:700; margin-bottom:6px">GoATL Affordable Housing Fund</h4>
+      <p>The primary goal is to support the creation and preservation of affordable housing in the Atlanta community. For many housing projects to deliver true long-term affordability, the market needs both equity (via site control, tax incentives, cash equity, or credit enhancements) as well as flexible, low-cost impact capital. Affordable housing advocates identified that Atlanta has an excess of senior, market-rate loan capital for housing, and yet, the local market lacks sources of equity and mezzanine or subordinated debt. AHF's investment thesis was developed to fill this gap.</p>
+
+      <div class="investment-overview">
+        <h4>Geographic Coverage</h4>
+        <p>Clayton, Cobb, DeKalb, Fulton, and Gwinnett Counties.</p>
+        <h4 style="margin-top:14px">Investment Types</h4>
+        <ul>
+          <li>Preferred and traditional equity</li>
+          <li>Joint ventures</li>
+          <li>Mezzanine loans</li>
+          <li>1st and 2nd mortgage loans</li>
+        </ul>
+      </div>
+
+      <div class="portfolio-item">
+        <h4>Case Study. Cityscape Housing Investment (November 2024)</h4>
+        <p>GoATL AHF invested in Cityscape Housing, a black-owned, for-profit developer. Cityscape transforms neighborhoods throughout Atlanta, providing much-needed affordable homeownership. One such project, the Villages at Brown's Mill, saw Cityscape partner with Atlanta Habitat for Humanity to bring affordable homeownership to SW Atlanta.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">How Are Investment Decisions Made?</h3>
+      <p>The ambitious GoATL Evolution strategy is core to CFGA's mission and way of working. The Foundation has invested resources into staff and leadership capacity to oversee the capital raising and investing activities. Impact investing staff integrate these functions across finance and accounting, philanthropic services, grantmaking, and community programming teams.</p>
+      <h4 style="margin-top:14px; color:var(--secondary-purple); font-size:15px; font-weight:700">Standard Six-Step Pipeline Process</h4>
+      <ol class="process-steps" style="margin-top:10px">
+        <li class="process-step">Prospective investment partners complete an introductory conversation with relevant CFGA team members.</li>
+        <li class="process-step">If the prospective partner and CFGA see a "there there," the partner submits an investment application.</li>
+        <li class="process-step">Relevant CFGA staff review application material. CFGA may request additional information or follow-up discussions. Assuming alignment, CFGA issues a term sheet.</li>
+        <li class="process-step">The prospective investment partner signs the term sheet, and if necessary, remits an application fee payment so that CFGA may initiate formal underwriting (which may be conducted by internal CFGA staff or a contracted external advisor).</li>
+        <li class="process-step">The final underwriting package is submitted to the appropriate Impact Investment Committee for decisioning.</li>
+        <li class="process-step">If approved, CFGA staff initiate closing. CFGA uses external legal advisors to draft loan documents. Prior to execution, CFGA's in-house legal counsel reviews agreements, and final documents are presented to the investment partner for closing.</li>
+      </ol>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">Important Lessons Learned</h3>
+      <div class="lesson-card">
+        <div class="lesson-title">Prepare your cross-functional team for a different type and pace of work</div>
+        <div class="lesson-content">For larger foundations, especially those that desire to grow sizable impact investing programs with greater portfolio volume, impact investing will likely require cross-functional team support. Using CFGA as an example, the GoATL Fund strategy is led by a three-person team, but it involves finance and accounting, philanthropic services, and legal team members. It's critical to train supporting departments and staff in program mechanics and expected workflows. Often, impact investing deal flow is slow in the build-up and urgency-driven when capital needs to close. When cross-functional teams do not have shared expectations and strong working norms, the cadence of impact investing activities can create tension within the foundation and for investment partners.</div>
+      </div>
+      <div class="lesson-card">
+        <div class="lesson-title">Be open to iterating based on what the market needs and emerging opportunities</div>
+        <div class="lesson-content">To avoid stalling in design and strategy-setting, it's often important for foundations to pick a starting point and iterate over time. For CFGA, the earliest iteration of the GoATL Fund allowed the Foundation to build its impact investing muscles and internal comfort. During the early months of the COVID-19 pandemic, CFGA staff recognized that nonprofits were not able to effectively access new federal relief capital because of the reimbursable nature of such awards. In response, the CFGA impact investing team quickly structured and secured capital for a guarantee pool that incentivized CDFIs to provide bridge loans to local nonprofits. This example demonstrates the value of foundation impact investors operating as adaptive, solutions-oriented partners within local capital markets.</div>
+      </div>
+      <div class="lesson-card">
+        <div class="lesson-title">Use agreement templates when possible and identify reliable partners</div>
+        <div class="lesson-content">Early on, CFGA developed some standard loan agreements. Standardized legal templates for loans, notes, guarantees, and equity term sheets can save staff time, reduce errors, reduce closing expenses, and level the playing field for smaller investment partners. However, it is unrealistic to expect that all impact investments will conform to template agreements. Many, if not most, philanthropic impact investments have unique structures, covenants, or features. The bespoke nature of impact investments is due to the investor's willingness to structure investments that meet the needs of both parties and allow for impact.<br><br>Realistically, foundations should expect to customize many investment agreements. In CFGA's experience, it was important for staff to have go-to closing attorneys and tax advisors. These external resources buttress staff capacity, ensure consistency in tax structuring and compliance, support future audit reporting, and cover all legal bases.</div>
+      </div>
+      <div class="lesson-card">
+        <div class="lesson-title">Codify everything, especially as you are modifying or standing up new processes</div>
+        <div class="lesson-content">As GoATL expanded in 2022 to include direct affordable-housing and economic-inclusion funds, staff documented each step, from deal sourcing criteria to impact metrics reviews, to avoid knowledge silos and ensure smooth scaling. While some may perceive thorough documentation as bureaucratic, for CFGA, the practice drives quality and accountability. Investment evaluation and management work best when processes, from evaluation frameworks to due diligence checklists to post-investment reporting templates, are written down, standardized, and (when necessary) iterated over time.<br><br>Thorough documentation is increasingly important in the current environment. Executive orders and shifting federal policy targeted towards DEI, ESG, socially responsible investing, and more are meant to dissuade and discourage philanthropic leadership, particularly around investment activities. Many legal scholars and attorneys are confident that case law will continue to support impact investing by foundations, but in the meantime, foundations should make every possible effort to use standard systems, document everything, and maintain strong decision-making records.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BRADLEY-TURNER FOUNDATION -->
+  <div id="bradley" class="foundation-content">
+    <div class="profile-header">
+      <div class="profile-title-bar"><h2 class="profile-title">Bradley-Turner Foundation</h2></div>
+      <div class="profile-grid">
+        <div class="profile-item"><span class="profile-label">Location</span><span class="profile-value">Columbus, GA</span></div>
+        <div class="profile-item"><span class="profile-label">Foundation Type</span><span class="profile-value">Private Foundation (Family)</span></div>
+        <div class="profile-item"><span class="profile-label">Founded</span><span class="profile-value">1943</span></div>
+        <div class="profile-item"><span class="profile-label">Asset Size</span><span class="profile-value">$105 Million</span></div>
+        <div class="profile-item"><span class="profile-label">Geographic Focus</span><span class="profile-value">Chattahoochee Valley</span></div>
+        <div class="profile-item"><span class="profile-label">Staff Size</span><span class="profile-value">1 FTE</span></div>
+        <div class="profile-item"><span class="profile-label">Impact Investing Since</span><span class="profile-value">2016</span></div>
+        <div class="profile-item"><span class="profile-label">Strategy</span><span class="profile-value">Local Impact Investing (PRIs)</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">What Motivated This Organization to Become an Impact Investor?</h3>
+      <div class="motivation-item">
+        <h4>Moving the needle on Columbus's affordable housing crisis</h4>
+        The Bradley-Turner Foundation and other key community and economic development partners grew increasingly aware of Columbus's affordable housing crisis. At the time, research developed by the Federal Home Loan Bank of Atlanta (FHLBA) revealed critical challenges facing the greater Columbus area.
+      </div>
+      <div class="impact-metrics">
+        <div class="metric-card"><div class="metric-value">16,246</div><div class="metric-label">Affordable Housing Unit Shortage</div></div>
+        <div class="metric-card"><div class="metric-value">80%</div><div class="metric-label">Extremely Low-Income Households Cost Burdened</div></div>
+        <div class="metric-card"><div class="metric-value">74%</div><div class="metric-label">Very Low-Income Households Cost Burdened</div></div>
+        <div class="metric-card"><div class="metric-value">71%</div><div class="metric-label">Low-Income Households Cost Burdened</div></div>
+      </div>
+      <p style="margin-top:18px">The low inventory of affordable housing units for working families drives up the sales price and mortgage costs. Moreover, the housing market was creating conditions whereby renters and homeowners alike were spending disproportionate amounts of household income on housing. The Foundation recognized that grants alone were not sufficient to move the needle on a community challenge of this scale.</p>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">Where Does the Capital Come From?</h3>
+      <p>The Bradley-Turner Foundation, like many foundations, chose to "dip their toe in the water" with a pilot investment to accelerate its entry into impact investing. The Foundation leveraged its first PRI as an opportunity to engage board members in a hands-on experience whereby they exercised new muscles.</p>
+      <div class="highlight-box">
+        <h4>Capital Allocation Strategy</h4>
+        <p>Not only did this approach result in the Foundation making its first PRI loan, but it also unlocked the board's willingness to carve out a modest amount of the endowment (up to 5%) for future local impact investing efforts. Setting aside a modest amount of capital alleviated concerns of more hesitant board members while also giving the Foundation permission to continue to make PRIs in a learn-by-doing manner.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">What Types of Investments Are They Making?</h3>
+      <p>The Bradley-Turner Foundation makes Program-Related Investment loans to housing-focused community development efforts in Columbus and the surrounding Chattahoochee Valley region. To date, the Foundation has made two PRI loans to nonprofit, community development organizations.</p>
+      <div class="portfolio-item">
+        <h4>First PRI. Historic Columbus Foundation (2016)</h4>
+        <p><strong>Amount.</strong> $500,000</p>
+        <p><strong>Purpose.</strong> Support for HCF's newly launched loan fund designed to make loans to LMI homeowners in Columbus.</p>
+        <p><strong>Use of Funds.</strong> Homeowners could use loan proceeds to finance:</p>
+        <ul>
+          <li>Façade updates</li>
+          <li>Minor exterior improvements</li>
+          <li>Larger rehabilitation projects on older homes throughout the Columbus area</li>
+        </ul>
+      </div>
+      <div class="portfolio-item">
+        <h4>Second PRI. NeighborWorks Columbus (2021)</h4>
+        <p><strong>Amount.</strong> $2 Million</p>
+        <p><strong>Purpose.</strong> Address Columbus's insufficient affordable housing stock.</p>
+        <p><strong>Project.</strong> Elliott's Walk Development</p>
+        <ul>
+          <li>24 single-family homes</li>
+          <li>Sold at price points ranging from $150,000 to $180,000</li>
+          <li>Leveraged alongside capital from Synovus Bank and the State of Georgia's Department of Community Affairs</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">Important Lessons Learned</h3>
+      <div class="lesson-card">
+        <div class="lesson-title">Balance nimble learning-by-doing and thoughtful institutionalization</div>
+        <div class="lesson-content">The Foundation recognizes the important role its pilot impact investment played in accelerating the board's willingness to consider future impact investing activities. Early on, the Foundation's President made the strategic decision to recommend that the board create a "band" of portfolio assets that could be used for further impact investments. The President recognized that the Foundation's existing decision-making culture was more responsive to applied vs. abstract learning.<br><br>Pilot investing efforts can create a "lower stakes" learning environment. The trade-off is that without a formal strategy, the pilot may not align neatly with broader organizational goals, and without a dedicated source of funds, foundations may not have a capital pool to tap for future investments. In these instances, a foundation runs the risk of "pilot drift," where subsequent investments become ad hoc, inconsistent in size or scope, and difficult to integrate into a cohesive program.<br><br>The Bradley-Turner Foundation's story demonstrates that a balanced learn-by-doing and institutionalization approach is possible, but it requires clear intention and expectation-setting with board members.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WILLIAM JOSEF FOUNDATION -->
+  <div id="william" class="foundation-content">
+    <div class="profile-header">
+      <div class="profile-title-bar"><h2 class="profile-title">William Josef Foundation</h2></div>
+      <div class="profile-grid">
+        <div class="profile-item"><span class="profile-label">Location</span><span class="profile-value">Atlanta, GA</span></div>
+        <div class="profile-item"><span class="profile-label">Foundation Type</span><span class="profile-value">Private Foundation</span></div>
+        <div class="profile-item"><span class="profile-label">Founded</span><span class="profile-value">2007</span></div>
+        <div class="profile-item"><span class="profile-label">Asset Size</span><span class="profile-value">$48 Million</span></div>
+        <div class="profile-item"><span class="profile-label">Geographic Focus</span><span class="profile-value">State of Georgia (Metro Atlanta Focus)</span></div>
+        <div class="profile-item"><span class="profile-label">Staff Size</span><span class="profile-value">2 FTEs</span></div>
+        <div class="profile-item"><span class="profile-label">Impact Investing Since</span><span class="profile-value">2020/2021</span></div>
+        <div class="profile-item"><span class="profile-label">Strategy</span><span class="profile-value">Local Impact Investing (PRIs and MRIs)</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">What Motivated This Foundation to Become an Impact Investor?</h3>
+      <div class="motivation-item">
+        <h4>Stewarding financial assets while maximizing the present value of dollars used for mission</h4>
+        <p>As a relatively small foundation, the William Josef Foundation leadership sought ways to marshal more dollars for impact without "materially degrading its long-term financial capacity." The Foundation explored increasing its spending policy to pay out more than the minimum distribution requirement (5%).</p>
+        <p style="margin-top:10px">Were the Foundation to pursue this option, leadership determined that its traditional 65/35 equity/fixed income investment allocation would be insufficient to generate the financial returns necessary to cover a 7-10% annual grant budget. To address this, the Foundation discussed increasing its equity allocation up to the 80-85% range, but the Foundation felt that the risk of periodic drawdowns in equity markets might introduce more volatility that could negatively impact its grantmaking ability on a year-to-year basis.</p>
+        <p style="margin-top:10px">The Foundation determined that impact investing was the answer, as it presented an opportunity to.</p>
+        <ul style="margin-top:8px">
+          <li>Increase the present value of its impact by creating a supplemental pool of capital available to mission-fulfilling partners</li>
+          <li>Maintain existing portfolio allocations intact</li>
+          <li>Minimize the likelihood of long-term endowment erosion</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">Where Does the Capital Come From?</h3>
+      <p>The Foundation elected to reallocate a portion of the endowment towards future PRI investments. As a part of this process, the Foundation created a supplemental PRI Policy that established specific PRI investment criteria, target investment terms, and decision-making processes.</p>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">What Types of Investments Are They Making?</h3>
+      <p>Over time, the Foundation's PRI portfolio has grown to include two types of investments.</p>
+      <div class="portfolio-item">
+        <h4>CDFI Impact Notes</h4>
+        <p>Like many philanthropic impact investors, the William Josef Foundation directed its earliest impact investments to CDFIs. The Foundation purchased low-interest impact notes from key CDFIs located throughout the Metro Atlanta region. Notes were a low-hanging fruit means of providing patient, concessionary capital to CDFIs working in housing, access to capital, and income and wealth building.</p>
+      </div>
+      <div class="portfolio-item">
+        <h4>Direct Bridge Loans to Nonprofits</h4>
+        <p>As the Foundation grew more comfortable with impact investing, its investment appetite expanded. The Foundation recognized that many of its key nonprofit partners were consistently experiencing delayed government payments, which were creating cash flow challenges. At this time, the Foundation began making direct bridge loans to nonprofits. These loans infused nonprofits with the operating capital needed to deliver key community programs and services without drawing on reserves or needing to secure high-interest commercial lines of credit.</p>
+      </div>
+      <div class="highlight-box">
+        <h4>Mission-Related Investment Example</h4>
+        <p>To this point, the Foundation has principally pursued PRIs. On occasion, the Foundation has made select Mission-Related Investments when presented with promising market-rate private partnerships.</p>
+        <p style="margin-top:10px"><strong>Center Creek Housing Fund II.</strong> The Foundation is an equity investor in this market-rate impact fund raised by Center Creek Capital Group. The Fund buys, renovates, and holds affordable single-family rentals for cash flow and appreciation. The Fund prioritizes investments in three markets. Atlanta, Birmingham, and Tampa.</p>
+        <p style="margin-top:10px">The Pathway to Homeownership Program (created by Center Creek, D&E Group, and Truist) helped Douglasville residents purchase affordable homes.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">How Are Investment Decisions Made?</h3>
+      <p>The William Josef Foundation, perhaps more so than many lean family foundations, has tremendous in-house financial and investment expertise. Its founder, Scott Satterwhite, spent his career in banking, investment management, and venture capital. In his current capacity as the William Josef Foundation's President, Satterwhite draws on his decades-long professional expertise in service of the Foundation's impact investing efforts.</p>
+      <h4 style="margin-top:14px; color:var(--secondary-purple); font-size:15px; font-weight:700">Investment Decision Process</h4>
+      <ol class="process-steps" style="margin-top:10px">
+        <li class="process-step">Foundation leadership identifies potential investment opportunities. Potential investments are assessed by the Foundation's President based on four factors.
+          <ul style="margin-top:8px">
+            <li>Compliance with the Impact Policy (relative to investment type, size, and effect on the impact portfolio diversification)</li>
+            <li>Tightness of fit between the recipient of the investment and the Foundation's mission and programmatic goals</li>
+            <li>Appropriate tool (PRI or MRI)</li>
+            <li>Dimensions of investment risk</li>
+          </ul>
+        </li>
+        <li class="process-step">If, after this initial evaluation, the President wants to proceed with an investment, further due diligence commences. At this stage, the Foundation requests key documents (financial statements, pitch books, private placement memoranda or offering documents). The Foundation also produces an investment questionnaire that the prospective investee completes.</li>
+        <li class="process-step">Once sufficient documentation and Q&A responses have been collected, the President produces an investment recommendation memo that covers the aforementioned four criteria and elements.</li>
+        <li class="process-step">The recommendation memo is presented to the Board for consideration and decisioning.</li>
+        <li class="process-step">Following investment approval, the President and Program Manager support investment closing and are responsible for tracking the investment and reporting to the Board quarterly.</li>
+      </ol>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">Important Lessons Learned</h3>
+      <div class="lesson-card">
+        <div class="lesson-title">Document program goals, guardrails, and processes on the front-end</div>
+        <div class="lesson-content">The William Josef Foundation recognizes the role its Impact Investing Policy Statement has played in keeping its impact investing efforts on track. At the outset of its impact investing journey, the Foundation elected to craft and ratify a well-constructed Impact Investing Policy Statement that integrates into its overall Investment Policy Statement. This impact investing-specific policy establishes clear guidelines and guardrails that empower staff to source, evaluate, underwrite, and monitor impact investments over time.</div>
+      </div>
+      <div class="lesson-card">
+        <div class="lesson-title">Revise the Impact Investing Policy Statement when necessary or appropriate</div>
+        <div class="lesson-content">With the benefit of five years' experience and transactions under its belt, the Foundation is currently reevaluating and amending its Impact Investing Policy Statement to guide future impact investing efforts. The Foundation's experience can be a lesson to future philanthropic impact investors. Your impact investing journey can be thorough and imperfect. Boards should be diligent and considerate when establishing impact investing programs, and yet, acting prudently does not require perfection at the outset. There will be opportunities to revise and amend guiding policies as the foundation gains experience.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showFoundation(id, btn){
+  document.querySelectorAll('.foundation-content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.foundation-button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top: document.querySelector('.foundation-selector').offsetTop - 20, behavior: 'smooth'});
+}
+</script>
+</body>
+</html>

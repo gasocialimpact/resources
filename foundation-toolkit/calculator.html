@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Source of Funds for Impact Investing</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@300;400;500;600;700&family=Young+Serif&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{
+    --primary-green:#149a49;
+    --primary-cream:#fff1d3;
+    --primary-lilac:#dde0fe;
+    --accent-yellow:#eec61a;
+    --accent-teal:#53c3c2;
+    --accent-green:#66b445;
+    --accent-orange:#f15922;
+    --secondary-purple:#4750a2;
+    --secondary-mint:#e0f1d9;
+    --text:#000;
+    --text-sec:#444;
+    --text-dim:#666;
+    --border:#e2e4eb;
+    --light-bg:#ffffff;
+    --card-bg:#ffffff;
+    --soft-bg:#fafbfd;
+    --grant-color:#149a49;
+    --impact-color:#53c3c2;
+    --trad-color:#9ca3af;
+    --pri-color:#f15922;
+    --mri-color:#4750a2;
+    --disc-color:#149a49;
+    --nondisc-color:#bfc3cc;
+    --pool-color:#eec61a;
+    --ops-color:#9ca3af;
+    --divest:#f15922;
+    --responsible:#53c3c2;
+    --placebased:#4750a2;
+  }
+  body{font-family:'Familjen Grotesk',sans-serif;background:var(--light-bg);color:var(--text);line-height:1.4;font-weight:400;font-size:15px;}
+
+  .container{max-width:1280px;margin:0 auto;padding:24px 48px 72px;}
+
+  /* Tabs */
+  .tab-bar{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:32px;padding-top:24px;flex-wrap:wrap;}
+  .tab-btn{padding:14px 28px;font-family:'Familjen Grotesk',sans-serif;font-size:15px;font-weight:500;
+    border:none;background:transparent;cursor:pointer;color:var(--text-sec);
+    border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.2s;}
+  .tab-btn.active{color:var(--secondary-purple);border-bottom-color:var(--primary-green);font-weight:600;}
+  .tab-btn:hover:not(.active){color:var(--secondary-purple);background:#f4f5f9;border-radius:6px 6px 0 0;}
+
+  .tab-content{display:none;animation:fadeIn 0.3s ease;}
+  .tab-content.active{display:block;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+  .section-label{font-family:'Familjen Grotesk',sans-serif;font-size:12px;font-weight:300;text-transform:uppercase;letter-spacing:1.4px;color:var(--secondary-purple);margin-bottom:12px;}
+  h2.young{font-family:'Young Serif',serif;font-weight:400;font-size:28px;letter-spacing:0.2px;margin-bottom:8px;color:var(--secondary-purple);}
+  h3.young{font-family:'Familjen Grotesk',sans-serif;font-weight:600;font-size:18px;letter-spacing:0.2px;margin-bottom:6px;color:var(--primary-green);}
+  .card{background:var(--card-bg);border-radius:12px;border:1px solid var(--border);padding:30px 32px;margin-bottom:22px;}
+  .card h3{font-size:18px;font-weight:600;margin-bottom:6px;color:var(--secondary-purple);}
+  .card-text{font-size:15px;color:var(--text);line-height:1.4;}
+
+  /* Slider */
+  .slider-row{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
+  .slider-row label{font-size:14px;font-weight:500;width:220px;flex-shrink:0;color:var(--text);}
+  .slider-row input[type=range]{flex:1;accent-color:var(--primary-green);height:6px;}
+  .slider-row .val{font-size:14px;font-weight:600;width:75px;text-align:right;flex-shrink:0;color:var(--secondary-purple);}
+
+  .callout{background:var(--primary-cream);border-left:4px solid var(--primary-green);
+    border-radius:0 10px 10px 0;padding:18px 22px;font-size:14px;color:var(--text);margin-top:18px;line-height:1.5;}
+  .callout strong{color:var(--secondary-purple);}
+
+  /* Bar chart rows */
+  .bar-chart{margin:14px 0;}
+  .bar-row{display:flex;align-items:center;margin-bottom:9px;gap:9px;}
+  .bar-label{font-size:12px;width:140px;text-align:right;flex-shrink:0;color:var(--text-sec);}
+  .bar-track{flex:1;height:32px;background:#f0f2f6;border-radius:6px;overflow:hidden;display:flex;}
+  .bar-seg{height:100%;transition:width 0.4s ease;display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:600;color:white;overflow:hidden;white-space:nowrap;}
+  .bar-total{font-size:13px;font-weight:600;width:75px;flex-shrink:0;padding-left:6px;color:var(--text);}
+
+  /* Donut */
+  .donut-wrap{display:flex;align-items:center;gap:22px;margin:18px 0;}
+  .donut-svg{width:150px;height:150px;flex-shrink:0;}
+  .donut-legend{font-size:14px;color:var(--text);}
+  .donut-legend div{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+  .leg-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0;display:inline-block;}
+  .donut-legend .amt{font-weight:600;color:var(--text);margin-left:auto;padding-left:14px;}
+
+  /* Case grid */
+  .case-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-bottom:22px;}
+  .model-side h3{font-size:17px;font-weight:600;margin-bottom:4px;color:var(--secondary-purple);}
+  .model-side .tag{display:inline-block;font-size:11px;font-weight:600;text-transform:uppercase;
+    letter-spacing:0.9px;padding:4px 11px;border-radius:20px;margin-bottom:14px;}
+  .tag.trad-tag{background:#f0f2f6;color:var(--text-sec);}
+  .tag.impact-tag{background:var(--secondary-mint);color:var(--primary-green);}
+
+  /* Strategies layout */
+  .strategy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:14px;}
+  .strategy-cat{background:var(--card-bg);border:2px solid var(--cat-color);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;}
+  .strategy-cat-header{background:var(--cat-color);color:white;padding:14px 18px;font-family:'Familjen Grotesk',sans-serif;font-size:16px;font-weight:600;letter-spacing:0.6px;text-align:center;text-transform:uppercase;}
+  .strategy-items{padding:18px;display:flex;flex-direction:column;gap:14px;flex:1;}
+  .strategy-item{padding:14px;background:var(--soft-bg);border-radius:10px;border:1px solid var(--border);}
+  .strategy-item h4{font-size:14px;font-weight:600;color:var(--secondary-purple);margin-bottom:8px;line-height:1.3;text-transform:uppercase;letter-spacing:0.6px;}
+  .strategy-item p{font-size:13.5px;color:var(--text);line-height:1.45;margin-bottom:10px;}
+  .strategy-item .strategy-ex{font-size:12.5px;color:var(--text-sec);line-height:1.4;border-top:1px solid var(--border);padding-top:9px;}
+  .strategy-item .ex-label{display:inline-block;font-size:10px;font-weight:600;letter-spacing:1px;color:var(--cat-color, var(--primary-green));margin-right:6px;}
+
+  .strategy-criteria{display:flex;gap:14px;margin-top:22px;}
+  .crit-arrow{padding:18px 22px;border-radius:10px;position:relative;border:1px solid var(--border);}
+  .crit-arrow::before{content:'';position:absolute;top:-8px;left:24px;width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:8px solid var(--border);}
+  .crit-arrow::after{content:'';position:absolute;top:-7px;left:25px;width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:7px solid currentColor;}
+  .crit-arrow .crit-label{font-size:11px;font-weight:300;letter-spacing:1.3px;text-transform:uppercase;color:var(--text-sec);margin-bottom:6px;}
+  .crit-arrow .crit-text{font-size:14px;color:var(--text);font-weight:500;line-height:1.4;}
+
+  /* Mechanism layout */
+  .mech-layout{display:grid;grid-template-columns:380px 1fr;gap:26px;}
+  .mech-list{display:flex;flex-direction:column;gap:12px;}
+  .mech-item{background:var(--card-bg);border-radius:10px;border:2px solid var(--border);
+    padding:16px 18px;cursor:pointer;transition:all 0.2s;}
+  .mech-item:hover{border-color:var(--accent-teal);}
+  .mech-item.active{border-color:var(--primary-green);background:var(--secondary-mint);}
+  .mech-item h4{font-size:15px;font-weight:600;margin-bottom:2px;color:var(--secondary-purple);}
+  .mech-item .sub{font-size:13px;color:var(--text-sec);}
+  .mech-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
+    border-radius:50%;background:var(--primary-green);color:white;font-size:12px;font-weight:600;margin-right:10px;flex-shrink:0;}
+
+  .mech-detail{min-height:200px;}
+  .mech-detail .desc{font-size:14.5px;color:var(--text);line-height:1.5;margin-bottom:18px;}
+  .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+  .detail-box{background:var(--soft-bg);border-radius:8px;padding:14px;}
+  .detail-box h5{font-size:11px;font-weight:300;text-transform:uppercase;letter-spacing:1.2px;color:var(--secondary-purple);margin-bottom:8px;}
+  .detail-box ul{list-style:none;font-size:13.5px;}
+  .detail-box ul li{padding:3px 0;padding-left:14px;position:relative;color:var(--text);}
+  .detail-box ul li::before{content:'';width:6px;height:6px;background:var(--primary-green);border-radius:50%;
+    position:absolute;left:0;top:9px;}
+
+  .key-insight{background:var(--primary-lilac);border-left:4px solid var(--secondary-purple);
+    border-radius:0 10px 10px 0;padding:14px 18px;font-size:13.5px;color:var(--text);margin-top:14px;line-height:1.5;}
+  .key-insight strong{color:var(--secondary-purple);}
+
+  /* Calculator stacked layout */
+  .calc-section{margin-top:18px;}
+  .calc-section + .calc-section{margin-top:24px;}
+  .calc-section-label{font-family:'Familjen Grotesk',sans-serif;font-size:12px;font-weight:300;text-transform:uppercase;letter-spacing:1.4px;color:var(--secondary-purple);margin-bottom:12px;}
+  .calc-subsection-label{font-family:'Familjen Grotesk',sans-serif;font-size:11px;font-weight:300;text-transform:uppercase;letter-spacing:1.3px;color:var(--primary-green);margin-top:18px;margin-bottom:10px;}
+
+  .input-row{display:flex;align-items:center;gap:14px;margin-bottom:10px;}
+  .input-row label{flex:1;font-size:14px;color:var(--text);font-weight:500;line-height:1.3;}
+  .input-row input[type=number]{width:130px;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:'Familjen Grotesk',sans-serif;font-size:14px;font-weight:500;color:var(--text);background:var(--card-bg);}
+  .input-row input[type=number]:focus{outline:none;border-color:var(--primary-green);}
+
+  .input-trio{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-bottom:12px;}
+  .input-trio .input-row{flex-direction:column;align-items:stretch;gap:6px;margin-bottom:0;padding:14px 16px;background:var(--soft-bg);border-radius:10px;}
+  .input-trio .input-row label{font-size:12px;font-weight:300;letter-spacing:1px;text-transform:uppercase;color:var(--secondary-purple);}
+  .input-trio .input-row input{width:100%;font-size:18px;font-weight:600;color:var(--secondary-purple);background:white;}
+
+  .input-pair{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:12px;}
+  .input-pair .input-row{flex-direction:column;align-items:stretch;gap:6px;margin-bottom:0;padding:14px 16px;background:var(--soft-bg);border-radius:10px;}
+  .input-pair .input-row label{font-size:12px;font-weight:300;letter-spacing:1px;text-transform:uppercase;color:var(--secondary-purple);}
+  .input-pair .input-row input{width:100%;font-size:18px;font-weight:600;color:var(--secondary-purple);background:white;}
+
+  .alloc-row{display:grid;grid-template-columns:1fr 220px 60px;align-items:center;gap:18px;margin-bottom:10px;padding:10px 14px;background:var(--soft-bg);border-radius:10px;}
+  .alloc-label{display:flex;flex-direction:column;}
+  .alloc-label > span:first-child{font-size:14px;font-weight:500;color:var(--text);line-height:1.3;}
+  .alloc-return{font-size:11px;font-weight:300;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-sec);margin-top:3px;}
+  .alloc-row input[type=range]{accent-color:var(--primary-green);height:6px;}
+  .alloc-val{text-align:right;font-size:16px;font-weight:600;color:var(--secondary-purple);}
+
+  .alloc-total{margin-top:8px;padding:10px 14px;background:var(--primary-lilac);border-radius:8px;font-size:13px;font-weight:500;color:var(--secondary-purple);text-align:right;}
+  .alloc-total.warn{background:#fde8e1;color:var(--accent-orange);}
+
+  .checkbox-row{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:var(--soft-bg);border-radius:10px;cursor:pointer;border:1.5px solid var(--border);}
+  .checkbox-row input[type=checkbox]{width:18px;height:18px;accent-color:var(--primary-green);margin-top:1px;flex-shrink:0;cursor:pointer;}
+  .checkbox-row label{flex:1;font-size:14px;color:var(--text);font-weight:500;cursor:pointer;line-height:1.35;}
+  .checkbox-row.active{border-color:var(--primary-green);background:var(--secondary-mint);}
+
+  .conditional{padding:14px 16px;margin-top:8px;background:var(--primary-lilac);border-radius:10px;display:none;}
+  .conditional.visible{display:block;}
+  .conditional .input-row{margin-bottom:8px;}
+  .conditional .input-row:last-child{margin-bottom:0;}
+
+  /* Metric grid */
+  .metric-section{margin-bottom:18px;}
+  .metric-section:last-child{margin-bottom:0;}
+  .metric-section-label{font-family:'Familjen Grotesk',sans-serif;font-size:11px;font-weight:300;text-transform:uppercase;letter-spacing:1.4px;color:var(--primary-green);margin-bottom:10px;}
+  .metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+  .metric-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .metric-card{background:var(--soft-bg);border:1px solid var(--border);border-radius:10px;padding:16px 18px;}
+  .metric-card.headline{background:var(--primary-cream);border-color:var(--accent-yellow);}
+  .metric-card.full{grid-column:1/-1;}
+  .metric-card.span2{grid-column:span 2;}
+  .metric-label{font-size:11px;font-weight:300;text-transform:uppercase;letter-spacing:1.1px;color:var(--secondary-purple);margin-bottom:6px;line-height:1.3;}
+  .metric-value{font-family:'Familjen Grotesk',sans-serif;font-size:24px;font-weight:600;color:var(--text);letter-spacing:0.3px;}
+  .metric-sub{font-size:12px;color:var(--text-sec);margin-top:4px;line-height:1.35;}
+
+  .chart-block{margin-top:18px;padding:20px 22px;background:var(--soft-bg);border-radius:10px;border:1px solid var(--border);}
+  .chart-title-mini{font-size:11px;font-weight:300;text-transform:uppercase;letter-spacing:1.3px;color:var(--primary-green);margin-bottom:14px;}
+  .chart-canvas-wrap{position:relative;height:320px;width:100%;}
+
+  /* Stacked full-width bar */
+  .full-bar{height:46px;background:#f0f2f6;border-radius:8px;overflow:hidden;display:flex;margin:8px 0;}
+  .full-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;
+    color:white;transition:width 0.5s ease;overflow:hidden;white-space:nowrap;}
+  .bar-legend{display:flex;gap:18px;margin:10px 0 0;flex-wrap:wrap;}
+  .bar-legend-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text);}
+
+  @media(max-width:980px){
+    .case-grid,.mech-layout,.detail-grid,.strategy-grid{grid-template-columns:1fr;}
+    .metric-grid,.metric-grid-3{grid-template-columns:repeat(2,1fr);}
+    .input-trio,.input-pair{grid-template-columns:1fr;}
+    .alloc-row{grid-template-columns:1fr;gap:8px;}
+    .container{padding:0 24px 48px;}
+    .strategy-criteria{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('case')">The Case for Alignment</button>
+    <button class="tab-btn" onclick="switchTab('strategies')">Impact Investing Strategies</button>
+    <button class="tab-btn" onclick="switchTab('private')">Private Foundations</button>
+    <button class="tab-btn" onclick="switchTab('community')">Community Foundations</button>
+  </div>
+
+  <!-- ==================== TAB 1: THE CASE ==================== -->
+  <div class="tab-content active" id="tab-case">
+    <p class="card-text" style="margin-bottom:22px;max-width:820px;">
+      Most foundations operate with a structural disconnect. The investment portfolio (roughly 95% of assets) is managed without regard for mission, while only the grant budget (roughly 5%) is directed toward charitable purpose. The emerging model asks what happens when more of your assets work toward your mission. The answer depends on what type of foundation you are and which mechanisms you use to unlock capital.
+    </p>
+
+    <div class="section-label">Hypothetical Foundation Scenario</div>
+    <div class="card" style="padding:22px 26px;">
+      <div class="slider-row">
+        <label>Total Assets (AUM)</label>
+        <input type="range" min="10" max="200" value="50" step="5" id="sl-aum" oninput="updateCase()">
+        <div class="val" id="val-aum">$50M</div>
+      </div>
+      <div class="slider-row">
+        <label>Spending Policy</label>
+        <input type="range" min="5" max="15" value="7" step="0.5" id="sl-spend-case" oninput="updateCase()">
+        <div class="val" id="val-spend-case">7.0%</div>
+      </div>
+      <div class="slider-row">
+        <label>Operations (fixed)</label>
+        <input type="range" min="1" max="4" value="2" step="0.5" id="sl-ops" oninput="updateCase()">
+        <div class="val" id="val-ops">2.0%</div>
+      </div>
+      <div class="slider-row">
+        <label>Impact Allocation (of corpus)</label>
+        <input type="range" min="0" max="30" value="0" step="1" id="sl-impact" oninput="updateCase()">
+        <div class="val" id="val-impact">0%</div>
+      </div>
+    </div>
+
+    <div class="case-grid">
+      <div class="model-side card">
+        <span class="tag trad-tag">Traditional Model</span>
+        <h3>Two Buckets, No Overlap</h3>
+        <p class="card-text" style="margin-bottom:8px;">Grants pursue mission. Investments pursue returns. These two activities operate independently with no shared criteria.</p>
+        <div class="donut-wrap">
+          <svg class="donut-svg" viewBox="0 0 42 42" id="donut-trad"></svg>
+          <div class="donut-legend" id="legend-trad"></div>
+        </div>
+        <div class="bar-chart" id="bars-trad"></div>
+      </div>
+
+      <div class="model-side card">
+        <span class="tag impact-tag">Impact-Centered Model</span>
+        <h3>Aligning Assets with Purpose</h3>
+        <p class="card-text" style="margin-bottom:8px;">A portion of the investment portfolio is redirected toward mission-aligned vehicles, creating a third channel of capital.</p>
+        <div class="donut-wrap">
+          <svg class="donut-svg" viewBox="0 0 42 42" id="donut-impact"></svg>
+          <div class="donut-legend" id="legend-impact"></div>
+        </div>
+        <div class="bar-chart" id="bars-impact"></div>
+      </div>
+    </div>
+    <div class="callout" id="case-callout"></div>
+
+    <div class="card" style="margin-top:24px;">
+      <h3 style="font-size:17px;">For Community Foundations, Two Sides of the Ledger</h3>
+      <p class="card-text" style="margin-bottom:12px;">
+        Every dollar in a community foundation is held in a fund (a DAF, agency fund, field of interest fund, scholarship fund, discretionary fund, and so on). Each fund has two sides. The <strong>investable assets</strong> describe how the money is invested. The <strong>spendable assets</strong> describe how grants are deployed. Most community foundations have very limited discretionary control over the grantmaking side, since fundholders direct the vast majority of grant dollars. The investment side tells a different story. Most fundholders and fund types participate in the foundation's main investment pool, giving the foundation meaningful influence over investment strategy even when grantmaking control is limited.
+      </p>
+      <p class="card-text">
+        This is why impact investing is such a powerful lever for community foundations. On the investment side, introducing an impact asset class into the main pool can galvanize the broadest base of assets with a single policy decision. Explore the <strong>Community Foundations</strong> tab to see how this works.
+      </p>
+    </div>
+  </div>
+
+  <!-- ==================== TAB 2: STRATEGIES ==================== -->
+  <div class="tab-content" id="tab-strategies">
+    <p class="card-text" style="margin-bottom:24px;max-width:820px;">
+      GIIN estimates that the global impact investing market has a total AUM of $1.5 trillion. Not all impact investing looks the same. The strategies below show how foundation leaders can think about the spectrum, organized by three core approaches and the criteria that guide investment decisions in each.
+    </p>
+
+    <div class="strategy-grid">
+      <div class="strategy-cat" style="--cat-color:#53c3c2;">
+        <div class="strategy-cat-header">Responsible Investing</div>
+        <div class="strategy-items">
+          <div class="strategy-item">
+            <h4>Divesting and Negative ESG Screening</h4>
+            <p>Selling or screening out stocks that are not ESG-aligned or are detrimental to the asset holder's mission or purpose. This usually encompasses the entire portfolio.</p>
+            <div class="strategy-ex"><span class="ex-label" style="color:#53c3c2;">EXAMPLE</span>A health conversion foundation instructs its investment manager to "screen out" alcohol, tobacco, and firearm stocks because of adverse health impacts.</div>
+          </div>
+          <div class="strategy-item">
+            <h4>Activist Investing (Shareholder Activism)</h4>
+            <p>Buying stock in publicly traded companies to become a shareholder "activist" and promote an agenda aligned with the foundation's mission.</p>
+            <div class="strategy-ex"><span class="ex-label" style="color:#53c3c2;">EXAMPLE</span>A foundation buys stock in a company to promote better workplace practices or conditions through shareholder advocacy.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="strategy-cat" style="--cat-color:#4750a2;">
+        <div class="strategy-cat-header">Values-Aligned Investing</div>
+        <div class="strategy-items">
+          <div class="strategy-item">
+            <h4>ESG Inclusion Investing</h4>
+            <p>Buying stocks in companies that are highly aligned with ESG factors or values.</p>
+            <div class="strategy-ex"><span class="ex-label" style="color:#4750a2;">EXAMPLE</span>A foundation buys stock in a publicly traded company with diverse executive leadership and governing bodies, or a company with strong sustainability or environmental stewardship practices.</div>
+          </div>
+          <div class="strategy-item">
+            <h4>Thematic Impact Investing</h4>
+            <p>Using a particular "thematic lens" to invest across asset classes and return profiles to advance a targeted impact area like environment, health, or education. Investment firms increasingly offer these kinds of impact funds.</p>
+            <div class="strategy-ex"><span class="ex-label" style="color:#4750a2;">EXAMPLE</span>A foundation or DAF platform creates a clean energy investment pool, which fundholders can elect to direct a percentage of assets to.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="strategy-cat" style="--cat-color:#149a49;">
+        <div class="strategy-cat-header">Impact-First Investing</div>
+        <div class="strategy-items">
+          <div class="strategy-item">
+            <h4>Catalytic Impact Investing</h4>
+            <p>Catalytic investments take on greater risk, more flexible terms, more patient timelines, and impact-adjusted financial returns. They accept higher risk than traditional investments (no or limited collateral, short operating tenure, seed capital), provide flexibility for the investee's needs (interest-only or free periods, flexible repayment), give a capital runway for adaptation, and allow lower financial returns to ensure higher social impact returns.</p>
+          </div>
+          <div class="strategy-item">
+            <h4>Place-Based Impact Investing</h4>
+            <p>Investing in local companies, organizations, or funds with the intention to generate measurable community benefit and financial returns.</p>
+            <div class="strategy-ex"><span class="ex-label" style="color:#149a49;">EXAMPLE</span>A foundation seeds a new microlender to invest in local small businesses, or makes a bridge loan to a nonprofit awaiting government reimbursement.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="strategy-criteria">
+      <div class="crit-arrow" style="flex:1;background:#dde0fe;color:#4750a2;">
+        <div class="crit-label">Investment Lens</div>
+        <div class="crit-text">Environmental, Social, and Governance (ESG) criteria guide decisions.</div>
+      </div>
+      <div class="crit-arrow" style="flex:1.2;background:#fff1d3;color:#149a49;">
+        <div class="crit-label">Investment Lens</div>
+        <div class="crit-text">Mission, Purpose, and Founding Charter criteria guide decisions.</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:24px;">
+      <h3 style="font-size:17px;margin-bottom:8px;">Reading the Strategies</h3>
+      <p class="card-text">
+        The three categories form a progression. Responsible Investing focuses on the lens of avoiding harm and shaping company behavior. Values-Aligned Investing actively selects companies and themes that match what the foundation stands for. Impact-First Investing prioritizes measurable community outcomes, with capital structured to support the investee rather than to maximize returns. Each foundation can pick where to start and grow into deeper alignment over time.
+      </p>
+    </div>
+  </div>
+
+  <!-- ==================== TAB 3: PRIVATE FOUNDATIONS ==================== -->
+  <div class="tab-content" id="tab-private">
+    <p class="card-text" style="margin-bottom:24px;max-width:820px;">
+      Private foundations have a legal distinction between PRIs (Program Related Investments) on the programmatic side and MRIs (Mission Related Investments) on the investment side. The spending policy determines how much of the corpus is deployed each year for grants and operations. Use the source of funds mechanisms below to choose an approach, then explore the projection model to see how each path reshapes capital deployment over a 10 year horizon.
+    </p>
+
+    <div class="section-label">Source of Funds Mechanisms</div>
+    <div class="mech-layout" style="margin-bottom:32px;">
+      <div class="mech-list" id="pf-mech-list"></div>
+      <div class="mech-detail card" id="pf-mech-detail"></div>
+    </div>
+
+    <div class="card" style="margin-bottom:26px;">
+      <h2 class="young">Harnessing Impact Investing for Local or Place-Based Impact</h2>
+      <p class="card-text" style="margin-bottom:18px;">A 10 year projection model. Adjust the inputs to see how portfolio composition and a dedicated impact-first local allocation shape capital deployment, asset growth, and total mission dollars mobilized.</p>
+
+      <!-- INPUTS -->
+      <div class="calc-section">
+        <div class="calc-section-label">Projection Inputs</div>
+
+        <div class="input-trio">
+          <div class="input-row">
+            <label for="pf-aum">Starting AUM ($M)</label>
+            <input type="number" id="pf-aum" value="50" min="1" step="1" oninput="updatePF()">
+          </div>
+          <div class="input-row">
+            <label for="pf-grant">Annual Grant Payout (% of AUM)</label>
+            <input type="number" id="pf-grant" value="5" min="0" max="20" step="0.1" oninput="updatePF()">
+          </div>
+          <div class="input-row">
+            <label for="pf-ops-pct">Annual Operating Budget (% of AUM)</label>
+            <input type="number" id="pf-ops-pct" value="2" min="0" max="10" step="0.1" oninput="updatePF()">
+          </div>
+        </div>
+
+        <div class="calc-subsection-label">Portfolio Allocation</div>
+
+        <div class="alloc-row">
+          <div class="alloc-label">
+            <span>Fixed Income and Cash</span>
+            <span class="alloc-return">Return Assumption 2 to 5% annually</span>
+          </div>
+          <input type="range" min="0" max="100" value="20" step="1" id="pf-fi" oninput="updatePF()">
+          <div class="alloc-val" id="pf-fi-val">20%</div>
+        </div>
+        <div class="alloc-row">
+          <div class="alloc-label">
+            <span>Public Equities (Domestic and International)</span>
+            <span class="alloc-return">Return Assumption 7 to 10% annually</span>
+          </div>
+          <input type="range" min="0" max="100" value="50" step="1" id="pf-eq" oninput="updatePF()">
+          <div class="alloc-val" id="pf-eq-val">50%</div>
+        </div>
+        <div class="alloc-row">
+          <div class="alloc-label">
+            <span>Private Investments, Alternatives, and Real Assets</span>
+            <span class="alloc-return">Return Assumption 10 to 18% net of fees</span>
+          </div>
+          <input type="range" min="0" max="100" value="25" step="1" id="pf-alt" oninput="updatePF()">
+          <div class="alloc-val" id="pf-alt-val">25%</div>
+        </div>
+        <div class="alloc-row">
+          <div class="alloc-label">
+            <span>Impact-First Local Investing</span>
+            <span class="alloc-return">Return Assumption 2 to 5% net of fees and losses</span>
+          </div>
+          <input type="range" min="0" max="100" value="5" step="1" id="pf-loc" oninput="updatePF()">
+          <div class="alloc-val" id="pf-loc-val">5%</div>
+        </div>
+
+        <div class="alloc-total" id="pf-alloc-total">Total Allocation 100%</div>
+      </div>
+
+      <!-- OUTPUTS -->
+      <div class="calc-section">
+        <div class="calc-section-label">10-Year Key Metrics and Projections</div>
+
+        <div class="metric-section">
+          <div class="metric-section-label">Portfolio Trajectory</div>
+          <div class="metric-grid">
+            <div class="metric-card">
+              <div class="metric-label">Starting AUM</div>
+              <div class="metric-value" id="pf-m-start">$50.0M</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">10-Year Ending AUM</div>
+              <div class="metric-value" id="pf-m-end">$0.0M</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Annual Portfolio Return</div>
+              <div class="metric-value" id="pf-m-ret">0.0%</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Asset Growth (CAGR)</div>
+              <div class="metric-value" id="pf-m-growth">0.0%</div>
+              <div class="metric-sub">Net of grants and operations</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="metric-section">
+          <div class="metric-section-label">Mission Capital Deployed</div>
+          <div class="metric-grid">
+            <div class="metric-card">
+              <div class="metric-label">Total Grants Made</div>
+              <div class="metric-value" id="pf-m-grants">$0.0M</div>
+              <div class="metric-sub">Cumulative over 10 years</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Local Impact Capital Deployed</div>
+              <div class="metric-value" id="pf-m-local">$0.0M</div>
+              <div class="metric-sub" id="pf-m-local-sub">Allocation deployed over 5 years, then recycled</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Annual % Mobilized for Local Impact</div>
+              <div class="metric-value" id="pf-m-mob">0.0%</div>
+              <div class="metric-sub">Avg grants plus local deployment vs. AUM</div>
+            </div>
+            <div class="metric-card headline">
+              <div class="metric-label">Total Mission Capital Mobilized</div>
+              <div class="metric-value" id="pf-m-total">$0.0M</div>
+              <div class="metric-sub" id="pf-m-total-sub">Grants plus local impact investing combined</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-block">
+          <div class="chart-title-mini">Annual Mission Capital Deployed Over 10 Years</div>
+          <div class="chart-canvas-wrap"><canvas id="pf-chart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="callout" id="pf-callout" style="margin-top:18px;"></div>
+    </div>
+  </div>
+
+  <!-- ==================== TAB 4: COMMUNITY FOUNDATIONS ==================== -->
+  <div class="tab-content" id="tab-community">
+    <p class="card-text" style="margin-bottom:24px;max-width:820px;">
+      Community foundations don't face the PRI/MRI distinction. The central challenge is the composition of the asset base and how new gifts flow into the foundation. Use the source of funds mechanisms below to choose an approach, then explore the projection model to see how each path reshapes capital mobilization over a 10 year horizon.
+    </p>
+
+    <div class="section-label">Source of Funds Mechanisms</div>
+    <div class="mech-layout" style="margin-bottom:32px;">
+      <div class="mech-list" id="cf-mech-list"></div>
+      <div class="mech-detail card" id="cf-mech-detail"></div>
+    </div>
+
+    <div class="card">
+      <h2 class="young">The Business Implications of Local Impact Investing Mechanisms</h2>
+      <p class="card-text" style="margin-bottom:18px;">A 10 year projection model. Set the foundation's asset composition, fundraising flows, and impact investing strategies to see how each mechanism reshapes capital mobilization, fee income, and discretionary capital growth.</p>
+
+      <!-- INPUTS -->
+      <div class="calc-section">
+        <div class="calc-section-label">Projection Inputs</div>
+
+        <div class="input-row">
+          <label for="cf-aum">Starting AUM ($M)</label>
+          <input type="number" id="cf-aum" value="200" min="1" step="1" oninput="updateCF()">
+        </div>
+
+        <div class="calc-subsection-label">Asset Composition (must total 100%)</div>
+
+        <div class="alloc-row">
+          <div class="alloc-label">
+            <span>Without Donor Restrictions, Board Designated</span>
+            <span class="alloc-return">CF discretionary capital</span>
+          </div>
+          <input type="range" min="0" max="100" value="15" step="1" id="cf-bd" oninput="updateCF()">
+          <div class="alloc-val" id="cf-bd-val">15%</div>
+        </div>
+        <div class="alloc-row">
+          <div class="alloc-label">
+            <span>Without Donor Restrictions, Undesignated</span>
+            <span class="alloc-return">Operating reserves and quasi-discretionary</span>
+          </div>
+          <input type="range" min="0" max="100" value="10" step="1" id="cf-ud" oninput="updateCF()">
+          <div class="alloc-val" id="cf-ud-val">10%</div>
+        </div>
+        <div class="alloc-row">
+          <div class="alloc-label">
+            <span>With Donor Restrictions</span>
+            <span class="alloc-return">DAFs, designated, agency, scholarship funds</span>
+          </div>
+          <input type="range" min="0" max="100" value="75" step="1" id="cf-dr" oninput="updateCF()">
+          <div class="alloc-val" id="cf-dr-val">75%</div>
+        </div>
+
+        <div class="alloc-total" id="cf-alloc-total">Total 100%</div>
+
+        <div class="calc-subsection-label">Annual Cash Flows</div>
+
+        <div class="input-pair">
+          <div class="input-row">
+            <label for="cf-disc-gifts">New Gifts to Discretionary Funds ($M annually)</label>
+            <input type="number" id="cf-disc-gifts" value="1" min="0" step="0.1" oninput="updateCF()">
+          </div>
+          <div class="input-row">
+            <label for="cf-dr-gifts">New Gifts to Donor-Restricted Funds ($M annually)</label>
+            <input type="number" id="cf-dr-gifts" value="15" min="0" step="0.5" oninput="updateCF()">
+          </div>
+        </div>
+
+        <div class="input-row">
+          <label for="cf-dr-payout">Annual Grant Payout Rate from Donor-Restricted Funds (% of DR AUM)</label>
+          <input type="number" id="cf-dr-payout" value="8" min="0" max="30" step="0.5" oninput="updateCF()">
+        </div>
+
+        <div class="calc-subsection-label">Pool and Fee Settings</div>
+
+        <div class="input-pair">
+          <div class="input-row">
+            <label for="cf-mainpool">% of Total AUM in Internally Managed Main Pool</label>
+            <input type="number" id="cf-mainpool" value="80" min="0" max="100" step="1" oninput="updateCF()">
+          </div>
+          <div class="input-row">
+            <label for="cf-fee">Average Fund Fee on Donor-Restricted Funds (%)</label>
+            <input type="number" id="cf-fee" value="1" min="0" max="5" step="0.05" oninput="updateCF()">
+          </div>
+        </div>
+
+        <div class="calc-subsection-label">Impact-First Local Investing Strategies</div>
+
+        <div class="checkbox-row" id="cf-mainimpact-box">
+          <input type="checkbox" id="cf-mainimpact-en" onchange="updateCF()">
+          <label for="cf-mainimpact-en">Create an Impact-First Local Investment Allocation in the Main Pool</label>
+        </div>
+        <div class="conditional" id="cf-mainimpact-cond">
+          <div class="input-row">
+            <label for="cf-mainimpact-pct">% of Main Pool Reallocated to Impact-First Local</label>
+            <input type="number" id="cf-mainimpact-pct" value="5" min="0" max="100" step="0.5" oninput="updateCF()">
+          </div>
+        </div>
+
+        <div class="checkbox-row" id="cf-optin-box" style="margin-top:10px;">
+          <input type="checkbox" id="cf-optin-en" onchange="updateCF()">
+          <label for="cf-optin-en">Create a Separate Impact-First Local Investment Pool for Fundholder Opt-In</label>
+        </div>
+        <div class="conditional" id="cf-optin-cond">
+          <div class="input-pair" style="margin-bottom:0;">
+            <div class="input-row">
+              <label for="cf-optin-target">10-Year Target Pool Size ($M)</label>
+              <input type="number" id="cf-optin-target" value="20" min="0" step="1" oninput="updateCF()">
+            </div>
+            <div class="input-row">
+              <label for="cf-optin-fee">Additional Donor Fee on Opt-In Funds (%)</label>
+              <input type="number" id="cf-optin-fee" value="0.25" min="0" max="5" step="0.05" oninput="updateCF()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OUTPUTS -->
+      <div class="calc-section">
+        <div class="calc-section-label">10-Year Key Metrics and Projections</div>
+        <p class="card-text" style="font-size:12.5px;color:var(--text-sec);margin-bottom:14px;line-height:1.4;">
+          Investment return assumption of 7.0% annually, consistent with the average 10 year annualized return for community foundations through 2024.
+        </p>
+
+        <div class="metric-section">
+          <div class="metric-section-label">Portfolio Trajectory</div>
+          <div class="metric-grid-3">
+            <div class="metric-card">
+              <div class="metric-label">Starting AUM</div>
+              <div class="metric-value" id="cf-m-start">$200.0M</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">10-Year Ending AUM</div>
+              <div class="metric-value" id="cf-m-end">$0.0M</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Total AUM Growth (CAGR)</div>
+              <div class="metric-value" id="cf-m-aumcagr">0.0%</div>
+              <div class="metric-sub">Includes new gifts and 7% returns</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="metric-section">
+          <div class="metric-section-label">Mission Capital Deployed</div>
+          <div class="metric-grid">
+            <div class="metric-card">
+              <div class="metric-label">Discretionary Grants Deployed</div>
+              <div class="metric-value" id="cf-m-grants">$0.0M</div>
+              <div class="metric-sub">5% of BD AUM annually, 10 years</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Local Investing from Main Pool</div>
+              <div class="metric-value" id="cf-m-mainloc">$0.0M</div>
+              <div class="metric-sub" id="cf-m-mainloc-sub">Allocation deployed over 5 years, then recycled</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Local Investing from Opt-In Pool</div>
+              <div class="metric-value" id="cf-m-optin">$0.0M</div>
+              <div class="metric-sub" id="cf-m-optin-sub">20% annual opt-in, then recycled</div>
+            </div>
+            <div class="metric-card headline">
+              <div class="metric-label">Total Mission Capital Mobilized</div>
+              <div class="metric-value" id="cf-m-total">$0.0M</div>
+              <div class="metric-sub">Discretionary grants plus all local investing</div>
+            </div>
+            <div class="metric-card full">
+              <div class="metric-label">Donor-Directed Grants from DR Funds (10 Yr)</div>
+              <div class="metric-value" id="cf-m-drgrants">$0.0M</div>
+              <div class="metric-sub">Charitable outflow processed by the foundation but directed by donors. Provided for context only and not counted in total mission capital mobilized above.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="metric-section">
+          <div class="metric-section-label">Operating Context</div>
+          <div class="metric-grid-3">
+            <div class="metric-card">
+              <div class="metric-label">Annual % Mobilized for Local Impact</div>
+              <div class="metric-value" id="cf-m-mob">0.0%</div>
+              <div class="metric-sub">Discretionary grants plus local deployment vs. AUM</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Additional Fee Income (10 Yr)</div>
+              <div class="metric-value" id="cf-m-fee">$0.0M</div>
+              <div class="metric-sub">Cumulative from the Opt-In Pool fee</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Discretionary Capital Tools Growth</div>
+              <div class="metric-value" id="cf-m-disc">0.0%</div>
+              <div class="metric-sub">CAGR of Board Designated plus mechanism capacity</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-block">
+          <div class="chart-title-mini">Annual Mission Capital Deployed by Mechanism Over 10 Years</div>
+          <div class="chart-canvas-wrap"><canvas id="cf-chart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="callout" id="cf-callout" style="margin-top:18px;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ DATA ============
+const privateMechs = [
+  {
+    num:1, title:"PRIs Within Existing Spending Policy",
+    sub:"Programmatic side, within the current spending policy",
+    desc:"The foundation makes Program Related Investments using dollars from within its existing spending policy. Because the spending policy must cover both grants and operations, and operations are relatively fixed, PRIs made within the existing spending policy come at the expense of grant dollars. No policy changes are needed since PRIs are treated like grants for the 5% MDR, but the tradeoff is real. Every dollar allocated to PRIs is a dollar not going to traditional grants.",
+    stakeholders:["Board of Directors","Program Staff","Legal Counsel","Investees / Borrowers"],
+    considerations:["Counts toward the 5% MDR just like grants","PRI dollars come from the grant portion of the spending policy","Operations are a fixed cost and won't absorb the shift","Below-market returns are acceptable and expected","Recoverable capital that can be recycled into future PRIs or grants"],
+    insight:"This is the simplest entry point but requires an honest conversation. PRIs within the existing spending policy mean fewer grant dollars in the near term. The upside is that PRI principal is recoverable, so over time the foundation recaptures capital that would have been permanently spent as grants."
+  },
+  {
+    num:2, title:"PRIs With Increased Spending Policy",
+    sub:"Programmatic side, expanding beyond the existing spending policy",
+    desc:"The foundation increases its total spending policy to create room for PRIs without displacing existing grant dollars. For example, a foundation with a 7% spending policy (5% grants, 2% operations) might move to 10% (5% grants, 2% operations, 3% PRIs). The additional PRI allocation is carved from the endowment, reducing the traditional investment percentage. Because PRI principal is recoverable, the effective long-term cost to the corpus is substantially lower than the payout increase implies.",
+    stakeholders:["Board of Directors","Investment Committee","Program Staff","Legal Counsel","Financial Advisors"],
+    considerations:["Requires board approval to increase spending policy","Preserves the existing grant budget entirely","The PRI allocation reduces the traditional investment pool","PRI principal is recoverable, unlike grants","May require updated investment policy statement"],
+    insight:"This is the approach that unlocks new capital without cannibalizing grants. A foundation going from 7% to 10% spending with the increase entirely in PRIs is deploying 3% more of its corpus for mission, but because that capital comes back, the long-term corpus impact is far smaller than a 3% increase in grants would be."
+  },
+  {
+    num:3, title:"MRI Asset Class",
+    sub:"Investment side, carving out a portion of the corpus",
+    desc:"The foundation creates a new asset class within its investment portfolio dedicated to Mission Related Investments. This sits on the investment side, meaning the primary obligation is still a financial return, but investments are screened or selected for mission alignment. MRIs reduce the traditional investment percentage of the corpus. This is the most versatile mechanism because it can encompass ESG integration, negative screens, and place-based allocations.",
+    stakeholders:["Board of Directors","Investment Committee","Investment Manager / Advisor","Outsourced CIO (if applicable)"],
+    considerations:["Sits on the investment side, not the programmatic side","Market-rate or near-market-rate return expectations","Requires investment policy statement update","Can encompass ESG integration, negative screens, and direct community investments","Typically starts at 1% to 10% of corpus"],
+    insight:"The MRI asset class is where all three impact investing strategies converge. Divesting and responsible investing shape how the portfolio is managed. Place-based investments can be targeted allocations within the class. Combined with PRIs, a foundation can build a comprehensive approach that touches both sides of the house."
+  }
+];
+
+const communityMechs = [
+  {
+    num:1, title:"Impact Asset Class (Main Pool)",
+    sub:"Introduced into the foundation's main investment pool",
+    desc:"The community foundation introduces an impact-oriented asset class into its main investment pool. Because the vast majority of fund types and fundholders participate in this pool, a single policy decision by the board and investment committee can redirect a meaningful percentage of total AUM toward mission-aligned investments. This is the mechanism that galvanizes the greatest number of dollars most efficiently.",
+    stakeholders:["Board of Directors","Investment Committee","Investment Manager / Advisor","Foundation Staff"],
+    considerations:["Reaches all assets in the main pool with a single decision","Board-driven, no individual fundholder consent needed","Requires investment policy statement update","Scope is proportional to how much AUM is in the main pool","The broadest, most efficient path to investment-side alignment"],
+    insight:"This is the most powerful lever for community foundations. If 85% of AUM is in the main pool and the board designates 5% of that pool as an impact asset class, the foundation has just moved roughly 4% of total AUM to mission alignment in a single policy decision, no donor conversations required."
+  },
+  {
+    num:2, title:"Opt-In Impact Pool",
+    sub:"Fundholders voluntarily participate",
+    desc:"The foundation creates a separate impact investment pool and invites fundholders to opt in. This reaches beyond the main pool by giving fundholders of all types a way to align their investable assets with impact. It galvanizes fewer dollars than the asset class approach because it requires ongoing fundholder engagement, education, and individual decisions. It can be a powerful donor engagement and retention strategy.",
+    stakeholders:["Board of Directors","Investment Committee","Donor Services / Philanthropic Advisors","Individual Fundholders / Donors","Investment Manager"],
+    considerations:["Reaches into non-main-pool assets through donor choice","Requires ongoing donor education and communication","Pool size depends entirely on fundholder uptake","Foundation sets investment parameters, donors choose to join","Doubles as a donor engagement and retention tool"],
+    insight:"The opt-in pool is valuable but galvanizes fewer dollars than the asset class because it depends on individual fundholder decisions. It works best as a complement to the main pool asset class, extending reach to fundholders with externally managed assets or those who want a deeper level of impact alignment."
+  },
+  {
+    num:3, title:"Dedicated Impact Fund",
+    sub:"A standalone fund capitalized by grants and gifts",
+    desc:"The foundation creates a distinct fund specifically for impact investments, capitalized through new gifts, grants, or interfund transfers. This fund operates on the grantmaking side of the ledger. It accepts charitable contributions and deploys them as impact investments. It does not touch the investment side of the ledger and does not unlock existing investable assets for mission. Its value is in creating a visible, marketable vehicle for impact-motivated donors.",
+    stakeholders:["Board of Directors","Program Staff","Fund Donors / Contributors","Community Partners","Investment Manager"],
+    considerations:["Capitalized only by new gifts, grants, or transfers","Does not redirect existing investable assets","Often has explicit geographic or thematic focus","Creates a tangible vehicle for donor engagement","Can grow the foundation's discretionary asset base over time"],
+    insight:"The dedicated impact fund does not galvanize existing assets. Its power is strategic. It can grow the foundation's pool of discretionary, deployable capital over time as new contributions come in. This addresses the grantmaking imbalance but through new money, not by redirecting the existing investment pool."
+  },
+  {
+    num:4, title:"Donor-Directed Impact Investing",
+    sub:"Individual DAF holders direct their own investments",
+    desc:"Individual donor-advised fund holders direct that their fund assets be invested in impact-aligned vehicles. The foundation facilitates by offering an investment menu or approving donor-recommended investments. This unlocks investable assets on a fund-by-fund basis but does not address the community foundation's structural need for more discretionary capital. The dollars remain donor-directed on both sides of the ledger.",
+    stakeholders:["Individual DAF Holders","Philanthropic Advisors","Foundation Staff","Investment Committee","External Investment Platforms"],
+    considerations:["Unlocks investable assets but only for individual DAFs","Does not increase discretionary capital for the foundation","Highest donor agency and customization","Requires robust due diligence infrastructure","Administrative complexity scales with participating donors"],
+    insight:"Donor-directed impact investing gives individual fundholders maximum choice, but it does not solve the community foundation's core challenge. The assets remain under donor control on both sides of the ledger. It is useful for donor retention and engagement but does not shift the balance of discretionary versus non-discretionary capital."
+  }
+];
+
+// ============ TAB SWITCHING ============
+function switchTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  const names = {case:'The Case for Alignment',strategies:'Impact Investing Strategies',private:'Private Foundations',community:'Community Foundations'};
+  document.querySelectorAll('.tab-btn').forEach(b => { if(b.textContent===names[id]) b.classList.add('active'); });
+  setTimeout(()=>{ try{ if(pfChart) pfChart.resize(); if(cfChart) cfChart.resize(); }catch(e){} }, 50);
+}
+
+// ============ HELPERS ============
+function fmt(n){return n>=1?'$'+n.toFixed(1)+'M':'$'+(n*1000).toFixed(0)+'K';}
+function fmtD(n){if(n>=1000)return '$'+(n/1000).toFixed(2)+'B'; if(n<1 && n>0) return '$'+(n*1000).toFixed(0)+'K'; return '$'+n.toFixed(1)+'M';}
+
+function drawDonut(svgId, segs, center) {
+  const svg = document.getElementById(svgId);
+  let h='', off=25;
+  segs.forEach(s=>{
+    if(s.pct>0.1){
+      h+=`<circle cx="21" cy="21" r="15.9" fill="transparent" stroke="${s.color}" stroke-width="5.5" stroke-dasharray="${s.pct} ${100-s.pct}" stroke-dashoffset="${off}"/>`;
+    }
+    off-=s.pct;
+  });
+  h+=`<text x="21" y="22.5" text-anchor="middle" style="font-size:5px;font-weight:600;fill:#000;font-family:Familjen Grotesk,sans-serif;">${center}</text>`;
+  svg.innerHTML=h;
+}
+
+// ============ TAB 1: THE CASE ============
+function updateCase(){
+  const aum=+document.getElementById('sl-aum').value;
+  const spendPct=+document.getElementById('sl-spend-case').value;
+  const opsPct=+document.getElementById('sl-ops').value;
+  const impPct=+document.getElementById('sl-impact').value;
+
+  document.getElementById('val-aum').textContent='$'+aum+'M';
+  document.getElementById('val-spend-case').textContent=spendPct.toFixed(1)+'%';
+  document.getElementById('val-ops').textContent=opsPct.toFixed(1)+'%';
+  document.getElementById('val-impact').textContent=impPct+'%';
+
+  const grantPct=Math.max(0,spendPct-opsPct);
+  const grants=aum*grantPct/100;
+  const ops=aum*opsPct/100;
+  const totalSpend=grants+ops;
+  const tradInv=aum-totalSpend;
+
+  const gP=(grants/aum)*100, oP=(ops/aum)*100, tP=Math.max(0,100-gP-oP);
+  drawDonut('donut-trad',[
+    {color:'var(--grant-color)',pct:gP},
+    {color:'var(--ops-color)',pct:oP},
+    {color:'var(--trad-color)',pct:tP}
+  ],fmt(aum));
+  document.getElementById('legend-trad').innerHTML=`
+    <div><span class="leg-dot" style="background:var(--grant-color)"></span>Grants (${grantPct.toFixed(1)}%)<span class="amt">${fmt(grants)}</span></div>
+    <div><span class="leg-dot" style="background:var(--ops-color)"></span>Operations (${opsPct.toFixed(1)}%)<span class="amt">${fmt(ops)}</span></div>
+    <div><span class="leg-dot" style="background:var(--trad-color)"></span>Traditional Investments<span class="amt">${fmt(tradInv)}</span></div>`;
+  document.getElementById('bars-trad').innerHTML=
+    barRow('Mission-Aligned',grants,aum,'var(--grant-color)')+
+    barRow('No Mission Filter',tradInv,aum,'var(--trad-color)');
+
+  const impAmt=aum*impPct/100;
+  const remTrad=Math.max(0,aum-totalSpend-impAmt);
+  const gP2=(grants/aum)*100, oP2=(ops/aum)*100, iP2=(impAmt/aum)*100, rP2=Math.max(0,100-gP2-oP2-iP2);
+  drawDonut('donut-impact',[
+    {color:'var(--grant-color)',pct:gP2},
+    {color:'var(--ops-color)',pct:oP2},
+    {color:'var(--impact-color)',pct:iP2},
+    {color:'var(--trad-color)',pct:rP2}
+  ],fmt(aum));
+  document.getElementById('legend-impact').innerHTML=`
+    <div><span class="leg-dot" style="background:var(--grant-color)"></span>Grants (${grantPct.toFixed(1)}%)<span class="amt">${fmt(grants)}</span></div>
+    <div><span class="leg-dot" style="background:var(--ops-color)"></span>Operations (${opsPct.toFixed(1)}%)<span class="amt">${fmt(ops)}</span></div>
+    <div><span class="leg-dot" style="background:var(--impact-color)"></span>Impact Investments (${impPct}%)<span class="amt">${fmt(impAmt)}</span></div>
+    <div><span class="leg-dot" style="background:var(--trad-color)"></span>Traditional Investments<span class="amt">${fmt(remTrad)}</span></div>`;
+  const missionAmt=grants+impAmt;
+  document.getElementById('bars-impact').innerHTML=
+    barRow('Mission-Aligned',missionAmt,aum,'var(--impact-color)')+
+    barRow('No Mission Filter',remTrad,aum,'var(--trad-color)');
+
+  const mPctT=(grants/aum*100).toFixed(1);
+  const mPctI=(missionAmt/aum*100).toFixed(1);
+  const mult=impAmt>0?((missionAmt)/grants).toFixed(1):'1.0';
+  document.getElementById('case-callout').innerHTML=impPct>0
+    ?`<strong>The shift.</strong> In the traditional model, ${mPctT}% of assets (${fmt(grants)}) work toward mission. By allocating ${impPct}% to impact investments, ${mPctI}% (${fmt(missionAmt)}) are now mission-aligned, a <strong>${mult}x increase</strong> in capital deployed for purpose, without reducing grants or operations.`
+    :`<strong>Move the Impact Allocation slider</strong> to see how redirecting a portion of the investment portfolio to impact changes the capital picture. Even a modest allocation dramatically increases total dollars working toward mission.`;
+}
+
+function barRow(lbl,amt,total,color){
+  const p=Math.max(0,(amt/total)*100);
+  return `<div class="bar-row"><div class="bar-label">${lbl}</div><div class="bar-track"><div class="bar-seg" style="width:${p}%;background:${color};">${p>10?fmt(amt):''}</div></div><div class="bar-total">${fmt(amt)}</div></div>`;
+}
+
+// ============ TAB 3: PRIVATE FOUNDATIONS CALCULATOR ============
+let pfChart=null;
+
+function updatePF(){
+  const aum=+document.getElementById('pf-aum').value || 0;
+  const grantPct=+document.getElementById('pf-grant').value || 0;
+  const opsPct=+document.getElementById('pf-ops-pct').value || 0;
+  const fi=+document.getElementById('pf-fi').value || 0;
+  const eq=+document.getElementById('pf-eq').value || 0;
+  const alt=+document.getElementById('pf-alt').value || 0;
+  const loc=+document.getElementById('pf-loc').value || 0;
+
+  document.getElementById('pf-fi-val').textContent=fi+'%';
+  document.getElementById('pf-eq-val').textContent=eq+'%';
+  document.getElementById('pf-alt-val').textContent=alt+'%';
+  document.getElementById('pf-loc-val').textContent=loc+'%';
+
+  const totalAlloc=fi+eq+alt+loc;
+  const totalEl=document.getElementById('pf-alloc-total');
+  if(totalAlloc===100){
+    totalEl.textContent='Total Allocation 100%';
+    totalEl.classList.remove('warn');
+  } else {
+    totalEl.textContent='Total Allocation '+totalAlloc+'% (must equal 100%)';
+    totalEl.classList.add('warn');
+  }
+
+  const retFI=3.5, retEQ=8.5, retALT=14.0, retLOC=3.5;
+  const portfolioReturn = totalAlloc>0
+    ? (fi*retFI + eq*retEQ + alt*retALT + loc*retLOC) / totalAlloc
+    : 0;
+
+  const years=10;
+  let currAUM=aum;
+  const newDeployByYear=[];
+  const annualGrants=[];
+  const annualLocal=[];
+  const aumByYear=[aum];
+  const yearlyMobilized=[];
+  let totalGrants=0;
+  let cumulativeLocalDeployed=0;
+
+  // Deployment model. The full local allocation deploys over 5 years (1/5 per year).
+  // Each deployment is locked for 5 years, then recycled and redeployed.
+  // This produces ~2x the starting allocation deployed across 10 years.
+  for(let y=1; y<=years; y++){
+    const beginAUM=currAUM;
+    const currentLocalAlloc = beginAUM * loc / 100;
+    const newDep = (y <= 5) ? currentLocalAlloc / 5 : 0;
+    const recycledDep = (y >= 6) ? newDeployByYear[y-6] : 0;
+    newDeployByYear.push(newDep);
+    const totalDep = newDep + recycledDep;
+    annualLocal.push(totalDep);
+    cumulativeLocalDeployed += totalDep;
+
+    const growth = beginAUM * portfolioReturn / 100;
+    const grants = beginAUM * grantPct / 100;
+    const ops = beginAUM * opsPct / 100;
+    annualGrants.push(grants);
+    totalGrants += grants;
+
+    yearlyMobilized.push((grants + totalDep) / beginAUM * 100);
+    currAUM = beginAUM + growth - grants - ops;
+    aumByYear.push(currAUM);
+  }
+
+  const endingAUM = currAUM;
+  const cagr = aum>0 ? (Math.pow(endingAUM/aum, 1/years) - 1) * 100 : 0;
+  const avgMobilized = yearlyMobilized.reduce((a,b)=>a+b,0)/yearlyMobilized.length;
+  const totalMission = totalGrants + cumulativeLocalDeployed;
+  const startingLocalAlloc = aum * loc/100;
+
+  document.getElementById('pf-m-start').textContent=fmtD(aum);
+  document.getElementById('pf-m-ret').textContent=portfolioReturn.toFixed(2)+'%';
+  document.getElementById('pf-m-end').textContent=fmtD(endingAUM);
+  document.getElementById('pf-m-grants').textContent=fmtD(totalGrants);
+  document.getElementById('pf-m-local').textContent=fmtD(cumulativeLocalDeployed);
+  document.getElementById('pf-m-local-sub').textContent='Allocation grows with AUM, deployed over 5 years, then recycled';
+  document.getElementById('pf-m-mob').textContent=avgMobilized.toFixed(2)+'%';
+  document.getElementById('pf-m-growth').textContent=cagr.toFixed(2)+'%';
+  document.getElementById('pf-m-total').textContent=fmtD(totalMission);
+  const grantPctOfMission = totalMission>0 ? (totalGrants/totalMission*100).toFixed(0) : 0;
+  const localPctOfMission = totalMission>0 ? (cumulativeLocalDeployed/totalMission*100).toFixed(0) : 0;
+  document.getElementById('pf-m-total-sub').textContent=grantPctOfMission+'% from grants and '+localPctOfMission+'% from impact-first local investing';
+
+  // Stacked bar chart
+  const labels=Array.from({length:years},(_,i)=>'Y'+(i+1));
+  if(typeof Chart === 'undefined'){
+    // Chart.js unavailable, skip
+  } else if(pfChart){
+    pfChart.data.labels=labels;
+    pfChart.data.datasets[0].data=annualGrants;
+    pfChart.data.datasets[1].data=annualLocal;
+    pfChart.update('none');
+  } else {
+    const ctx=document.getElementById('pf-chart').getContext('2d');
+    pfChart=new Chart(ctx,{
+      type:'bar',
+      data:{
+        labels:labels,
+        datasets:[
+          {label:'Annual Grants',data:annualGrants,backgroundColor:'#149a49',borderRadius:4,stack:'mission'},
+          {label:'Annual Local Impact Deployment',data:annualLocal,backgroundColor:'#eec61a',borderRadius:4,stack:'mission'}
+        ]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        interaction:{mode:'index',intersect:false},
+        plugins:{
+          legend:{position:'top',align:'end',labels:{usePointStyle:true,padding:14,font:{family:'Familjen Grotesk',size:12}}},
+          tooltip:{callbacks:{label:c=>c.dataset.label+' '+fmtD(c.parsed.y)}}
+        },
+        scales:{
+          x:{stacked:true,grid:{display:false},ticks:{font:{family:'Familjen Grotesk'}}},
+          y:{stacked:true,beginAtZero:true,ticks:{callback:v=>fmtD(v),font:{family:'Familjen Grotesk'}}}
+        }
+      }
+    });
+  }
+
+  // Callout
+  const co=document.getElementById('pf-callout');
+  if(loc>0){
+    co.innerHTML=`<strong>What this projection shows.</strong> A ${loc}% Impact-First Local Investing allocation grows with the portfolio over time, deploying ${fmtD(cumulativeLocalDeployed)} cumulatively into local borrowers and businesses by Year 10 (recycled after 5 years). Combined with ${fmtD(totalGrants)} in grants, the foundation mobilizes ${fmtD(totalMission)} in total mission capital across the decade. Assets compound at ${cagr.toFixed(2)}% annually with an average ${avgMobilized.toFixed(2)}% of assets going to local impact each year.`;
+  } else {
+    co.innerHTML=`Move the Impact-First Local Investing slider to see how a place-based allocation changes mission deployment. Even a 5% allocation can deploy substantial recyclable capital into local communities while preserving asset growth.`;
+  }
+}
+
+// ============ TAB 4: COMMUNITY FOUNDATIONS CALCULATOR ============
+let cfChart=null;
+
+function updateCF(){
+  const aum=+document.getElementById('cf-aum').value || 0;
+  const bd=+document.getElementById('cf-bd').value || 0;
+  const ud=+document.getElementById('cf-ud').value || 0;
+  const dr=+document.getElementById('cf-dr').value || 0;
+  const newDiscGifts=+document.getElementById('cf-disc-gifts').value || 0;
+  const newDRGifts=+document.getElementById('cf-dr-gifts').value || 0;
+  const drPayoutPct=+document.getElementById('cf-dr-payout').value || 0;
+  const mainpoolPct=+document.getElementById('cf-mainpool').value || 0;
+  const fee=+document.getElementById('cf-fee').value || 0;
+
+  const enableMain=document.getElementById('cf-mainimpact-en').checked;
+  const enableOpt=document.getElementById('cf-optin-en').checked;
+  const mainImpactPct=+document.getElementById('cf-mainimpact-pct').value || 0;
+  const optTarget=+document.getElementById('cf-optin-target').value || 0;
+  const optFee=+document.getElementById('cf-optin-fee').value || 0;
+
+  document.getElementById('cf-bd-val').textContent=bd+'%';
+  document.getElementById('cf-ud-val').textContent=ud+'%';
+  document.getElementById('cf-dr-val').textContent=dr+'%';
+
+  const totalComp=bd+ud+dr;
+  const compEl=document.getElementById('cf-alloc-total');
+  if(totalComp===100){
+    compEl.textContent='Total 100%';
+    compEl.classList.remove('warn');
+  } else {
+    compEl.textContent='Total '+totalComp+'% (must equal 100%)';
+    compEl.classList.add('warn');
+  }
+
+  document.getElementById('cf-mainimpact-cond').classList.toggle('visible',enableMain);
+  document.getElementById('cf-optin-cond').classList.toggle('visible',enableOpt);
+  document.getElementById('cf-mainimpact-box').classList.toggle('active',enableMain);
+  document.getElementById('cf-optin-box').classList.toggle('active',enableOpt);
+
+  const investReturn=7.0;
+  const grantRate=5.0;
+  const years=10;
+
+  // Track each fund balance
+  let bdBalance = aum * bd / 100;
+  let udBalance = aum * ud / 100;
+  let drBalance = aum * dr / 100;
+  const startingBD = bdBalance;
+
+  const annualGrants=[];
+  const annualMainLocal=[];
+  const annualOptLocal=[];
+  const annualFeeIncome=[];
+  const aumByYear=[bdBalance + udBalance + drBalance];
+  const bdByYear=[bdBalance];
+  const yearlyMobilized=[];
+  const mainNewDeploys=[];
+  const optNewDeploys=[];
+
+  let totalDiscGrants=0;
+  let totalDRGrants=0;
+  let totalMainLocal=0;
+  let totalOptLocal=0;
+  let totalFeeIncome=0;
+
+  for(let y=1; y<=years; y++){
+    const beginAUM = bdBalance + udBalance + drBalance;
+
+    // Add annual new gifts
+    bdBalance += newDiscGifts;
+    drBalance += newDRGifts;
+
+    // Apply 7% return on all balances
+    bdBalance *= (1 + investReturn/100);
+    udBalance *= (1 + investReturn/100);
+    drBalance *= (1 + investReturn/100);
+
+    // 5% discretionary grants from BD
+    const grants = bdBalance * grantRate / 100;
+    bdBalance -= grants;
+    annualGrants.push(grants);
+    totalDiscGrants += grants;
+
+    // Donor-directed grant payout from Donor-Restricted funds (DAFs and similar typically pay out 7-10% annually)
+    const drGrants = drBalance * drPayoutPct / 100;
+    drBalance -= drGrants;
+    totalDRGrants += drGrants;
+
+    const totalAUM = bdBalance + udBalance + drBalance;
+    aumByYear.push(totalAUM);
+    bdByYear.push(bdBalance);
+
+    // Main Pool Local Investing. Allocation scales with AUM. Deploys over 5 years (1/5 per year)
+    // then recycles. Produces roughly 2x the allocation deployed across 10 years.
+    let mainDep=0;
+    if(enableMain){
+      const mainAlloc = totalAUM * (mainpoolPct/100) * (mainImpactPct/100);
+      const newM = (y <= 5) ? mainAlloc / 5 : 0;
+      const recycledM = (y >= 6) ? mainNewDeploys[y-6] : 0;
+      mainNewDeploys.push(newM);
+      mainDep = newM + recycledM;
+    } else { mainNewDeploys.push(0); }
+    annualMainLocal.push(mainDep);
+    totalMainLocal += mainDep;
+
+    // Opt-In Pool (20% annual opt-in rate, target reached by Y5)
+    let optDep=0;
+    if(enableOpt){
+      const newO = (y <= 5) ? 0.2 * optTarget : 0;
+      const recycledO = (y >= 6) ? optNewDeploys[y-6] : 0;
+      optNewDeploys.push(newO);
+      optDep = newO + recycledO;
+    } else { optNewDeploys.push(0); }
+    annualOptLocal.push(optDep);
+    totalOptLocal += optDep;
+
+    // Fee income from opt-in pool
+    let f=0;
+    if(enableOpt){
+      const poolSize = Math.min(y * 0.2 * optTarget, optTarget);
+      f = poolSize * (optFee/100);
+    }
+    annualFeeIncome.push(f);
+    totalFeeIncome += f;
+
+    yearlyMobilized.push((grants + mainDep + optDep) / beginAUM * 100);
+  }
+
+  const endingAUM = aumByYear[years];
+  const aumCAGR = aum>0 ? (Math.pow(endingAUM/aum, 1/years) - 1) * 100 : 0;
+  const avgMobilized = yearlyMobilized.reduce((a,b)=>a+b,0)/yearlyMobilized.length;
+  const totalMission = totalDiscGrants + totalMainLocal + totalOptLocal;
+
+  // Discretionary Capital Tools CAGR
+  const mainAllocY1 = enableMain ? aum * (mainpoolPct/100) * (mainImpactPct/100) : 0;
+  const mainAllocY10 = enableMain ? endingAUM * (mainpoolPct/100) * (mainImpactPct/100) : 0;
+  const discY1 = startingBD + mainAllocY1;
+  const discY10 = bdByYear[years] + mainAllocY10 + (enableOpt ? optTarget : 0);
+  const discCAGR = discY1>0 ? (Math.pow(discY10/discY1, 1/years) - 1) * 100 : 0;
+
+  // Display metrics
+  document.getElementById('cf-m-start').textContent=fmtD(aum);
+  document.getElementById('cf-m-end').textContent=fmtD(endingAUM);
+  document.getElementById('cf-m-aumcagr').textContent=aumCAGR.toFixed(2)+'%';
+  document.getElementById('cf-m-grants').textContent=fmtD(totalDiscGrants);
+  document.getElementById('cf-m-mob').textContent=avgMobilized.toFixed(2)+'%';
+  document.getElementById('cf-m-mainloc').textContent=fmtD(totalMainLocal);
+  document.getElementById('cf-m-mainloc-sub').textContent=enableMain ? 'Allocation deployed over 5 years, then recycled' : 'Strategy not enabled';
+  document.getElementById('cf-m-optin').textContent=fmtD(totalOptLocal);
+  document.getElementById('cf-m-optin-sub').textContent=enableOpt ? '20% annual opt-in to '+fmtD(optTarget)+' target' : 'Strategy not enabled';
+  document.getElementById('cf-m-fee').textContent=fmtD(totalFeeIncome);
+  document.getElementById('cf-m-disc').textContent=discCAGR.toFixed(2)+'%';
+  document.getElementById('cf-m-total').textContent=fmtD(totalMission);
+  document.getElementById('cf-m-drgrants').textContent=fmtD(totalDRGrants);
+
+  // Stacked bar chart
+  const labels=Array.from({length:years},(_,i)=>'Y'+(i+1));
+  if(typeof Chart === 'undefined'){
+    // Chart.js unavailable, skip
+  } else if(cfChart){
+    cfChart.data.labels=labels;
+    cfChart.data.datasets[0].data=annualGrants;
+    cfChart.data.datasets[1].data=annualMainLocal;
+    cfChart.data.datasets[2].data=annualOptLocal;
+    cfChart.update('none');
+  } else {
+    const ctx=document.getElementById('cf-chart').getContext('2d');
+    cfChart=new Chart(ctx,{
+      type:'bar',
+      data:{
+        labels:labels,
+        datasets:[
+          {label:'Discretionary Grants',data:annualGrants,backgroundColor:'#149a49',borderRadius:4,stack:'mission'},
+          {label:'Main Pool Local Investing',data:annualMainLocal,backgroundColor:'#53c3c2',borderRadius:4,stack:'mission'},
+          {label:'Opt-In Pool Local Investing',data:annualOptLocal,backgroundColor:'#eec61a',borderRadius:4,stack:'mission'}
+        ]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        interaction:{mode:'index',intersect:false},
+        plugins:{
+          legend:{position:'top',align:'end',labels:{usePointStyle:true,padding:12,font:{family:'Familjen Grotesk',size:12}}},
+          tooltip:{callbacks:{label:c=>c.dataset.label+' '+fmtD(c.parsed.y)}}
+        },
+        scales:{
+          x:{stacked:true,grid:{display:false},ticks:{font:{family:'Familjen Grotesk'}}},
+          y:{stacked:true,beginAtZero:true,ticks:{callback:v=>fmtD(v),font:{family:'Familjen Grotesk'}}}
+        }
+      }
+    });
+  }
+
+  // Callout
+  const co=document.getElementById('cf-callout');
+  if(enableMain || enableOpt || (newDiscGifts+newDRGifts)>0){
+    let msg=`<strong>What this projection shows.</strong> Annual fundraising of ${fmtD(newDiscGifts)} into discretionary funds and ${fmtD(newDRGifts)} into donor-restricted funds compounds with 7% investment returns and is offset by a ${drPayoutPct}% annual payout from donor-restricted funds. Total AUM grows from ${fmtD(aum)} to ${fmtD(endingAUM)} (${aumCAGR.toFixed(2)}% CAGR). Discretionary grants total ${fmtD(totalDiscGrants)}, while ${fmtD(totalDRGrants)} flows out as donor-directed grants from DR funds. `;
+    if(enableMain) msg += `The Main Pool Impact Allocation deploys ${fmtD(totalMainLocal)} cumulatively. `;
+    if(enableOpt) msg += `The Opt-In Pool deploys ${fmtD(totalOptLocal)} cumulatively and generates ${fmtD(totalFeeIncome)} in additional fee income. `;
+    msg += `Total mission capital mobilized through foundation-shaped channels reaches <strong>${fmtD(totalMission)}</strong>, with discretionary capital tools growing at ${discCAGR.toFixed(2)}% annually.`;
+    co.innerHTML=msg;
+  } else {
+    co.innerHTML=`Set the annual new gifts and enable one or both impact-first local investing strategies above to see how each mechanism reshapes capital mobilization, fee income, and discretionary capital growth.`;
+  }
+}
+
+// ============ MECHANISMS RENDERING ============
+function renderMechList(mechs, listId, detailId, prefix) {
+  const list=document.getElementById(listId);
+  list.innerHTML=mechs.map((m,i)=>
+    `<div class="mech-item${i===0?' active':''}" onclick="selectMech('${prefix}',${i})" id="${prefix}-item-${i}">
+      <div style="display:flex;align-items:flex-start;">
+        <span class="mech-num">${m.num}</span>
+        <div><h4>${m.title}</h4><div class="sub">${m.sub}</div></div>
+      </div>
+    </div>`
+  ).join('');
+  renderMechDetail(mechs, detailId, prefix, 0);
+}
+
+function selectMech(prefix, idx) {
+  const mechs=prefix==='pf'?privateMechs:communityMechs;
+  document.querySelectorAll(`#${prefix}-mech-list .mech-item`).forEach((el,i)=>el.classList.toggle('active',i===idx));
+  renderMechDetail(mechs, prefix+'-mech-detail', prefix, idx);
+}
+
+function renderMechDetail(mechs, detailId, prefix, idx) {
+  const m=mechs[idx];
+  document.getElementById(detailId).innerHTML=`
+    <h3 style="font-size:18px;margin-bottom:8px;">${m.title}</h3>
+    <div class="desc">${m.desc}</div>
+    <div class="detail-grid">
+      <div class="detail-box">
+        <h5>Key Stakeholders</h5>
+        <ul>${m.stakeholders.map(s=>`<li>${s}</li>`).join('')}</ul>
+      </div>
+      <div class="detail-box">
+        <h5>Key Considerations</h5>
+        <ul>${m.considerations.map(c=>`<li>${c}</li>`).join('')}</ul>
+      </div>
+    </div>
+    <div class="key-insight"><strong>Key Insight.</strong> ${m.insight}</div>`;
+}
+
+// ============ INIT ============
+updateCase();
+renderMechList(privateMechs, 'pf-mech-list', 'pf-mech-detail', 'pf');
+renderMechList(communityMechs, 'cf-mech-list', 'cf-mech-detail', 'cf');
+updatePF();
+updateCF();
+</script>
+</body>
+</html>
