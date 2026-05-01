@@ -17,6 +17,8 @@
   --warn-bg:#f8dcd3;
   --secondary-purple:#4750a2;
   --secondary-green:#e0f1d9;
+  --soft-cream:#fcf3cf;
+  --soft-gray:#f4f5f7;
   --ink:#000;
   --line:#e6e8ec;
   --line-dark:#cfd2d8;
@@ -41,7 +43,7 @@ body{
 header{position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid var(--line)}
 .wrap{max-width:1500px; margin:0 auto; padding:14px 24px; display:flex; gap:14px; align-items:center; flex-wrap:wrap}
 .brand-logo{display:flex; align-items:center; gap:10px}
-.brand-mark{width:28px; height:28px; border-radius:6px; background:linear-gradient(135deg, var(--accent) 0%, var(--accent-teal) 100%); display:flex; align-items:center; justify-content:center; color:#fff}
+.brand-mark{width:28px; height:28px; border-radius:6px; background:conic-gradient(from 90deg, var(--secondary-purple), var(--accent-teal), var(--accent-gold), var(--accent)); border:1px solid var(--line)}
 .kicker{font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink)}
 .controls{margin-left:auto; display:flex; gap:8px; flex-wrap:wrap}
 .btn{
@@ -117,12 +119,12 @@ aside{
 .section h1 svg{width:28px; height:28px; flex-shrink:0}
 .section h2{
   font-size:20px; font-weight:700; margin:32px 0 12px;
-  color:var(--accent); padding-bottom:6px;
+  color:var(--secondary-purple); padding-bottom:6px;
   border-bottom:1px solid var(--line);
   display:flex; align-items:center; gap:10px;
 }
-.section h2 svg{width:18px; height:18px; flex-shrink:0}
-.section h3{font-size:16px; font-weight:700; margin:20px 0 8px; color:var(--accent)}
+.section h2 svg{width:18px; height:18px; flex-shrink:0; color:var(--secondary-purple)}
+.section h3{font-size:16px; font-weight:700; margin:20px 0 8px; color:var(--secondary-purple)}
 .section h4{font-size:13px; font-weight:700; margin:14px 0 6px; color:var(--ink); text-transform:uppercase; letter-spacing:.04em}
 .subtitle{margin:0 0 24px; font-size:15px; color:var(--ink); max-width:780px}
 
@@ -138,10 +140,10 @@ strong{font-weight:700; color:var(--ink)}
   padding:18px 20px;
   margin-bottom:14px;
 }
-.panel.purpose{background:var(--primary-blue); border-left:4px solid var(--secondary-purple); border-color:#bfc4f3 var(--line) #bfc4f3 var(--secondary-purple)}
+.panel.purpose{background:var(--soft-cream); border-left:4px solid var(--secondary-purple); border-color:#f0e5a8 var(--line) #f0e5a8 var(--secondary-purple)}
 .panel.warn{background:var(--warn-bg); border-left:4px solid var(--accent-orange); border-color:#f3c1b3 var(--line) #f3c1b3 var(--accent-orange)}
-.panel.success{background:var(--secondary-green); border-left:4px solid var(--accent); border-color:#c5e2b8 var(--line) #c5e2b8 var(--accent)}
-.panel.highlight{background:var(--primary-cream); border-left:4px solid var(--accent-gold); border-color:#f0e5b8 var(--line) #f0e5b8 var(--accent-gold)}
+.panel.success{background:var(--soft-cream); border-left:4px solid var(--accent); border-color:#f0e5a8 var(--line) #f0e5a8 var(--accent)}
+.panel.highlight{background:var(--soft-cream); border-left:4px solid var(--accent-gold); border-color:#f0e5a8 var(--line) #f0e5a8 var(--accent-gold)}
 
 /* Numbered list (Information-Gathering Steps) */
 ol.steps{list-style:none; padding:0; margin:0; counter-reset:step}
@@ -172,7 +174,7 @@ ol.steps .step-body span{display:block; font-size:13.5px}
 }
 .area .icon-circle{
   width:36px; height:36px; border-radius:8px;
-  background:var(--secondary-green); color:var(--accent);
+  background:var(--soft-gray); color:var(--secondary-purple);
   display:flex; align-items:center; justify-content:center;
   margin-bottom:10px;
 }
@@ -197,12 +199,12 @@ ol.steps .step-body span{display:block; font-size:13.5px}
 .usecase .head .ttl{font-weight:700; font-size:15px}
 .usecase .head svg{width:18px; height:18px; color:var(--accent); flex-shrink:0}
 .uc-grid{display:grid; grid-template-columns:1fr 1fr; gap:24px}
-.uc-grid h4{margin:0 0 6px; font-size:11px; font-weight:700; color:var(--accent); letter-spacing:.06em; text-transform:uppercase}
+.uc-grid h4{margin:0 0 6px; font-size:11px; font-weight:700; color:var(--secondary-purple); letter-spacing:.06em; text-transform:uppercase}
 .uc-grid p{font-size:13.5px; line-height:1.5}
 
 /* Table */
 .tbl{width:100%; border-collapse:collapse; margin-top:8px; background:#fff; border:1px solid var(--line); border-radius:10px; overflow:hidden}
-.tbl th{background:var(--secondary-green); text-align:left; padding:12px 16px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--accent); border-bottom:1px solid var(--line)}
+.tbl th{background:var(--soft-gray); text-align:left; padding:12px 16px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--secondary-purple); border-bottom:1px solid var(--line)}
 .tbl td{padding:14px 16px; vertical-align:top; border-bottom:1px solid var(--line); font-size:13.5px; line-height:1.5}
 .tbl tr:last-child td{border-bottom:none}
 .tbl td .meta-line{font-size:12px; color:var(--ink); opacity:.75; display:block; margin-top:4px}
@@ -240,7 +242,7 @@ ol.steps .step-body span{display:block; font-size:13.5px}
 .tx-col{padding:0}
 .tx-col .label{
   font-size:11px; font-weight:700; letter-spacing:.06em;
-  text-transform:uppercase; color:var(--accent); margin-bottom:8px;
+  text-transform:uppercase; color:var(--secondary-purple); margin-bottom:8px;
   display:flex; align-items:center; gap:6px;
 }
 .tx-col .label svg{width:14px; height:14px}
@@ -250,7 +252,7 @@ ol.steps .step-body span{display:block; font-size:13.5px}
 .tx-col.intervention{border-left:3px solid var(--accent); padding-left:14px}
 .tx-col.future{border-left:3px solid var(--secondary-purple); padding-left:14px}
 .tx-deps{padding-top:16px; border-top:1px solid var(--line)}
-.tx-deps h4{margin:0 0 8px}
+.tx-deps h4{margin:0 0 8px; color:var(--secondary-purple)}
 .tx-deps ul{margin:0; padding-left:20px; font-size:13.5px; line-height:1.55}
 .tx-deps ul li{margin-bottom:4px}
 
@@ -265,7 +267,7 @@ ol.steps .step-body span{display:block; font-size:13.5px}
 }
 .stat .stat-icon{
   width:32px; height:32px; border-radius:8px;
-  background:var(--secondary-green); color:var(--accent);
+  background:var(--soft-gray); color:var(--secondary-purple);
   display:flex; align-items:center; justify-content:center; flex-shrink:0;
 }
 .stat .stat-icon svg{width:16px; height:16px}
@@ -293,16 +295,16 @@ ol.steps .step-body span{display:block; font-size:13.5px}
 .diagnostic.teal{border-top-color:var(--accent-teal)}
 .diagnostic .d-icon{
   width:32px; height:32px; border-radius:8px;
-  background:var(--secondary-green); color:var(--accent);
+  background:var(--soft-gray); color:var(--secondary-purple);
   display:flex; align-items:center; justify-content:center;
   margin-bottom:10px;
 }
-.diagnostic.gold .d-icon{background:var(--primary-cream); color:#a0830a}
-.diagnostic.teal .d-icon{background:#dff5f4; color:#2e8a89}
+.diagnostic.gold .d-icon{background:var(--soft-cream); color:#a0830a}
+.diagnostic.teal .d-icon{background:var(--soft-gray); color:#2e8a89}
 .diagnostic .d-icon svg{width:16px; height:16px}
 .diagnostic .d-title{font-weight:700; font-size:14px; margin-bottom:6px}
 .diagnostic .d-formula{font-size:13px; margin-bottom:12px}
-.diagnostic .d-section{font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px; color:var(--accent)}
+.diagnostic .d-section{font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px; color:var(--secondary-purple)}
 .diagnostic.gold .d-section{color:#a0830a}
 .diagnostic.teal .d-section{color:#2e8a89}
 .diagnostic ul{margin:0; padding-left:18px; font-size:13px; line-height:1.55}
@@ -353,7 +355,7 @@ ol.steps .step-body span{display:block; font-size:13.5px}
 .sp-pane .head .meta{font-size:12.5px; margin-top:2px}
 
 .sp-cols{display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:14px}
-.sp-cols h4{margin:0 0 8px; color:var(--accent)}
+.sp-cols h4{margin:0 0 8px; color:var(--secondary-purple)}
 .sp-cols.vuln h4{color:var(--accent-orange)}
 .sp-cols.build h4{color:#a0830a}
 .indicator-list{list-style:none; padding:0; margin:0}
@@ -375,7 +377,7 @@ ol.steps .step-body span{display:block; font-size:13.5px}
 /* Size cards */
 .size-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; margin-top:8px}
 .size-card{background:#fff; border:1px solid var(--line); border-radius:10px; padding:18px; border-top:4px solid var(--accent)}
-.size-card h4{margin:0 0 12px; color:var(--accent); font-size:14px; text-transform:none; letter-spacing:0}
+.size-card h4{margin:0 0 12px; color:var(--secondary-purple); font-size:14px; text-transform:none; letter-spacing:0}
 .size-card .row{margin-bottom:10px; font-size:13px; line-height:1.5}
 .size-card .row strong{display:block; margin-bottom:2px}
 
@@ -391,7 +393,7 @@ ol.steps .step-body span{display:block; font-size:13.5px}
   font-size:13px; font-weight:600;
 }
 .assess-progress-bar{
-  height:6px; background:var(--secondary-green); border-radius:999px;
+  height:6px; background:var(--soft-gray); border-radius:999px;
   overflow:hidden; margin-bottom:30px;
 }
 .assess-progress-fill{
@@ -443,7 +445,7 @@ ol.steps .step-body span{display:block; font-size:13.5px}
 .gauge-text{font-size:32px; font-weight:800; text-anchor:middle; dominant-baseline:central}
 .r-stage{font-size:22px; font-weight:800; text-align:center; margin-top:4px}
 .r-recs{display:grid; gap:10px; margin-top:18px}
-.r-rec{background:var(--secondary-green); border-left:3px solid var(--accent); border-radius:8px; padding:14px 16px}
+.r-rec{background:var(--soft-cream); border-left:3px solid var(--accent); border-radius:8px; padding:14px 16px}
 .r-rec .rt{font-weight:700; font-size:14px; margin-bottom:4px; color:var(--accent)}
 .r-rec .rd{font-size:13px; line-height:1.55}
 
@@ -533,7 +535,7 @@ ol.steps .step-body span{display:block; font-size:13.5px}
   <div class="wrap">
     <button class="menu-toggle" id="menuToggle" aria-label="Open navigation"><svg width="18" height="18"><use href="#i-menu"/></svg></button>
     <div class="brand-logo">
-      <div class="brand-mark"><svg width="16" height="16"><use href="#i-network"/></svg></div>
+      <div class="brand-mark" aria-hidden="true"></div>
       <div class="kicker">Atlanta Nonprofit Capital Ecosystem</div>
     </div>
     <div class="controls">
