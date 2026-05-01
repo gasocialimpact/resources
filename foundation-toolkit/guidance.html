@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guidance for Investment Advisor Search</title>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#149a49;
+  --secondary-purple:#4750a2;
+  --accent-gold:#eec61a;
+  --accent-teal:#53c3c2;
+  --accent-orange:#f15922;
+  --soft-cream:#fcf3cf;
+  --soft-gray:#f4f5f7;
+  --secondary-green:#e0f1d9;
+  --warn-bg:#f8dcd3;
+  --primary-blue:#dde0fe;
+  --ink:#000;
+  --line:#e6e8ec;
+  --line-dark:#cfd2d8;
+}
+*{margin:0; padding:0; box-sizing:border-box}
+body{
+  font-family:'Familjen Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background:#fff; color:var(--ink); font-size:15px; line-height:1.45;
+}
+.container{max-width:1100px; margin:0 auto; padding:24px}
+
+.intro{
+  background:var(--soft-cream);
+  border:1px solid #f0e5a8; border-left:4px solid var(--accent-gold);
+  padding:18px 22px; border-radius:10px; margin-bottom:24px;
+}
+.intro p{margin:0; font-size:14px}
+
+h2.section-h{
+  font-size:20px; font-weight:700; color:var(--accent);
+  margin:32px 0 12px; padding-bottom:8px;
+  border-bottom:1px solid var(--line);
+  display:flex; align-items:center; gap:10px;
+}
+h3.sub-h{
+  font-size:15px; font-weight:700; color:var(--secondary-purple);
+  margin:14px 0 6px;
+}
+p.body{margin-bottom:12px; font-size:14.5px; line-height:1.55}
+
+.section{
+  background:#fff; padding:22px 26px; border-radius:12px;
+  margin-bottom:18px; border:1px solid var(--line);
+}
+
+.list-cards{display:grid; gap:10px; margin-top:6px}
+.list-card{
+  background:#fff; border:1px solid var(--line);
+  border-left:3px solid var(--accent); border-radius:8px;
+  padding:14px 16px;
+}
+.list-card.con{border-left-color:var(--accent-orange)}
+.list-card .lc-title{font-weight:700; color:var(--accent); font-size:14.5px; margin-bottom:6px}
+.list-card.con .lc-title{color:var(--accent-orange)}
+.list-card .lc-body{font-size:14px; line-height:1.55}
+
+.steps{list-style:none; counter-reset:step; padding:0; margin-top:6px}
+.steps li{
+  counter-increment:step; position:relative;
+  padding:10px 14px 10px 50px; margin-bottom:10px;
+  background:#fff; border:1px solid var(--line); border-radius:8px;
+  font-size:14px; line-height:1.55;
+}
+.steps li:before{
+  content:counter(step);
+  position:absolute; left:12px; top:10px;
+  width:28px; height:28px; background:var(--accent); color:#fff;
+  border-radius:6px; display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:13px;
+}
+.steps li strong{color:var(--secondary-purple); display:block; margin-bottom:2px}
+
+.pillars{display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-top:8px}
+.pillar{
+  background:#fff; border:1px solid var(--line); border-radius:10px;
+  padding:16px; border-top:3px solid var(--accent-teal);
+}
+.pillar h4{color:var(--secondary-purple); font-size:14px; font-weight:700; margin-bottom:8px}
+.pillar p{font-size:13.5px; line-height:1.55; margin:0}
+
+.callout{
+  background:var(--secondary-green); border:1px solid #c5e2b8;
+  border-left:4px solid var(--accent);
+  padding:16px 20px; border-radius:10px; margin:16px 0;
+}
+.callout p{margin:0; font-size:14px}
+.callout strong{color:var(--accent)}
+
+.callout.purple{background:var(--primary-blue); border-color:#bfc4f3; border-left-color:var(--secondary-purple)}
+.callout.purple strong{color:var(--secondary-purple)}
+
+.pathways{display:grid; gap:12px; margin-top:8px}
+.pathway{
+  background:#fff; border:1px solid var(--line); border-radius:10px;
+  padding:16px 20px;
+}
+.pathway .ph{display:flex; align-items:center; gap:10px; margin-bottom:8px}
+.pathway .badge{
+  background:var(--accent); color:#fff; padding:3px 10px;
+  border-radius:999px; font-size:11px; font-weight:700;
+  letter-spacing:.04em; text-transform:uppercase;
+}
+.pathway.mid .badge{background:var(--accent-teal)}
+.pathway.adv .badge{background:var(--secondary-purple)}
+.pathway .ph .name{font-weight:700; font-size:15px}
+.pathway p{font-size:14px; line-height:1.55; margin-bottom:8px}
+.pathway ol{margin:8px 0 0 20px; font-size:13.5px; line-height:1.55}
+
+ul.bullets{margin:8px 0 0 20px}
+ul.bullets li{font-size:14px; line-height:1.55; margin-bottom:6px}
+
+@media(max-width:768px){
+  .pillars{grid-template-columns:1fr}
+  .container{padding:16px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="intro">
+    <p>This guidance helps foundation leadership think through whether to hire a search consultant, manage an investment advisor RFP internally, or pursue a hybrid approach. It draws on examples from peer foundations that have published their materials publicly.</p>
+  </div>
+
+  <div class="section">
+    <h2 class="section-h">Understanding the Two Types of Consulting Engagements</h2>
+    <p class="body">Before deciding on an advisor search, it is worth distinguishing between two related but different consulting engagements.</p>
+
+    <div class="list-cards" style="margin-top:12px">
+      <div class="list-card">
+        <div class="lc-title">Strategy Development Consulting</div>
+        <div class="lc-body">A consultant helps you build internal capacity, design your overall impact investing strategy (including allocation targets across PRIs, MRIs, and ESG), develop measurement frameworks, and update governance documents. This typically happens before a foundation is ready to search for an investment advisor.</div>
+      </div>
+      <div class="list-card">
+        <div class="lc-title">Advisor Search Consulting</div>
+        <div class="lc-body">A consultant facilitates the RFP process to select an investment advisor who will implement your impact investing approach. Typical fees run $25,000 to $75,000 depending on your asset size and the scope of the engagement.</div>
+      </div>
+    </div>
+
+    <div class="callout purple" style="margin-top:18px">
+      <p><strong>Where you are in your journey matters.</strong> If you are still developing your impact investing framework, investment beliefs, or board alignment around mission-aligned investing, you may benefit more from strategy consulting first. If you have clarity on your approach and need to find the right advisor to execute it, then a search consultant or an internally managed search is the appropriate next step.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-h">The Case for Hiring a Search Consultant</h2>
+    <p class="body">A search consultant can provide value in several areas.</p>
+
+    <div class="list-cards">
+      <div class="list-card">
+        <div class="lc-title">Specialized Expertise</div>
+        <div class="lc-body">Consultants who work in this space know the current landscape of impact-oriented advisors, understand emerging practices in mission-aligned investing, and can identify which firms have actual depth versus marketing language. They stay current on fee structures, service models, and which advisors work well with foundations of your size and complexity.</div>
+      </div>
+      <div class="list-card">
+        <div class="lc-title">Process Management</div>
+        <div class="lc-body">Running an RFP involves considerable coordination. Developing the question set, managing the timeline, ensuring comparability across responses, facilitating evaluation criteria, and organizing finalist presentations. A consultant handles these logistics and keeps the process moving while your team focuses on strategic decisions rather than administrative details.</div>
+      </div>
+      <div class="list-card">
+        <div class="lc-title">Objective Evaluation Framework</div>
+        <div class="lc-body">An experienced consultant brings structured evaluation methods, helps you avoid common pitfalls in advisor selection, and can pressure-test your assumptions about what you actually need. They also provide a buffer that allows for candid assessment of proposals without the relationship dynamics that can arise when foundation staff interact directly with potential advisors.</div>
+      </div>
+      <div class="list-card">
+        <div class="lc-title">Market Intelligence</div>
+        <div class="lc-body">Beyond the immediate search, a good consultant will help you understand where your foundation sits relative to peers, what is reasonable to expect in terms of fees and services, and how your impact investing goals compare to what is currently achievable in the market. A consultant familiar with Georgia's impact investing ecosystem can identify relevant regional opportunities and partnerships.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-h">The Case Against Hiring a Search Consultant</h2>
+
+    <div class="list-cards">
+      <div class="list-card con">
+        <div class="lc-title">Cost</div>
+        <div class="lc-body">Search consultants typically charge between $25,000 and $75,000 depending on scope and your asset size. For a smaller foundation, this represents a meaningful expense that could otherwise support grantmaking or be invested.</div>
+      </div>
+      <div class="list-card con">
+        <div class="lc-title">Process Ownership</div>
+        <div class="lc-body">When you manage the search internally, your team develops deeper knowledge of the investment advisor landscape and builds relationships that extend beyond the search. You also maintain more direct control over timing, emphasis, and decision criteria.</div>
+      </div>
+      <div class="list-card con">
+        <div class="lc-title">Available Resources</div>
+        <div class="lc-body">Strong RFP templates exist. Organizations like Mission Investors Exchange, the Jessie Smith Noyes Foundation, and the Impact Finance Center have published their materials specifically so other foundations can learn from their experience. With these templates and a curated list of advisors to solicit, you have the core materials needed to run a credible process.</div>
+      </div>
+      <div class="list-card con">
+        <div class="lc-title">Foundation-Specific Knowledge</div>
+        <div class="lc-body">Your team understands your board culture, risk tolerance, grantmaking strategy, and organizational capacity better than any outside consultant will, even after a thorough discovery process. Some foundations find that external consultants, despite their best efforts, miss nuances that matter to final decision-making.</div>
+      </div>
+      <div class="list-card con">
+        <div class="lc-title">Readiness Questions</div>
+        <div class="lc-body">Before hiring a search consultant, honestly assess whether you are ready for an advisor search. Building shared understanding of impact investing, designing an impact investing strategy, and updating key governance documents are foundational. If you are not confident in those elements, rushing into an advisor search may lead to poor fit or unrealistic expectations.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-h">What the Foundation Needs to Prepare</h2>
+    <p class="body">Whether you hire a consultant or manage this internally, the foundation needs clarity on several foundational questions before issuing an RFP.</p>
+
+    <div class="list-cards">
+      <div class="list-card">
+        <div class="lc-title">Investment Beliefs and Policy Framework</div>
+        <div class="lc-body">Articulate your investment beliefs upfront. What is your theory about the relationship between impact investing and financial returns? What role should the endowment play in advancing mission? How do you think about tradeoffs between impact depth and portfolio diversification? What balance are you seeking between PRIs, MRIs, and ESG investments? These beliefs shape which advisors are appropriate fits.</div>
+      </div>
+      <div class="list-card">
+        <div class="lc-title">Current Portfolio Snapshot</div>
+        <div class="lc-body">Document your existing asset allocation, current advisor relationships if any, fee structure, and performance. Prospective advisors need to understand what they are inheriting or changing. This also helps you identify specific pain points you want a new advisor to address.</div>
+      </div>
+      <div class="list-card">
+        <div class="lc-title">Organizational Capacity</div>
+        <div class="lc-body">Be realistic about how much staff and board time you can dedicate to investment oversight. Some advisor models require quarterly meetings, detailed reporting review, and active decision-making on manager selection. Others offer more turnkey approaches. Knowing your capacity helps you evaluate service models appropriately.</div>
+      </div>
+      <div class="list-card">
+        <div class="lc-title">Impact Investing Parameters</div>
+        <div class="lc-body">Get specific about what impact investing means for your foundation. Articulate which issues matter most, whether you are interested in screening strategies versus proactive impact investments, your geographic focus if any, and how you want to measure and report on impact outcomes. Advisors can help refine your impact measurement approach, but they should not be defining your impact goals. That is core to your mission and theory of change.</div>
+      </div>
+      <div class="list-card">
+        <div class="lc-title">Budget and Asset Projections</div>
+        <div class="lc-body">Advisors structure fees differently. Share your current asset level, projected growth or distributions, and any planned large inflows or outflows. Also establish your budget range for advisory fees so you can evaluate proposals against realistic constraints.</div>
+      </div>
+      <div class="list-card">
+        <div class="lc-title">Decision-Making Structure</div>
+        <div class="lc-body">Clarify who evaluates proposals, who conducts finalist interviews, and who makes the final selection. Understanding whether this is a board decision, an investment committee decision, or a staff recommendation with board approval shapes how you structure the process timeline.</div>
+      </div>
+      <div class="list-card">
+        <div class="lc-title">Field-Building Intentions</div>
+        <div class="lc-body">Consider whether your foundation wants to contribute to ecosystem development beyond your own portfolio. If you share that orientation, you might seek an advisor who engages in thought leadership, collaborates with other regional foundations, or helps develop local investment opportunities. If you are primarily focused on your own portfolio optimization, that is also a valid choice that should shape your advisor criteria.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-h">Search Process Elements and Timeline</h2>
+    <p class="body">Based on common practice across foundations that have run published searches, a typical process includes these phases.</p>
+
+    <ol class="steps">
+      <li><strong>Preparation (4 to 6 weeks)</strong>Finalize investment beliefs, develop RFP questions, identify firms to solicit, establish evaluation criteria, and confirm internal timeline and roles.</li>
+      <li><strong>RFP Issuance and Response (4 to 6 weeks)</strong>Distribute the RFP to selected firms, hold a deadline for questions one week before the proposal deadline, and allow adequate time for thoughtful responses.</li>
+      <li><strong>Initial Evaluation (2 to 3 weeks)</strong>Review responses against your criteria, eliminate firms that do not meet requirements, and identify three to five finalists for deeper consideration.</li>
+      <li><strong>Finalist Presentations (2 to 4 weeks)</strong>Invite finalists to present in person or virtually. Schedule these presentations close together so you can compare approaches while they are fresh.</li>
+      <li><strong>Final Evaluation and Selection (2 to 3 weeks)</strong>Check references, negotiate fee terms if needed, make the final selection, and notify all participants.</li>
+      <li><strong>Transition and Onboarding (variable)</strong>Work with the selected advisor on transition planning, documentation, and initial portfolio review.</li>
+    </ol>
+
+    <div class="callout">
+      <p><strong>Total timeline.</strong> Plan on 4 to 6 months from RFP preparation through contract signing. You can compress this if needed, but rushing the process often means missing important considerations or limiting the pool of qualified respondents.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-h">Key RFP Components</h2>
+    <p class="body">Strong RFPs across the field generally include these elements.</p>
+
+    <div class="pillars">
+      <div class="pillar">
+        <h4>Foundation Background</h4>
+        <p>Your mission, grantmaking focus, organizational structure, asset size, and any relevant history with impact investing or previous advisor relationships. Context helps respondents understand what you have learned, what you have tried, and what gaps remain.</p>
+      </div>
+      <div class="pillar">
+        <h4>Scope of Work</h4>
+        <p>Be explicit about what services you expect. Articulate clear project objectives with specific activities under each. This specificity helps you get comparable proposals rather than generic capabilities statements.</p>
+      </div>
+      <div class="pillar">
+        <h4>Investment Beliefs and Values</h4>
+        <p>Sharing your investment beliefs upfront allows advisors to respond specifically to your framework rather than providing generic answers. Embed your values throughout the RFP.</p>
+      </div>
+      <div class="pillar">
+        <h4>Detailed Questions</h4>
+        <p>Cover firm profile and stability, team experience and staffing, investment philosophy and process, impact investing capabilities and track record, reporting and technology, fees, and references. Include open-ended questions that invite consultants to share genuine expertise.</p>
+      </div>
+      <div class="pillar">
+        <h4>Evaluation Criteria</h4>
+        <p>Tell respondents how you will evaluate proposals. Assigning specific weights (for example, fit and understanding 35%, expertise and experience 30%, quality of deliverables 25%, cost and timeline 10%) helps firms understand what to emphasize and forces your team to think clearly about what matters most.</p>
+      </div>
+      <div class="pillar">
+        <h4>Process and Timeline</h4>
+        <p>Clear deadlines, contact protocols, and timeline for finalist selection and presentations. A detailed timeline table showing RFP issuance, proposal deadline, interview dates, and final notice helps everyone plan.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-h">The Consultant-Foundation Relationship</h2>
+    <p class="body">If you do hire a consultant, establish clear working agreements upfront.</p>
+
+    <div class="list-cards">
+      <div class="list-card">
+        <div class="lc-title">Role Boundaries</div>
+        <div class="lc-body">The consultant should facilitate the process and provide expertise, but foundation staff and board make the actual decisions. Be explicit about where the consultant advises versus decides.</div>
+      </div>
+      <div class="list-card">
+        <div class="lc-title">Communication Protocols</div>
+        <div class="lc-body">How often will you meet? Who is the primary foundation contact? How does the consultant interact with board members versus staff? What approvals does the consultant need before communicating with prospective advisors?</div>
+      </div>
+      <div class="list-card">
+        <div class="lc-title">Confidentiality and Conflicts</div>
+        <div class="lc-body">Ensure the consultant does not have undisclosed relationships with firms being considered and agrees to keep foundation information confidential. Understand how the consultant is compensated, typically a flat fee from you, not contingent on which advisor is selected.</div>
+      </div>
+      <div class="list-card">
+        <div class="lc-title">Deliverables</div>
+        <div class="lc-body">Specify what you expect. RFP drafting, distribution list development, response analysis, evaluation framework, finalist presentation facilitation, reference checking, and a final recommendation memo. Get these in writing and be specific.</div>
+      </div>
+      <div class="list-card">
+        <div class="lc-title">Knowledge Transfer</div>
+        <div class="lc-body">Ask the consultant to document the process and rationale so your team builds institutional knowledge for future searches or investment policy updates. Consultant engagements should build internal capacity, not create permanent dependency.</div>
+      </div>
+      <div class="list-card">
+        <div class="lc-title">Budget Transparency</div>
+        <div class="lc-body">Require the consultant to clearly detail the hours required during each phase, as well as the accompanying deliverables that will be produced throughout the project work plan. This level of detail helps you understand what you are paying for and makes it easier to manage scope if project needs change.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-h">Pathways to Consider</h2>
+    <p class="body">Your decision about hiring a consultant should start with an honest assessment of where you are in your impact investing journey.</p>
+
+    <div class="pathways">
+      <div class="pathway">
+        <div class="ph"><span class="badge">Early Stage</span><span class="name">Still developing your framework or board alignment</span></div>
+        <p>Hire a strategy consultant first to help you build capacity and develop your approach. Then, once your strategy is clear, either manage the advisor search internally using available RFP templates or hire a search consultant if you need additional support.</p>
+      </div>
+
+      <div class="pathway mid">
+        <div class="ph"><span class="badge">Mid Stage</span><span class="name">Clarity on goals, need help finding the right advisor</span></div>
+        <p>You have three viable options.</p>
+        <ol>
+          <li>Hire a search consultant ($25,000 to $75,000) who brings market expertise, manages the process, and helps you avoid common pitfalls.</li>
+          <li>Manage the search internally using strong RFP templates plus a curated advisor list. This works well if your team has capacity and interest.</li>
+          <li>Hybrid approach. Use the templates and manage most of the process internally but hire a consultant for a few hours of strategic advice on advisor selection criteria, evaluation methods, and contract negotiation. This gives you expert input at key decision points without the full consulting fee.</li>
+        </ol>
+      </div>
+
+      <div class="pathway adv">
+        <div class="ph"><span class="badge">Advanced</span><span class="name">Experienced with impact investing and refining your approach</span></div>
+        <p>You likely do not need a consultant unless you want specialized expertise in a particular strategy area.</p>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:18px">
+      <p><strong>The bottom line.</strong> The key is investing adequate time upfront to clarify your investment beliefs and impact goals. The advisor search is actually the easier part once you have done that foundational work. Recognizing the need for strategy support before searching for new advisors is a sign of organizational maturity, not weakness.</p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
