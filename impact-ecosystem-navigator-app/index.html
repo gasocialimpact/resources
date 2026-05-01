@@ -16,6 +16,10 @@
 *{box-sizing:border-box}
 html,body{height:100%}
 body{margin:0;background:var(--bg); color:var(--ink);
+  /* Provide a small left/right buffer and prevent horizontal scrolling */
+  padding-left:10px;
+  padding-right:10px;
+  overflow-x:hidden;
   font:15px/1.55 "Familjen Grotesk", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;}
 header{position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid var(--line)}
 .wrap{max-width:1600px; margin:0 auto; padding:12px 18px; display:flex; gap:10px; align-items:center; flex-wrap:wrap}
@@ -121,6 +125,42 @@ footer{max-width:1600px; margin:22px auto 50px; padding:0 18px; color:#5c6b9b; f
 .note{font-size:12px; color:#4a5a8c; margin-top:8px}
 .no-print{display:inline-block}
 
+/* Mobile toggle button - hidden on desktop */
+.menu-toggle{display:none; background:none; border:1px solid var(--line); border-radius:8px; padding:6px 10px; cursor:pointer; color:var(--ink); font-size:18px; line-height:1}
+
+/* Responsive: tablet */
+@media(max-width:1100px){
+  main{grid-template-columns:240px 1fr}
+  .grid{grid-template-columns:repeat(3, minmax(200px, 1fr))}
+  .cs .flow{grid-template-columns:repeat(2,1fr)}
+}
+
+/* Responsive: mobile */
+@media(max-width:768px){
+  .menu-toggle{display:inline-flex}
+  main{grid-template-columns:1fr; padding:0 10px}
+  aside{position:fixed; left:-300px; top:56px; bottom:0; width:280px; z-index:90; transition:left .3s ease; border-radius:0; overflow-y:auto; height:calc(100vh - 56px)}
+  aside.open{left:0; box-shadow:4px 0 20px rgba(0,0,0,.15)}
+  .overlay{display:none; position:fixed; inset:0; background:rgba(0,0,0,.3); z-index:89}
+  .overlay.open{display:block}
+  .grid{grid-template-columns:1fr}
+  .col h3{font-size:15px}
+  .cs .flow{grid-template-columns:1fr}
+  .subgrid{grid-template-columns:1fr}
+  .sheet{width:98vw; max-height:94vh}
+  .wrap{padding:8px 10px}
+  .ga-stats{grid-template-columns:1fr 1fr}
+  header .kicker{font-size:11px}
+  .embedframe{height:600px}
+}
+
+/* Responsive: small mobile */
+@media(max-width:480px){
+  .controls{gap:4px}
+  .btn{padding:7px 8px; font-size:13px}
+  .ga-stats{grid-template-columns:1fr}
+}
+
 /* Print */
 @media print{
   header, aside, #exportPrint, #resetView, #how { display:none !important; }
@@ -131,6 +171,7 @@ footer{max-width:1600px; margin:22px auto 50px; padding:0 18px; color:#5c6b9b; f
 <body>
 <header>
   <div class="wrap">
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">&#9776;</button>
     <div class="brand" aria-hidden="true"></div>
     <div class="kicker">Impact Investing Ecosystem</div>
     <div class="controls">
@@ -141,6 +182,7 @@ footer{max-width:1600px; margin:22px auto 50px; padding:0 18px; color:#5c6b9b; f
   </div>
 </header>
 
+<div class="overlay" id="menuOverlay"></div>
 <main>
   <aside>
     <div class="nav">
@@ -148,6 +190,7 @@ footer{max-width:1600px; margin:22px auto 50px; padding:0 18px; color:#5c6b9b; f
       <button class="active" data-view="map">Framework</button>
       <button data-view="strategies">Strategies</button>
       <button data-view="georgia">Georgia</button>
+      <!-- Glossary view opens within the tool; clicking will switch to the glossary section -->
       <button data-view="glossary">Glossary</button>
     </div>
 
@@ -189,7 +232,12 @@ footer{max-width:1600px; margin:22px auto 50px; padding:0 18px; color:#5c6b9b; f
 
     <!-- STRATEGIES VIEW -->
     <div id="view-strategies" class="section">
-      <div class="panel alert">Strategies describe <em>how</em> money moves for impact. Each strategy nests stakeholders from the Map and includes detailed, step-by-step examples you can reuse in workshops. Use the Download Strategy Brief to export all examples for printing.</div>
+      <div class="panel alert">Strategies describe <em>how</em> money moves for impact. Each strategy nests stakeholders from the Map and includes detailed, step-by-step examples you can reuse in workshops.</div>
+      <!-- Button linking to the Impact Investing approaches & definitions page -->
+      <div class="no-print" style="margin:10px 0">
+        <a class="btn" href="impact_investing_definitions%20(1).html" target="_blank" rel="noopener">Impact Approaches &amp; Definitions</a>
+      </div>
+
       <div id="strategiesList"></div>
     </div>
 
@@ -197,25 +245,77 @@ footer{max-width:1600px; margin:22px auto 50px; padding:0 18px; color:#5c6b9b; f
     <div id="view-georgia" class="section">
       <div class="panel">
         <div class="ga-map">
-          <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1-6Rhs_g9H_Oxnk-8O51TWF1zNIOCk7c&ehbc=2E312F&noprof=1" width="100%" height="100%" style="border:0; border-radius:12px;"></iframe>
+          <iframe src="https://www.google.com/maps/d/embed?mid=1-6Rhs_g9H_Oxnk-8O51TWF1zNIOCk7c&amp;ehbc=2E312F" width="100%" height="100%" style="border:0; border-radius:12px;"></iframe>
         </div>
         
         <div class="ga-stats" id="gaStats"></div>
-        
-                <div class="embedwrap" style="margin-top:12px">
+
+        <div class="embedwrap" style="margin-top:12px">
           <div class="embedbar">
             <div><strong>Georgia's Impact Investing Ecosystem</strong> – embedded from Airtable</div>
             <div class="no-print">
               <a class="btn" href="https://airtable.com/apppRMBiQTMVEYDTI/shrRLGATY79wmHDl2" target="_blank" rel="noopener">Open in new tab</a>
             </div>
           </div>
-            <iframe class="embedframe" id="airtableFrame" src="https://airtable.com/embed/apppRMBiQTMVEYDTI/shrRLGATY79wmHDl2" title="Georgia Ecosystem"></iframe>
+          <iframe class="embedframe" id="airtableFrame" src="https://airtable.com/embed/apppRMBiQTMVEYDTI/shrRLGATY79wmHDl2" title="Georgia Ecosystem"></iframe>
         </div>
-    </div>
+      </div><!-- close panel -->
+    </div><!-- close view-georgia -->
 
     <!-- GLOSSARY VIEW (now last) -->
     <div id="view-glossary" class="section">
-      <div class="panel" id="glossary"></div>
+      <!-- Static glossary content: definitions of key investment terms. Replace or extend as needed. -->
+      <div class="panel">
+        <h3 style="margin-top:0">Key Terms Glossary</h3>
+        <!-- Investment Tools -->
+        <div class="block">
+          <h4>Investment Tools (selected)</h4>
+          <div class="p"><span class="badge" style="margin-right:8px">Equity</span>Ownership capital with upside through dividends or capital gains; patient but higher‑risk.</div>
+          <div class="p"><span class="badge" style="margin-right:8px">Debt</span>Loans or bonds requiring repayment with interest; preserves ownership but affects cash flow.</div>
+          <div class="p"><span class="badge" style="margin-right:8px">Guarantee</span>Third‑party promise to absorb losses on default, de‑risking lenders and unlocking credit.</div>
+        </div>
+        <!-- Asset Classes -->
+        <div class="block">
+          <h4>Asset Classes (selected)</h4>
+          <div class="p"><span class="badge" style="margin-right:8px">Bonds (incl. Green/Social)</span>Debt securities, including labeled bonds whose proceeds fund environmental or social projects.</div>
+          <div class="p"><span class="badge" style="margin-right:8px">Stocks</span>Equity ownership in companies; traded on exchanges.</div>
+          <div class="p"><span class="badge" style="margin-right:8px">Real Assets</span>Physical assets like real estate and infrastructure.</div>
+          <div class="p"><span class="badge" style="margin-right:8px">Commodities</span>Tradable raw materials such as cocoa, gold and oil.</div>
+          <div class="p"><span class="badge" style="margin-right:8px">Money Market &amp; Cash</span>Short‑term instruments used for liquidity.</div>
+          <div class="p"><span class="badge" style="margin-right:8px">Crypto/Digital Assets</span>Digitally‑native assets recorded on blockchains.</div>
+        </div>
+        <!-- Financial Markets -->
+        <div class="block">
+          <h4>Financial Markets</h4>
+          <div class="p"><span class="badge" style="margin-right:8px">Banking</span>A network of financial institutions that take deposits and lend money, acting as a conduit of capital to businesses.</div>
+          <div class="p"><span class="badge" style="margin-right:8px">Investment Services</span>Specialists and firms that advise clients on financial products, planning and fund‑raising, including the policies, rules and standards that apply to these activities.</div>
+        </div>
+        <!-- Investment Services -->
+        <div class="block">
+          <h4>Investment Services</h4>
+          <div class="p"><span class="badge" style="margin-right:8px">Investment Fund Managers</span>Professionals who construct and manage diversified investment portfolios on behalf of clients or sponsors.</div>
+          <div class="p"><span class="badge" style="margin-right:8px">Financial Advisors</span>Advisors who provide financial guidance and planning services to individuals and organizations.</div>
+          <div class="p"><span class="badge" style="margin-right:8px">Investment Consultants</span>Consultants who formulate investment strategies and planning for their clients.</div>
+          <div class="p"><span class="badge" style="margin-right:8px">Proxy Voting Agencies</span>Specialized firms that advise on and execute shareholder votes for fund managers.</div>
+        </div>
+        <!-- Fintech & Platforms -->
+        <div class="block">
+          <h4>Fintech &amp; Platforms</h4>
+          <div class="p"><span class="badge" style="margin-right:8px">Financial Technology</span>Technology, software and algorithms that improve and automate the delivery and use of financial services.</div>
+          <div class="p"><span class="badge" style="margin-right:8px">Online Investment Platforms</span>Digital platforms that allow individuals to buy, sell and hold investments through a single online account.</div>
+          <div class="p"><span class="badge" style="margin-right:8px">Crowdfunding Platforms</span>Internet‑based platforms that raise small amounts of money from a large number of people to fund projects or ventures.</div>
+        </div>
+        <!-- Investment Vehicles -->
+        <div class="block">
+          <h4>Investment Vehicles</h4>
+          <div class="p"><span class="badge" style="margin-right:8px">Debt Funds</span>Funds investing in fixed‑income securities like bonds and treasury bills, offering relatively steady income.</div>
+          <div class="p"><span class="badge" style="margin-right:8px">Private Equity</span>Investments made in private companies either directly or through specialized funds.</div>
+          <div class="p"><span class="badge" style="margin-right:8px">Venture Capital Funds</span>Funds that finance start‑up companies and businesses in high‑growth sectors.</div>
+          <div class="p"><span class="badge" style="margin-right:8px">Exchange Traded Funds &amp; Notes</span>Marketable securities that track an index, commodity or basket of assets and trade like stocks.</div>
+          <div class="p"><span class="badge" style="margin-right:8px">Mutual Funds &amp; Investment Trusts</span>Collective investment schemes that pool money from investors to purchase diversified securities.</div>
+          <div class="p"><span class="badge" style="margin-right:8px">Pooled Funds</span>Investment structures where multiple investors combine capital to benefit from diversification and economies of scale.</div>
+        </div>
+      </div>
     </div>
   </section>
 </main>
@@ -231,7 +331,8 @@ footer{max-width:1600px; margin:22px auto 50px; padding:0 18px; color:#5c6b9b; f
 </div>
 
 <footer>
-  All data lives in <span class="kbd">dataV10</span> below-edit in a text editor to tailor to your partners.
+  <!-- Simplify the footer and remove instructional language -->
+  This explorer is a living tool – data sources are embedded below.
 </footer>
 
 <script>
@@ -819,19 +920,61 @@ var dataV10 = {
   ],
 
   glossary: [
-    { group:'Investment Tools (selected)', items:[
-      { term:'Equity', def:'Ownership capital with upside through dividends or capital gains; patient but higher-risk.' },
-      { term:'Debt', def:'Loans/bonds requiring repayment with interest; preserves ownership but affects cash flow.' },
-      { term:'Guarantee', def:'Third-party promise to absorb losses on default, de-risking lenders and unlocking credit.' },
-    ]},
-    { group:'Asset Classes (selected)', items:[
-      { term:'Bonds (incl. Green/Social)', def:'Debt securities, including labeled bonds whose proceeds fund environmental or social projects.' },
-      { term:'Stocks', def:'Equity ownership in companies; traded on exchanges.' },
-      { term:'Real Assets', def:'Physical assets like real estate and infrastructure.' },
-      { term:'Commodities', def:'Tradable raw materials such as cocoa, gold, oil.' },
-      { term:'Money Market & Cash', def:'Short-term instruments for liquidity.' },
-      { term:'Crypto/Digital Assets', def:'Digitally-native assets on blockchains.' },
-    ]},
+    {
+      group:'Investment Tools (selected)',
+      items:[
+        { term:'Equity',    def:'Ownership capital with upside through dividends or capital gains; patient but higher‑risk.' },
+        { term:'Debt',      def:'Loans/bonds requiring repayment with interest; preserves ownership but affects cash flow.' },
+        { term:'Guarantee', def:'Third‑party promise to absorb losses on default, de‑risking lenders and unlocking credit.' },
+      ]
+    },
+    {
+      group:'Asset Classes (selected)',
+      items:[
+        { term:'Bonds (incl. Green/Social)', def:'Debt securities, including labeled bonds whose proceeds fund environmental or social projects.' },
+        { term:'Stocks',    def:'Equity ownership in companies; traded on exchanges.' },
+        { term:'Real Assets', def:'Physical assets like real estate and infrastructure.' },
+        { term:'Commodities', def:'Tradable raw materials such as cocoa, gold, oil.' },
+        { term:'Money Market & Cash', def:'Short‑term instruments for liquidity.' },
+        { term:'Crypto/Digital Assets', def:'Digitally‑native assets on blockchains.' },
+      ]
+    },
+    /* Additional glossary entries derived from the uploaded glossary document */
+    {
+      group:'Financial Markets',
+      items:[
+        { term:'Banking', def:'A network of financial institutions that take deposits and lend money, providing a range of financial services and acting as a conduit of capital to businesses.' },
+        { term:'Investment Services', def:'Specialists and firms that advise clients on financial products, planning and fund‑raising, including the policies, rules and standards that apply to these activities.' }
+      ]
+    },
+    {
+      group:'Investment Services',
+      items:[
+        { term:'Investment Fund Managers', def:'Professionals who construct and manage diversified investment portfolios on behalf of clients or sponsors.' },
+        { term:'Financial Advisors', def:'Advisors who provide financial guidance and planning services to individuals and organizations.' },
+        { term:'Investment Consultants', def:'Consultants who formulate investment strategies and planning for their clients.' },
+        { term:'Proxy Voting Agencies', def:'Specialized firms that advise on and execute shareholder votes for fund managers.' }
+      ]
+    },
+    {
+      group:'Fintech & Platforms',
+      items:[
+        { term:'Financial Technology', def:'Technology, software and algorithms that improve and automate the delivery and use of financial services.' },
+        { term:'Online Investment Platforms', def:'Digital platforms that allow individuals to buy, sell and hold investments through a single online account.' },
+        { term:'Crowdfunding Platforms', def:'Internet‑based platforms that raise small amounts of money from a large number of people to fund projects or ventures.' }
+      ]
+    },
+    {
+      group:'Investment Vehicles',
+      items:[
+        { term:'Debt Funds', def:'Funds investing in fixed‑income securities like bonds and treasury bills, offering relatively steady income.' },
+        { term:'Private Equity', def:'Investments made in private companies either directly or through specialized funds.' },
+        { term:'Venture Capital Funds', def:'Funds that finance start‑up companies and businesses in high‑growth sectors.' },
+        { term:'Exchange Traded Funds & Notes', def:'Marketable securities that track an index, commodity or basket of assets and trade like stocks.' },
+        { term:'Mutual Funds & Investment Trusts', def:'Collective investment schemes that pool money from investors to purchase diversified securities.' },
+        { term:'Pooled Funds', def:'Investment structures where multiple investors combine capital to benefit from diversification and economies of scale.' }
+      ]
+    }
   ],
 
   strategies: [
@@ -1127,6 +1270,65 @@ function buildGlossary(){
   });
 }
 
+// Inject static glossary content into the glossary view. This creates markup
+// on the fly so that the glossary appears reliably when the tab is shown. If
+// you need to update the definitions later, modify the HTML strings below.
+function injectGlossary(){
+  var container = document.getElementById('glossary-container');
+  if(!container) return;
+  var html = '';
+  html += '<h3 style="margin-top:0">Key Terms Glossary</h3>';
+  // Investment Tools
+  html += '<div class="block">';
+  html += '<h4>Investment Tools (selected)</h4>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Equity</span>Ownership capital with upside through dividends or capital gains; patient but higher‑risk.</div>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Debt</span>Loans or bonds requiring repayment with interest; preserves ownership but affects cash flow.</div>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Guarantee</span>Third‑party promise to absorb losses on default, de‑risking lenders and unlocking credit.</div>';
+  html += '</div>';
+  // Asset Classes
+  html += '<div class="block">';
+  html += '<h4>Asset Classes (selected)</h4>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Bonds (incl. Green/Social)</span>Debt securities, including labeled bonds whose proceeds fund environmental or social projects.</div>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Stocks</span>Equity ownership in companies; traded on exchanges.</div>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Real Assets</span>Physical assets like real estate and infrastructure.</div>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Commodities</span>Tradable raw materials such as cocoa, gold and oil.</div>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Money Market &amp; Cash</span>Short‑term instruments used for liquidity.</div>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Crypto/Digital Assets</span>Digitally‑native assets recorded on blockchains.</div>';
+  html += '</div>';
+  // Financial Markets
+  html += '<div class="block">';
+  html += '<h4>Financial Markets</h4>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Banking</span>A network of financial institutions that take deposits and lend money, acting as a conduit of capital to businesses.</div>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Investment Services</span>Specialists and firms that advise clients on financial products, planning and fund‑raising, including the policies, rules and standards that apply to these activities.</div>';
+  html += '</div>';
+  // Investment Services
+  html += '<div class="block">';
+  html += '<h4>Investment Services</h4>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Investment Fund Managers</span>Professionals who construct and manage diversified investment portfolios on behalf of clients or sponsors.</div>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Financial Advisors</span>Advisors who provide financial guidance and planning services to individuals and organizations.</div>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Investment Consultants</span>Consultants who formulate investment strategies and planning for their clients.</div>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Proxy Voting Agencies</span>Specialized firms that advise on and execute shareholder votes for fund managers.</div>';
+  html += '</div>';
+  // Fintech & Platforms
+  html += '<div class="block">';
+  html += '<h4>Fintech &amp; Platforms</h4>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Financial Technology</span>Technology, software and algorithms that improve and automate the delivery and use of financial services.</div>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Online Investment Platforms</span>Digital platforms that allow individuals to buy, sell and hold investments through a single online account.</div>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Crowdfunding Platforms</span>Internet‑based platforms that raise small amounts of money from a large number of people to fund projects or ventures.</div>';
+  html += '</div>';
+  // Investment Vehicles
+  html += '<div class="block">';
+  html += '<h4>Investment Vehicles</h4>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Debt Funds</span>Funds investing in fixed‑income securities like bonds and treasury bills, offering relatively steady income.</div>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Private Equity</span>Investments made in private companies either directly or through specialized funds.</div>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Venture Capital Funds</span>Funds that finance start‑up companies and businesses in high‑growth sectors.</div>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Exchange Traded Funds &amp; Notes</span>Marketable securities that track an index, commodity or basket of assets and trade like stocks.</div>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Mutual Funds &amp; Investment Trusts</span>Collective investment schemes that pool money from investors to purchase diversified securities.</div>';
+  html += '<div class="p"><span class="badge" style="margin-right:8px">Pooled Funds</span>Investment structures where multiple investors combine capital to benefit from diversification and economies of scale.</div>';
+  html += '</div>';
+  container.innerHTML = html;
+}
+
 // Strategies builder
 function buildStrategies(){
   var sList = document.getElementById('strategiesList');
@@ -1135,8 +1337,8 @@ function buildStrategies(){
     var block = document.createElement('div');
     block.className='strategy';
     var desc = '<div class="desc">'+s.longDesc+'</div>';
-    // Strategy-level actions (download all examples)
-    var actions = '<div class="strategy-actions"><button class="btn" data-dl="'+s.key+'">Download Strategy Brief (PDF)</button></div>';
+    // Strategy-level actions (download all examples) – removed PDF download button
+    var actions = '';
 
     // Stakeholders chips
     var chips = '<div class="chips">';
@@ -1175,12 +1377,7 @@ function buildStrategies(){
     });
   });
 
-  // download strategy brief buttons
-  sList.querySelectorAll('[data-dl]').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      var key = btn.getAttribute('data-dl'); exportStrategy(key);
-    });
-  });
+  // Removed individual strategy PDF downloads – no buttons to wire up
 }
 
 // Utilities for Strategy PDF
@@ -1335,7 +1532,8 @@ function exportStrategy(key){
     '<div class="cover">'+
       '<div class="hdr"><div class="dot"></div><div style="font-weight:700;letter-spacing:.2px;color:var(--blue)">Impact Investing Ecosystem - Strategy Brief</div></div>'+
       '<h1>'+s.title+'</h1>'+
-      '<div class="muted">Generated '+dateStr+' â€¢ Brand colors: <span style="color:var(--green)">#0F7938</span>, <span style="color:var(--blue)">#1E2951</span>, <span style="color:var(--yellow)">#D4AF37</span>, <span style="color:var(--light)">#6FBFB3</span></div>'+
+      /* Remove the AI tell about brand colors from the strategy PDF header */
+      '<div class="muted">Generated '+dateStr+'</div>'+
       '<p style="margin-top:10px">'+(s.longDesc||'')+'</p>'+
       '<div class="box"><span class="k">Instruments you may see in this strategy:</span><br>'+instrumentBadges+'</div>'+
     '</div>'+
@@ -1391,7 +1589,9 @@ q.addEventListener('input', function(){
     card.style.display = hit? '' : 'none';
   });
   // filter glossary lines
-  document.querySelectorAll('#glossary .block .p').forEach(function(d){
+  // Filter glossary terms; use the static glossary container rather than the
+  // original #glossary element which no longer exists.
+  document.querySelectorAll('#view-glossary .block .p').forEach(function(d){
     var text=d.textContent.toLowerCase();
     d.style.display = term==='' || text.indexOf(term)>=0 ? '' : 'none';
   });
@@ -1458,13 +1658,27 @@ document.getElementById('how').addEventListener('click', function(){
   modalBody.innerHTML = ''
     + '<div class="block"><h4>Explore roles</h4><div class="p">Open any card to see <em>Description</em>, <em>Capacities</em>, <em>Challenges</em>, <em>Sub-categories</em>, and <em>Dependencies</em>. Dependency chips jump to the related stakeholder.</div></div>'
     + '<div class="block"><h4>Function Lens</h4><div class="p">Use the chips to spotlight who does <strong>Provision</strong>, <strong>Origination</strong>, <strong>Execution</strong>, or <strong>Opportunity Development</strong>.</div></div>'
-    + '<div class="block"><h4>Strategies</h4><div class="p">Open the <strong>Strategies</strong> tab to read step-by-step flows (â€œHow the money movesâ€) under each strategy-<strong>Divesting</strong>, <strong>ESG Integration & Stewardship</strong>, <strong>Thematic</strong>, and <strong>Place-Based</strong>. Click any stakeholder chip to jump back to the Map and open its details.</div></div>'
-    + '<div class="block"><h4>Download</h4><div class="p">Use <strong>Download Strategy Brief</strong> to export a print-ready multi-case PDF using your brand font and colors. Each example includes <em>Key Steps</em>, an <em>Illustrative Capital Stack</em>, and <em>Who depends on whom (and why)</em>.</div></div>';
+    + '<div class="block"><h4>Strategies</h4><div class="p">Open the <strong>Strategies</strong> tab to read step‑by‑step flows under each strategy — <strong>Divesting</strong>, <strong>ESG Integration & Stewardship</strong>, <strong>Thematic</strong>, and <strong>Place‑Based</strong>. Click any stakeholder chip to jump back to the Map and open its details.</div></div>'
+    ;
   modal.classList.add('open');
 });
 
+// Mobile menu toggle
+(function(){
+  var toggle = document.getElementById('menuToggle');
+  var aside = document.querySelector('aside');
+  var overlay = document.getElementById('menuOverlay');
+  function closeMenu(){ aside.classList.remove('open'); overlay.classList.remove('open'); }
+  function openMenu(){ aside.classList.add('open'); overlay.classList.add('open'); }
+  toggle.addEventListener('click', function(){ aside.classList.contains('open') ? closeMenu() : openMenu() });
+  overlay.addEventListener('click', closeMenu);
+  aside.querySelectorAll('.nav button').forEach(function(btn){ btn.addEventListener('click', closeMenu) });
+})();
+
 // Boot
-buildColumns(); functionLens('all'); buildGlossary(); buildStrategies();
+buildColumns();
+functionLens('all');
+buildStrategies();
 
 // Georgia tab initialization
 function initGeorgiaTab() {
