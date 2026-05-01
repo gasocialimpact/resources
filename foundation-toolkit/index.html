@@ -130,6 +130,8 @@ aside{
     <symbol id="i-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></symbol>
     <symbol id="i-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></symbol>
     <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></symbol>
+    <symbol id="i-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></symbol>
+    <symbol id="i-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></symbol>
   </defs>
 </svg>
 
@@ -153,8 +155,10 @@ aside{
     <div class="nav">
       <button class="active" data-view="calculator"><svg><use href="#i-coin"/></svg> Source of Funds Calculator</button>
       <button data-view="case-studies"><svg><use href="#i-book"/></svg> Foundation Case Studies</button>
-      <button data-view="rfp-evaluation"><svg><use href="#i-clipboard"/></svg> RFP Evaluation Tool</button>
-      <button data-view="rfp-pool"><svg><use href="#i-users"/></svg> RFP Candidate Pool</button>
+      <button data-view="reflective-worksheet"><svg><use href="#i-pencil"/></svg> Reflective Worksheet</button>
+      <button data-view="guidance"><svg><use href="#i-compass"/></svg> Guidance for Advisor Search</button>
+      <button data-view="rfp-pool"><svg><use href="#i-users"/></svg> Advisor Search Candidate Pool</button>
+      <button data-view="rfp-evaluation"><svg><use href="#i-clipboard"/></svg> Advisor Proposal Evaluation Tool</button>
     </div>
     <div class="tip">
       Use the tabs above to move between tools. Each tool also has its own page if you want to embed just one. Use Print to save the current view as a PDF.
@@ -180,20 +184,36 @@ aside{
         <iframe class="tool-frame" src="case-studies.html" title="Foundation Case Studies" loading="lazy"></iframe>
       </div>
 
-      <div id="view-rfp-evaluation" class="section">
+      <div id="view-reflective-worksheet" class="section">
         <div class="section-intro">
-          <h1><svg><use href="#i-clipboard"/></svg> RFP Evaluation Tool</h1>
-          <p>A general-purpose evaluation tool for foundations sourcing impact investing strategy advisors. Add proposals, score them through screening and detailed review, and generate feedback letters.</p>
+          <h1><svg><use href="#i-pencil"/></svg> Reflective Worksheet</h1>
+          <p>A self-paced worksheet that helps your foundation think through where you stand on impact investing. Your responses save automatically in your browser.</p>
         </div>
-        <iframe class="tool-frame" src="rfp-evaluation.html" title="RFP Evaluation Tool" loading="lazy"></iframe>
+        <iframe class="tool-frame" src="reflective-worksheet.html" title="Reflective Worksheet" loading="lazy"></iframe>
+      </div>
+
+      <div id="view-guidance" class="section">
+        <div class="section-intro">
+          <h1><svg><use href="#i-compass"/></svg> Guidance for Advisor Search</h1>
+          <p>How to think through hiring a search consultant, managing an advisor RFP internally, or pursuing a hybrid approach. Includes process timeline, key RFP components, and decision pathways.</p>
+        </div>
+        <iframe class="tool-frame" src="guidance.html" title="Guidance for Advisor Search" loading="lazy"></iframe>
       </div>
 
       <div id="view-rfp-pool" class="section">
         <div class="section-intro">
-          <h1><svg><use href="#i-users"/></svg> Investment Advisor RFP Candidate Pool</h1>
+          <h1><svg><use href="#i-users"/></svg> Advisor Search Candidate Pool</h1>
           <p>A curated Airtable of impact investing strategy advisors that foundations can consider when sourcing proposals.</p>
         </div>
-        <iframe class="tool-frame" src="https://airtable.com/embed/appaiDoxyHhRJmqpq/shrqctgAS4lbvstsr" title="Investment Advisor RFP Candidate Pool" loading="lazy" style="height:900px"></iframe>
+        <iframe class="tool-frame" src="https://airtable.com/embed/appaiDoxyHhRJmqpq/shrqctgAS4lbvstsr" title="Advisor Search Candidate Pool" loading="lazy" style="height:900px"></iframe>
+      </div>
+
+      <div id="view-rfp-evaluation" class="section">
+        <div class="section-intro">
+          <h1><svg><use href="#i-clipboard"/></svg> Advisor Proposal Evaluation Tool</h1>
+          <p>A general-purpose evaluation tool for foundations sourcing impact investing strategy advisors. Add proposals, score them through screening and detailed review, and generate feedback letters.</p>
+        </div>
+        <iframe class="tool-frame" src="rfp-evaluation.html" title="Advisor Proposal Evaluation Tool" loading="lazy"></iframe>
       </div>
 
     </div>
