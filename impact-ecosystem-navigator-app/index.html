@@ -11,7 +11,7 @@
   --brand-dk:#4750a2; --brand-grn:#149a49; --brand-ylw:#eec61a; --brand-lbl:#53c3c2;
   --ink:#000000; --ink-2:#33406f; --muted:#5c6b9b; --bg:#ffffff; --surface:#f6f8fb;
   --card:#ffffff; --line:#e4e8f2; --ok:#149a49;
-  --shadow:0 10px 30px rgba(0,0,0,.08); --radius:14px;
+  --shadow:none; --radius:14px;
 }
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -24,7 +24,7 @@ body{margin:0;background:var(--bg); color:var(--ink);
 header{position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid var(--line)}
 .wrap{max-width:1600px; margin:0 auto; padding:12px 18px; display:flex; gap:10px; align-items:center; flex-wrap:wrap}
 .brand{width:24px; height:24px; border-radius:6px; background:conic-gradient(from 90deg, var(--brand-dk), var(--brand-lbl), var(--brand-ylw), var(--brand-grn)); border:1px solid var(--line)}
-.kicker{font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+.kicker{font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink)}
 .controls{margin-left:auto; display:flex; gap:8px; flex-wrap:wrap}
 .btn{background:#fff; color:var(--ink); border:1px solid var(--line); padding:9px 12px; font-weight:700; border-radius:10px; cursor:pointer; transition:.2s}
 .btn:hover{transform:translateY(-1px); box-shadow:0 4px 14px rgba(0,0,0,.08)}
@@ -34,8 +34,9 @@ header{position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px so
 main{max-width:1600px; margin:18px auto 20px; padding:0 18px; display:grid; grid-template-columns:280px 1fr; gap:16px}
 aside{position:sticky; top:66px; align-self:start; background:#fff; border:1px solid var(--line); border-radius:14px; padding:12px; box-shadow:var(--shadow)}
 .nav{display:grid; gap:6px}
-.nav button{width:100%; text-align:left; background:#fff; color:var(--ink); border:1px solid var(--line); padding:10px 12px; border-radius:10px; cursor:pointer}
-.nav button.active{outline:2px solid var(--brand-lbl)}
+.nav button{width:100%; text-align:left; background:#fff; color:var(--ink); border:1px solid var(--line); padding:10px 12px; border-radius:10px; cursor:pointer; font-family:inherit; font-size:14px; font-weight:500; transition:.15s}
+.nav button:hover{background:#e0f1d9; border-color:var(--brand-grn); color:var(--brand-grn)}
+.nav button.active{background:#e0f1d9; border-color:var(--brand-grn); color:var(--brand-grn); font-weight:700}
 .section{display:none}
 .section.active{display:block}
 
