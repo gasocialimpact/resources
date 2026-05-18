@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impact Investing Readiness Worksheet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Young+Serif&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Primary Colors */
+            --dark-green: #149a49;
+            --dark-blue: #4750a2;
+            --light-green: #66b445;
+            
+            /* Secondary Colors */
+            --bg-light-green: #e0f1d9;
+            --bg-light-yellow: #fff1d3;
+            --bg-light-purple: #dde0fe;
+            
+            /* Accent Colors */
+            --gold: #eec61a;
+            --orange: #f15922;
+            --teal: #53c3c2;
+            
+            /* Neutral */
+            --text-dark: #2c2c2c;
+            --text-muted: #555;
+            --border-color: #e0e0e0;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Familjen Grotesk', sans-serif;
+            background: var(--white);
+            line-height: 1.6;
+            color: var(--text-dark);
+            min-height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 100%;
+            width: 100%;
+            background: var(--white);
+        }
+
+        .content-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-title {
+            font-family: 'Young Serif', serif;
+            font-size: 32px;
+            margin-bottom: 10px;
+            line-height: 1.3;
+            color: var(--dark-blue);
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 25px;
+        }
+
+        /* Action Buttons */
+        .action-bar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .action-btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-family: 'Familjen Grotesk', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 2px solid transparent;
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, var(--dark-green) 0%, var(--light-green) 100%);
+            color: var(--white);
+            border-color: var(--dark-green);
+        }
+
+        .action-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(20,154,73,0.3);
+        }
+
+        .action-btn.secondary {
+            background: var(--white);
+            color: var(--dark-blue);
+            border-color: var(--border-color);
+        }
+
+        .action-btn.secondary:hover {
+            border-color: var(--dark-blue);
+            background: #f8f9fa;
+        }
+
+        .action-btn.danger {
+            background: var(--white);
+            color: var(--orange);
+            border-color: var(--orange);
+        }
+
+        .action-btn.danger:hover {
+            background: #fff5f2;
+        }
+
+        .action-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Progress Indicator */
+        .progress-container {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .progress-label {
+            font-weight: 600;
+            color: var(--dark-blue);
+        }
+
+        .progress-percentage {
+            font-weight: 700;
+            color: var(--dark-green);
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: var(--bg-light-green);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--dark-green) 0%, var(--light-green) 100%);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .save-status {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .save-status.saved {
+            color: var(--dark-green);
+        }
+
+        /* Worksheet Card */
+        .worksheet-card {
+            background: var(--white);
+            border-radius: 14px;
+            box-shadow: 0 4px 20px rgba(71,80,162,0.1);
+            border: 2px solid var(--border-color);
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        /* Section Styling */
+        .section {
+            padding: 30px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .section-number {
+            width: 40px;
+            height: 40px;
+            background: var(--dark-blue);
+            color: var(--white);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .section-title-group {
+            flex: 1;
+        }
+
+        .section-title {
+            font-family: 'Young Serif', serif;
+            font-size: 22px;
+            color: var(--dark-blue);
+            margin-bottom: 6px;
+        }
+
+        .section-description {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .form-label .required {
+            color: var(--orange);
+        }
+
+        .form-hint {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        textarea,
+        input[type="text"] {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-family: 'Familjen Grotesk', sans-serif;
+            font-size: 15px;
+            line-height: 1.6;
+            transition: all 0.3s ease;
+            resize: vertical;
+        }
+
+        textarea:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--dark-blue);
+            box-shadow: 0 0 0 3px rgba(71,80,162,0.1);
+        }
+
+        textarea {
+            min-height: 120px;
+        }
+
+        textarea.small {
+            min-height: 80px;
+        }
+
+        /* Checkbox Group */
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .checkbox-item:hover {
+            background: var(--bg-light-purple);
+        }
+
+        .checkbox-item.checked {
+            background: var(--bg-light-green);
+            border-color: var(--dark-green);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: var(--dark-green);
+        }
+
+        .checkbox-label {
+            flex: 1;
+            font-size: 14px;
+            color: var(--text-dark);
+            cursor: pointer;
+        }
+
+        /* Radio Group */
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .radio-item:hover {
+            background: var(--bg-light-yellow);
+        }
+
+        .radio-item.checked {
+            background: var(--bg-light-green);
+            border-color: var(--dark-green);
+        }
+
+        .radio-item input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--dark-green);
+        }
+
+        .radio-label {
+            flex: 1;
+            font-size: 14px;
+            color: var(--text-dark);
+            cursor: pointer;
+        }
+
+        /* Action Items Input */
+        .action-items-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .action-item-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .action-item-number {
+            width: 32px;
+            height: 32px;
+            background: var(--gold);
+            color: var(--text-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .action-item-row input {
+            flex: 1;
+        }
+
+        /* Footer Section */
+        .footer-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 0 0 12px 12px;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .footer-reminder {
+            background: var(--white);
+            border-left: 4px solid var(--gold);
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 25px;
+        }
+
+        .footer-reminder-title {
+            font-weight: 700;
+            color: var(--dark-blue);
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .footer-reminder-content {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .footer-reminder-content a {
+            color: var(--dark-green);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-reminder-content a:hover {
+            text-decoration: underline;
+        }
+
+        /* Resources Grid */
+        .resources-title {
+            font-family: 'Young Serif', serif;
+            font-size: 20px;
+            color: var(--dark-blue);
+            margin-bottom: 20px;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .resource-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: var(--white);
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+
+        .resource-link:hover {
+            border-color: var(--dark-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(20,154,73,0.15);
+        }
+
+        .resource-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-light-green);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .resource-info {
+            flex: 1;
+        }
+
+        .resource-name {
+            font-weight: 600;
+            color: var(--dark-blue);
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .resource-description {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                font-size: 11pt;
+            }
+
+            .action-bar {
+                display: none;
+            }
+
+            .progress-container {
+                display: none;
+            }
+
+            .worksheet-card {
+                box-shadow: none;
+                border: 1px solid #ccc;
+                page-break-inside: avoid;
+            }
+
+            .section {
+                page-break-inside: avoid;
+            }
+
+            .checkbox-item,
+            .radio-item {
+                background: white;
+                border: 1px solid #ccc;
+            }
+
+            textarea,
+            input[type="text"] {
+                border: 1px solid #ccc;
+                background: white;
+            }
+
+            .footer-section {
+                background: white !important;
+            }
+
+            .resource-link {
+                display: none;
+            }
+
+            .resources-grid {
+                display: none;
+            }
+
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 15px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .action-bar {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .section {
+                padding: 25px 20px;
+            }
+
+            .section-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .section-number {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+
+            .resources-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper">
+            <h1 class="page-title">Impact Investing Readiness Worksheet</h1>
+            <p class="page-subtitle">
+                Use this interactive worksheet to reflect on your foundation's readiness for impact investing. 
+                Your responses will be saved automatically and can be exported as a PDF for sharing with your team.
+            </p>
+
+            <!-- Action Buttons -->
+            <div class="action-bar">
+                <button class="action-btn primary" onclick="exportToPDF()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Export to PDF
+                </button>
+                <button class="action-btn secondary" onclick="saveProgress()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                        <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                    Save Progress
+                </button>
+                <button class="action-btn danger" onclick="clearAll()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    Clear All
+                </button>
+            </div>
+
+            <!-- Progress Indicator -->
+            <div class="progress-container">
+                <div class="progress-header">
+                    <span class="progress-label">Worksheet Completion</span>
+                    <span class="progress-percentage" id="progressPercentage">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="save-status" id="saveStatus">
+                    <span>Auto-save enabled</span>
+                </div>
+            </div>
+
+            <!-- Worksheet Form -->
+            <form id="worksheetForm" class="worksheet-card">
+                <!-- Section 1: Foundation Readiness Assessment -->
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-number">1</div>
+                        <div class="section-title-group">
+                            <h2 class="section-title">Foundation Readiness Assessment</h2>
+                            <p class="section-description">Evaluate your foundation's current state of readiness for impact investing.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">What is motivating your foundation to explore impact investing?</label>
+                            <p class="form-hint">Consider strategic goals, board interest, community needs, peer examples, etc.</p>
+                            <textarea id="motivation" name="motivation" placeholder="Describe your foundation's motivations for exploring impact investing..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Who are the internal champions for impact investing at your foundation?</label>
+                            <p class="form-hint">Include board members, staff, advisors, and other stakeholders.</p>
+                            <textarea id="champions" name="champions" class="small" placeholder="List the key individuals who are championing impact investing..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Which of these characteristics describe your foundation? (Select all that apply)</label>
+                            <div class="checkbox-group" id="characteristicsGroup">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="characteristics" value="mission-alignment">
+                                    <span class="checkbox-label">Our investment portfolio should align with our mission</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="characteristics" value="board-interest">
+                                    <span class="checkbox-label">Board members have expressed interest in impact investing</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="characteristics" value="grant-limitations">
+                                    <span class="checkbox-label">We see limitations of grants alone to achieve our goals</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="characteristics" value="capital-leverage">
+                                    <span class="checkbox-label">We want to leverage our capital for greater community impact</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="characteristics" value="peer-examples">
+                                    <span class="checkbox-label">We've seen successful examples from peer foundations</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="characteristics" value="policy-exists">
+                                    <span class="checkbox-label">We already have an investment policy statement</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="characteristics" value="financial-expertise">
+                                    <span class="checkbox-label">We have staff or board with financial/investment expertise</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Capital Source Planning -->
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-number">2</div>
+                            <div class="section-title-group">
+                                <h2 class="section-title">Capital Source Planning</h2>
+                                <p class="section-description">Consider where capital for impact investments might come from.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">What percentage of your endowment might you consider allocating to impact investments?</label>
+                            <div class="radio-group" id="endowmentGroup">
+                                <label class="radio-item">
+                                    <input type="radio" name="endowmentPercentage" value="1-2">
+                                    <span class="radio-label">1-2% (Conservative pilot)</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="endowmentPercentage" value="3-5">
+                                    <span class="radio-label">3-5% (Moderate allocation)</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="endowmentPercentage" value="6-10">
+                                    <span class="radio-label">6-10% (Significant commitment)</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="endowmentPercentage" value="10-plus">
+                                    <span class="radio-label">More than 10% (Major strategic priority)</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="endowmentPercentage" value="unsure">
+                                    <span class="radio-label">Unsure / Need more information</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">What concerns do you have about allocating capital to impact investments?</label>
+                            <textarea id="capitalConcerns" name="capitalConcerns" placeholder="Describe any concerns about fiduciary duty, returns, liquidity, risk, etc."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">How might you address these concerns?</label>
+                            <p class="form-hint">Consider policies, education, pilot programs, external expertise, etc.</p>
+                            <textarea id="addressingConcerns" name="addressingConcerns" class="small" placeholder="Outline potential approaches to addressing your concerns..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Section 3: Investment Strategy Exploration -->
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-number">3</div>
+                            <div class="section-title-group">
+                                <h2 class="section-title">Investment Strategy Exploration</h2>
+                                <p class="section-description">Explore the types of impact investments that might align with your mission.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Which investment types interest you? (Select all that apply)</label>
+                            <div class="checkbox-group" id="investmentTypesGroup">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="investmentTypes" value="cdfi-notes">
+                                    <span class="checkbox-label">CDFI Investment Notes (loans to community lenders)</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="investmentTypes" value="pri-loans">
+                                    <span class="checkbox-label">Program-Related Investments (PRIs) - Direct loans to nonprofits</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="investmentTypes" value="mri-funds">
+                                    <span class="checkbox-label">Mission-Related Investments (MRIs) - Impact funds with market returns</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="investmentTypes" value="loan-guarantees">
+                                    <span class="checkbox-label">Loan Guarantees (credit enhancement for other lenders)</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="investmentTypes" value="housing-funds">
+                                    <span class="checkbox-label">Affordable Housing Funds</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="investmentTypes" value="social-enterprise">
+                                    <span class="checkbox-label">Social Enterprise Equity</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="investmentTypes" value="esg-screening">
+                                    <span class="checkbox-label">ESG Screening of Public Investments</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">What impact areas would you want investments to support?</label>
+                            <p class="form-hint">Consider alignment with your grantmaking priorities.</p>
+                            <textarea id="impactAreas" name="impactAreas" placeholder="List impact areas such as affordable housing, small business, healthcare access, education, etc."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">What investment terms would work for your foundation?</label>
+                            <p class="form-hint">Consider duration, expected returns, reporting requirements, etc.</p>
+                            <textarea id="investmentTerms" name="investmentTerms" class="small" placeholder="Describe your preferences for loan terms, return expectations, and other requirements..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Section 4: Capacity and Process Development -->
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-number">4</div>
+                            <div class="section-title-group">
+                                <h2 class="section-title">Capacity and Process Development</h2>
+                                <p class="section-description">Assess what resources and systems you'll need to implement impact investing.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">What resources or systems do you need to develop? (Select all that apply)</label>
+                            <div class="checkbox-group" id="resourcesGroup">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="resources" value="policy">
+                                    <span class="checkbox-label">Investment policy statement / PRI policy</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="resources" value="due-diligence">
+                                    <span class="checkbox-label">Due diligence process and criteria</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="resources" value="board-education">
+                                    <span class="checkbox-label">Board education and training</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="resources" value="staff-capacity">
+                                    <span class="checkbox-label">Staff capacity / expertise development</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="resources" value="legal-templates">
+                                    <span class="checkbox-label">Legal documentation templates</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="resources" value="reporting-systems">
+                                    <span class="checkbox-label">Reporting and monitoring systems</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="resources" value="ocio-alignment">
+                                    <span class="checkbox-label">Alignment with OCIO / investment advisor</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="resources" value="external-expertise">
+                                    <span class="checkbox-label">External expertise or consulting support</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">What is your realistic timeline for making your first impact investment?</label>
+                            <div class="radio-group" id="timelineGroup">
+                                <label class="radio-item">
+                                    <input type="radio" name="timeline" value="6-months">
+                                    <span class="radio-label">Within 6 months</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="timeline" value="12-months">
+                                    <span class="radio-label">6-12 months</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="timeline" value="18-months">
+                                    <span class="radio-label">12-18 months</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="timeline" value="24-plus">
+                                    <span class="radio-label">More than 18 months</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="timeline" value="unsure">
+                                    <span class="radio-label">Unsure / Still exploring</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 5: Learning from Georgia Case Studies -->
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-number">5</div>
+                            <div class="section-title-group">
+                                <h2 class="section-title">Learning from Georgia Case Studies</h2>
+                                <p class="section-description">Reflect on lessons from other Georgia foundations that have implemented impact investing.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Which Georgia foundation case study approach resonates most with your situation?</label>
+                            <p class="form-hint">Consider Sapelo (rural CDFIs), CFGA (community foundation), Bradley-Turner (housing focus), or William Josef (mixed strategy).</p>
+                            <textarea id="resonatingApproach" name="resonatingApproach" placeholder="Describe which approach resonates with you and why..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">What key lessons from these case studies are most relevant to your foundation?</label>
+                            <textarea id="keyLessons" name="keyLessons" placeholder="List the lessons learned that you want to apply..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">What concerns or questions do you still have after reviewing the case studies?</label>
+                            <textarea id="remainingConcerns" name="remainingConcerns" class="small" placeholder="List any remaining questions or concerns..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Section 6: Next Steps Action Plan -->
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-number">6</div>
+                            <div class="section-title-group">
+                                <h2 class="section-title">Next Steps Action Plan</h2>
+                                <p class="section-description">Develop concrete next steps to move your impact investing journey forward.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">What are your top 3 action items for the next 90 days?</label>
+                            <div class="action-items-group">
+                                <div class="action-item-row">
+                                    <div class="action-item-number">1</div>
+                                    <input type="text" id="action1" name="action1" placeholder="First priority action item...">
+                                </div>
+                                <div class="action-item-row">
+                                    <div class="action-item-number">2</div>
+                                    <input type="text" id="action2" name="action2" placeholder="Second priority action item...">
+                                </div>
+                                <div class="action-item-row">
+                                    <div class="action-item-number">3</div>
+                                    <input type="text" id="action3" name="action3" placeholder="Third priority action item...">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Who are the key stakeholders you need to engage?</label>
+                            <p class="form-hint">Consider board members, staff, advisors, partners, etc.</p>
+                            <textarea id="stakeholders" name="stakeholders" class="small" placeholder="List the people you need to engage and their roles..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">What resources or support do you need to move forward?</label>
+                            <textarea id="neededResources" name="neededResources" class="small" placeholder="Describe the resources, training, or support you need..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">How will you measure success in your impact investing journey?</label>
+                            <p class="form-hint">Consider both process milestones and impact outcomes.</p>
+                            <textarea id="successMeasurement" name="successMeasurement" placeholder="Describe how you will know you're succeeding..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Footer Section -->
+                    <div class="footer-section">
+                        <div class="footer-reminder">
+                            <div class="footer-reminder-title">Ready to Take the Next Step?</div>
+                            <div class="footer-reminder-content">
+                                Connect with Georgia's impact investing community to get support, access resources, and learn from peers. 
+                                Reach out to the <a href="https://gasocialimpact.com" target="_blank" rel="noopener">Georgia Social Impact Collaborative</a>, 
+                                join <a href="https://missioninvestors.org" target="_blank" rel="noopener">Mission Investors Exchange</a>, 
+                                or connect with the <a href="https://gagrantmakers.org" target="_blank" rel="noopener">Georgia Grantmakers Alliance</a>.
+                            </div>
+                        </div>
+
+                        <h3 class="resources-title">Helpful Resources</h3>
+                        <div class="resources-grid">
+                            <a href="https://gasocialimpact.com" target="_blank" rel="noopener" class="resource-link">
+                                <div class="resource-icon">☞</div>
+                                <div class="resource-info">
+                                    <div class="resource-name">Georgia Social Impact Collaborative</div>
+                                    <div class="resource-description">Georgia's impact investing network</div>
+                                </div>
+                            </a>
+                            <a href="https://missioninvestors.org" target="_blank" rel="noopener" class="resource-link">
+                                <div class="resource-icon">☞</div>
+                                <div class="resource-info">
+                                    <div class="resource-name">Mission Investors Exchange</div>
+                                    <div class="resource-description">National foundation impact investing network</div>
+                                </div>
+                            </a>
+                            <a href="https://gagrantmakers.org" target="_blank" rel="noopener" class="resource-link">
+                                <div class="resource-icon">☞</div>
+                                <div class="resource-info">
+                                    <div class="resource-name">Georgia Grantmakers Alliance</div>
+                                    <div class="resource-description">Georgia's philanthropy association</div>
+                                </div>
+                            </a>
+                            <a href="#" class="resource-link">
+                                <div class="resource-icon">📄</div>
+                                <div class="resource-info">
+                                    <div class="resource-name">Sample Documents</div>
+                                    <div class="resource-description">PRI policies, templates, and guides</div>
+                                </div>
+                            </a>
+                            <a href="#" class="resource-link">
+                                <div class="resource-icon">☞</div>
+                                <div class="resource-info">
+                                    <div class="resource-name">Training Opportunities</div>
+                                    <div class="resource-description">Workshops and learning sessions</div>
+                                </div>
+                            </a>
+                            <a href="case-studies.html" class="resource-link">
+                                <div class="resource-icon">☞</div>
+                                <div class="resource-info">
+                                    <div class="resource-name">Case Studies</div>
+                                    <div class="resource-description">Georgia foundation examples</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    <script>
+    // Auto-save functionality
+    const STORAGE_KEY = 'impactInvestingWorksheet';
+    let saveTimeout;
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        loadProgress();
+        setupAutoSave();
+        updateProgress();
+        setupCheckboxStyling();
+        setupRadioStyling();
+    });
+
+    // Setup auto-save on any input change
+    function setupAutoSave() {
+        const form = document.getElementById('worksheetForm');
+        form.addEventListener('input', function() {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(function() {
+                saveProgress();
+            }, 1000);
+        });
+
+        form.addEventListener('change', function() {
+            updateProgress();
+        });
+    }
+
+    // Setup checkbox styling
+    function setupCheckboxStyling() {
+        const checkboxItems = document.querySelectorAll('.checkbox-item');
+        checkboxItems.forEach(function(item) {
+            const checkbox = item.querySelector('input[type="checkbox"]');
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    item.classList.add('checked');
+                } else {
+                    item.classList.remove('checked');
+                }
+            });
+            // Set initial state
+            if (checkbox.checked) {
+                item.classList.add('checked');
+            }
+        });
+    }
+
+    // Setup radio styling
+    function setupRadioStyling() {
+        const radioItems = document.querySelectorAll('.radio-item');
+        radioItems.forEach(function(item) {
+            const radio = item.querySelector('input[type="radio"]');
+            radio.addEventListener('change', function() {
+                // Remove checked class from all items in the same group
+                const groupName = this.name;
+                document.querySelectorAll('input[name="' + groupName + '"]').forEach(function(r) {
+                    r.closest('.radio-item').classList.remove('checked');
+                });
+                // Add checked class to selected item
+                if (this.checked) {
+                    item.classList.add('checked');
+                }
+            });
+            // Set initial state
+            if (radio.checked) {
+                item.classList.add('checked');
+            }
+        });
+    }
+
+    // Save progress to localStorage
+    function saveProgress() {
+        const form = document.getElementById('worksheetForm');
+        const formData = new FormData(form);
+        const data = {};
+
+        // Get all form values
+        formData.forEach(function(value, key) {
+            if (data[key]) {
+                if (Array.isArray(data[key])) {
+                    data[key].push(value);
+                } else {
+                    data[key] = [data[key], value];
+                }
+            } else {
+                data[key] = value;
+            }
+        });
+
+        // Also save checkbox values that might not be in FormData when unchecked
+        const checkboxes = form.querySelectorAll('input[type="checkbox"]');
+        const checkboxData = {};
+        checkboxes.forEach(function(cb) {
+            if (!checkboxData[cb.name]) {
+                checkboxData[cb.name] = [];
+            }
+            if (cb.checked) {
+                checkboxData[cb.name].push(cb.value);
+            }
+        });
+        Object.assign(data, checkboxData);
+
+        // Save to localStorage
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        
+        // Update save status
+        const saveStatus = document.getElementById('saveStatus');
+        saveStatus.innerHTML = '<span style="color: var(--dark-green);">✓ Saved just now</span>';
+        saveStatus.classList.add('saved');
+
+        updateProgress();
+    }
+
+    // Load progress from localStorage
+    function loadProgress() {
+        const savedData = localStorage.getItem(STORAGE_KEY);
+        if (!savedData) return;
+
+        try {
+            const data = JSON.parse(savedData);
+            const form = document.getElementById('worksheetForm');
+
+            // Restore text inputs and textareas
+            Object.keys(data).forEach(function(key) {
+                const element = form.querySelector('[name="' + key + '"]');
+                if (element && (element.type === 'text' || element.tagName === 'TEXTAREA')) {
+                    element.value = data[key];
+                }
+            });
+
+            // Restore checkboxes
+            const checkboxes = form.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(function(cb) {
+                const values = data[cb.name];
+                if (Array.isArray(values)) {
+                    cb.checked = values.includes(cb.value);
+                } else if (values) {
+                    cb.checked = values === cb.value;
+                }
+                // Update styling
+                if (cb.checked) {
+                    cb.closest('.checkbox-item').classList.add('checked');
+                }
+            });
+
+            // Restore radio buttons
+            const radios = form.querySelectorAll('input[type="radio"]');
+            radios.forEach(function(radio) {
+                if (data[radio.name] === radio.value) {
+                    radio.checked = true;
+                    radio.closest('.radio-item').classList.add('checked');
+                }
+            });
+
+            // Update save status
+            const saveStatus = document.getElementById('saveStatus');
+            saveStatus.innerHTML = '<span>Progress restored from previous session</span>';
+
+        } catch (e) {
+            console.error('Error loading saved progress:', e);
+        }
+    }
+
+    // Update progress indicator
+    function updateProgress() {
+        const form = document.getElementById('worksheetForm');
+        
+        // Count filled fields
+        let filledCount = 0;
+        let totalCount = 0;
+
+        // Count textareas and text inputs
+        const textFields = form.querySelectorAll('textarea, input[type="text"]');
+        textFields.forEach(function(field) {
+            totalCount++;
+            if (field.value.trim() !== '') {
+                filledCount++;
+            }
+        });
+
+        // Count radio groups (each group counts as 1)
+        const radioGroups = {};
+        const radios = form.querySelectorAll('input[type="radio"]');
+        radios.forEach(function(radio) {
+            if (!radioGroups[radio.name]) {
+                radioGroups[radio.name] = false;
+                totalCount++;
+            }
+            if (radio.checked) {
+                radioGroups[radio.name] = true;
+            }
+        });
+        Object.values(radioGroups).forEach(function(checked) {
+            if (checked) filledCount++;
+        });
+
+        // Count checkbox groups (each group counts as 1)
+        const checkboxGroups = {};
+        const checkboxes = form.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(function(cb) {
+            if (!checkboxGroups[cb.name]) {
+                checkboxGroups[cb.name] = false;
+                totalCount++;
+            }
+            if (cb.checked) {
+                checkboxGroups[cb.name] = true;
+            }
+        });
+        Object.values(checkboxGroups).forEach(function(checked) {
+            if (checked) filledCount++;
+        });
+
+        const percentage = totalCount > 0 ? Math.round((filledCount / totalCount) * 100) : 0;
+
+        // Update UI
+        document.getElementById('progressPercentage').textContent = percentage + '%';
+        document.getElementById('progressFill').style.width = percentage + '%';
+    }
+
+    // Export to PDF
+    function exportToPDF() {
+        // Save current progress first
+        saveProgress();
+        
+        // Trigger print dialog
+        window.print();
+    }
+
+    // Clear all data
+    function clearAll() {
+        if (confirm('Are you sure you want to clear all your responses? This action cannot be undone.')) {
+            localStorage.removeItem(STORAGE_KEY);
+            
+            const form = document.getElementById('worksheetForm');
+            form.reset();
+
+            // Remove styling classes
+            document.querySelectorAll('.checkbox-item, .radio-item').forEach(function(item) {
+                item.classList.remove('checked');
+            });
+
+            // Update progress
+            updateProgress();
+
+            // Update save status
+            const saveStatus = document.getElementById('saveStatus');
+            saveStatus.innerHTML = '<span>All responses cleared</span>';
+            saveStatus.classList.remove('saved');
+        }
+    }
+    </script>
+</body>
+</html>
