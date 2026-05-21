@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GSIC Innovation Library</title>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#149a49;
+  --green-dark:#0f7a39;
+  --purple:#4750a2;
+  --purple-dark:#373f82;
+  --gold:#eec61a;
+  --teal:#53c3c2;
+  --ink:#000;
+  --ink-soft:#333;
+  --line:#e6e8ec;
+  --line-dark:#cfd2d8;
+  /* Mode-driven accents, default to Learning Mode */
+  --mode-accent:var(--green);
+  --mode-deep:var(--green-dark);
+}
+*{margin:0; padding:0; box-sizing:border-box}
+html,body{min-height:100%; background:#fff}
+body{
+  font-family:'Familjen Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color:var(--ink); font-size:15px; line-height:1.5;
+}
+
+/* App wrapper drives mode theming */
+.app[data-mode="capital"]{--mode-accent:var(--purple); --mode-deep:var(--purple-dark)}
+
+/* Hero with colored, mode-shifting background and white serif title */
+.hero{
+  background:linear-gradient(135deg, var(--mode-accent) 0%, var(--mode-deep) 100%);
+  transition:background .35s ease;
+  text-align:center;
+  padding:30px 24px 0;
+}
+.hero-inner{max-width:920px; margin:0 auto}
+
+/* Segmented mode switch, floats over the hero/content boundary */
+.mode-switch{
+  display:inline-flex; background:#fff; border:1px solid var(--line);
+  border-radius:999px; padding:5px; gap:4px; position:relative;
+  transform:translateY(50%); box-shadow:0 8px 24px rgba(0,0,0,.14);
+}
+.mode-switch button{
+  border:none; background:transparent; cursor:pointer;
+  font-family:inherit; font-size:14.5px; font-weight:700;
+  color:var(--ink-soft); padding:12px 26px; border-radius:999px;
+  display:inline-flex; align-items:center; gap:8px; transition:color .25s ease;
+}
+.mode-switch button svg{width:17px; height:17px; flex-shrink:0}
+.mode-switch button.active{color:#fff}
+.mode-switch button[data-mode="learning"].active{background:var(--green)}
+.mode-switch button[data-mode="capital"].active{background:var(--purple)}
+
+/* Content */
+.content{max-width:1180px; margin:0 auto; padding:56px 24px 56px}
+.mode-panel{display:none}
+.mode-panel.active{display:block; animation:fadeIn .35s ease-out}
+@keyframes fadeIn{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:translateY(0)}}
+
+.panel-head{margin-bottom:20px; max-width:880px}
+.panel-eyebrow{
+  display:inline-block; font-size:11px; font-weight:700; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--mode-accent);
+  padding:5px 12px; border:1px solid var(--mode-accent); border-radius:999px;
+  margin-bottom:14px; transition:color .35s ease, border-color .35s ease;
+}
+.panel-head p{font-size:15.5px; color:var(--ink-soft); line-height:1.6}
+
+.embed-wrap{
+  background:#fff; border:1px solid var(--line); border-top:3px solid var(--mode-accent);
+  border-radius:12px; overflow:hidden; transition:border-color .35s ease;
+}
+.airtable-embed{width:100%; height:1200px; border:none; display:block; background:#fff}
+
+@media(max-width:768px){
+  .hero{padding:24px 16px 0}
+  .mode-switch{width:calc(100% - 8px); flex-direction:row}
+  .mode-switch button{flex:1; padding:11px 8px; font-size:13px; justify-content:center}
+  .content{padding:48px 16px 40px}
+  .airtable-embed{height:75vh; min-height:600px}
+}
+</style>
+</head>
+<body>
+<div class="app" data-mode="learning" id="app">
+
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="mode-switch" role="tablist">
+        <button class="active" data-mode="learning" onclick="setMode('learning')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          Learning Mode
+        </button>
+        <button data-mode="capital" onclick="setMode('capital')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          Moving Capital Mode
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="mode-panel active" id="panel-learning">
+      <div class="panel-head">
+        <span class="panel-eyebrow">Learning Mode</span>
+        <p>A self-guided learning journey for everyone in the impact investing ecosystem, tailored to the needs of capital suppliers, intermediaries, and investees.</p>
+      </div>
+      <div class="embed-wrap">
+        <iframe class="airtable-embed" src="https://airtable.com/embed/appaiDoxyHhRJmqpq/shrdTMeNG1qtRPuTP" title="Educational Resource Library" loading="lazy"></iframe>
+      </div>
+    </div>
+
+    <div class="mode-panel" id="panel-capital">
+      <div class="panel-head">
+        <span class="panel-eyebrow">Moving Capital Mode</span>
+        <p>Ready to build an impact investing program or make your first impact investments? This toolkit has everything you need to get started.</p>
+      </div>
+      <div class="embed-wrap">
+        <iframe class="airtable-embed" src="https://airtable.com/embed/appaiDoxyHhRJmqpq/shrPYkQL7VWDj8x8o" title="Impact Investing Toolkit" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function setMode(mode){
+  document.getElementById('app').setAttribute('data-mode', mode);
+  document.querySelectorAll('.mode-switch button').forEach(function(b){
+    b.classList.toggle('active', b.dataset.mode === mode);
+  });
+  document.querySelectorAll('.mode-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.getElementById('panel-' + mode).classList.add('active');
+}
+</script>
+</body>
+</html>
