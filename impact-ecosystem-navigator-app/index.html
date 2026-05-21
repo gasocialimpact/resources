@@ -31,7 +31,7 @@ header{position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px so
 .btn.primary{background:var(--brand-grn); color:#fff; border:none}
 .btn.ghost{background:#fff; border:1px dashed var(--line); color:var(--ink-2)}
 
-main{max-width:1600px; margin:18px auto 20px; padding:0 18px; display:grid; grid-template-columns:280px 1fr; gap:16px}
+main{max-width:1600px; margin:18px auto 20px; padding:0 18px; display:grid; grid-template-columns:200px 1fr; gap:14px}
 aside{position:sticky; top:66px; align-self:start; background:#fff; border:1px solid var(--line); border-radius:14px; padding:12px; box-shadow:var(--shadow)}
 .nav{display:grid; gap:6px}
 .nav button{width:100%; text-align:left; background:#fff; color:var(--ink); border:1px solid var(--line); padding:10px 12px; border-radius:10px; cursor:pointer; font-family:inherit; font-size:14px; font-weight:500; transition:.15s}
@@ -56,8 +56,8 @@ aside{position:sticky; top:66px; align-self:start; background:#fff; border:1px s
 .col{background:#fff; border:1px solid var(--line); border-radius:14px; padding:12px; box-shadow:var(--shadow)}
 .col h3{margin:0 0 6px 4px; font-size:13px; text-transform:uppercase; letter-spacing:1px; color:var(--muted)}
 .col .sub{margin:0 0 10px 4px; color:#7a87b7; font-size:12px}
-.list{display:grid; gap:10px}
-.card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:10px; cursor:pointer; transition:.2s}
+.list{display:grid; gap:8px}
+.card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:9px 10px; cursor:pointer; transition:.2s}
 .card:hover{transform:translateY(-2px); border-color:var(--brand-lbl); background:#f7fbfb}
 .card .title{font-weight:800; font-size:13px}
 .card .meta{color:#6a789f; font-size:12px; margin-top:4px}
@@ -131,8 +131,8 @@ footer{max-width:1600px; margin:22px auto 50px; padding:0 18px; color:#5c6b9b; f
 
 /* Responsive: tablet */
 @media(max-width:1100px){
-  main{grid-template-columns:240px 1fr}
-  .grid{grid-template-columns:repeat(3, minmax(200px, 1fr))}
+  main{grid-template-columns:190px 1fr}
+  .grid{grid-template-columns:repeat(3, minmax(0, 1fr))}
   .cs .flow{grid-template-columns:repeat(2,1fr)}
 }
 
