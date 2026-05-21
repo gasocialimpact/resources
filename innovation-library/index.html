@@ -22,29 +22,29 @@
   --mode-deep:var(--green-dark);
 }
 *{margin:0; padding:0; box-sizing:border-box}
-html,body{min-height:100%; background:#fff}
+html,body{min-height:100%}
 body{
   font-family:'Familjen Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   color:var(--ink); font-size:15px; line-height:1.5;
+  background:linear-gradient(135deg, #e8f8eb 0%, #fff1d3 100%);
+  background-attachment:fixed; min-height:100vh;
 }
 
 /* App wrapper drives mode theming */
 .app[data-mode="capital"]{--mode-accent:var(--purple); --mode-deep:var(--purple-dark)}
 
-/* Hero with colored, mode-shifting background and white serif title */
+/* Top area just floats the mode switch over the page gradient */
 .hero{
-  background:linear-gradient(135deg, var(--mode-accent) 0%, var(--mode-deep) 100%);
-  transition:background .35s ease;
   text-align:center;
-  padding:30px 24px 0;
+  padding:34px 24px 0;
 }
 .hero-inner{max-width:920px; margin:0 auto}
 
-/* Segmented mode switch, floats over the hero/content boundary */
+/* Segmented mode switch, floats on the gradient */
 .mode-switch{
   display:inline-flex; background:#fff; border:1px solid var(--line);
   border-radius:999px; padding:5px; gap:4px; position:relative;
-  transform:translateY(50%); box-shadow:0 8px 24px rgba(0,0,0,.14);
+  box-shadow:0 8px 24px rgba(0,0,0,.12);
 }
 .mode-switch button{
   border:none; background:transparent; cursor:pointer;
@@ -58,7 +58,7 @@ body{
 .mode-switch button[data-mode="capital"].active{background:var(--purple)}
 
 /* Content */
-.content{max-width:1180px; margin:0 auto; padding:56px 24px 56px}
+.content{max-width:1840px; margin:0 auto; padding:36px 28px 56px}
 .mode-panel{display:none}
 .mode-panel.active{display:block; animation:fadeIn .35s ease-out}
 @keyframes fadeIn{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:translateY(0)}}
@@ -82,7 +82,7 @@ body{
   .hero{padding:24px 16px 0}
   .mode-switch{width:calc(100% - 8px); flex-direction:row}
   .mode-switch button{flex:1; padding:11px 8px; font-size:13px; justify-content:center}
-  .content{padding:48px 16px 40px}
+  .content{padding:28px 16px 40px}
   .airtable-embed{height:75vh; min-height:600px}
 }
 </style>
