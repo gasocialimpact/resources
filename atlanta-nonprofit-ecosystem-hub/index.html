@@ -31,16 +31,17 @@ body{
   margin:0;
   color:var(--ink);
   background:#fff;
-  padding-left:10px;
-  padding-right:10px;
-  overflow-x:hidden;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  height:100vh;
   font-family:"Familjen Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   font-size:15px;
   line-height:1.4;
 }
 
 /* Header */
-header{position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid var(--line)}
+header{flex-shrink:0; z-index:50; background:#fff; border-bottom:1px solid var(--line)}
 .wrap{max-width:1500px; margin:0 auto; padding:14px 24px; display:flex; gap:14px; align-items:center; flex-wrap:wrap}
 .brand-logo{display:flex; align-items:center; gap:10px}
 .brand-mark{width:28px; height:28px; border-radius:6px; background:conic-gradient(from 90deg, var(--secondary-purple), var(--accent-teal), var(--accent-gold), var(--accent)); border:1px solid var(--line)}
@@ -60,20 +61,20 @@ header{position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px so
 
 /* Layout */
 main{
-  max-width:1500px;
-  margin:24px auto 32px;
-  padding:0 24px;
+  flex:1; min-height:0;
+  max-width:1500px; width:100%;
+  margin:0 auto;
+  padding:16px 24px;
   display:grid;
   grid-template-columns:260px 1fr;
-  gap:32px;
+  gap:24px;
 }
 aside{
-  position:sticky; top:78px; align-self:start;
+  align-self:stretch;
   background:#fff;
   border:1px solid var(--line);
   border-radius:12px;
   padding:14px;
-  max-height:calc(100vh - 100px);
   overflow-y:auto;
 }
 .nav{display:grid; gap:4px}
@@ -101,6 +102,8 @@ aside{
 
 /* Section content frame */
 .content-frame{
+  min-height:0;
+  overflow-y:auto;
   background:#fff;
   border:1px solid var(--line);
   border-radius:12px;
@@ -454,7 +457,7 @@ ol.steps .step-body span{display:block; font-size:13.5px}
 
 /* Tablet */
 @media(max-width:1100px){
-  main{grid-template-columns:220px 1fr; gap:24px; padding:0 18px}
+  main{grid-template-columns:220px 1fr; gap:20px; padding:14px 18px}
   .content-frame{padding:24px 24px}
   .tx-tabs{grid-template-columns:repeat(3, 1fr)}
   .tx-flow{grid-template-columns:1fr}
@@ -466,7 +469,7 @@ ol.steps .step-body span{display:block; font-size:13.5px}
 /* Mobile */
 @media(max-width:768px){
   .menu-toggle{display:inline-flex}
-  main{grid-template-columns:1fr; padding:0 12px; gap:16px}
+  main{grid-template-columns:1fr; padding:12px; gap:12px}
   .content-frame{padding:20px 18px}
   aside{position:fixed; left:-300px; top:62px; bottom:0; width:280px; z-index:90; transition:left .3s ease; border-radius:0; max-height:none; height:calc(100vh - 62px); border:none; border-right:1px solid var(--line)}
   aside.open{left:0; box-shadow:4px 0 20px rgba(0,0,0,.15)}
