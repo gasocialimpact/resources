@@ -6,6 +6,7 @@
 <title>Source of Funds for Impact Investing</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@300;400;500;600;700&family=Young+Serif&display=swap');
   *{margin:0;padding:0;box-sizing:border-box;}
@@ -1273,216 +1274,76 @@ updatePF();
 updateCF();
 
 // ============ SAVE CF SCENARIO AS PDF ============
-function saveCFScenario(){
+async function saveCFScenario(){
   if(!window.jspdf || !window.jspdf.jsPDF){
     alert('PDF library is still loading. Give it a moment and try again.');
     return;
   }
+  if(!window.html2canvas){
+    alert('Capture library is still loading. Give it a moment and try again.');
+    return;
+  }
   const { jsPDF } = window.jspdf;
 
-  // Read current inputs
-  const aum = +document.getElementById('cf-aum').value || 0;
-  const bd  = +document.getElementById('cf-bd').value || 0;
-  const ud  = +document.getElementById('cf-ud').value || 0;
-  const dr  = +document.getElementById('cf-dr').value || 0;
-  const discGifts = +document.getElementById('cf-disc-gifts').value || 0;
-  const drGifts   = +document.getElementById('cf-dr-gifts').value || 0;
-  const drPayout  = +document.getElementById('cf-dr-payout').value || 0;
-  const mainPool  = +document.getElementById('cf-mainpool').value || 0;
-  const fee       = +document.getElementById('cf-fee').value || 0;
-  const mainOn    = document.getElementById('cf-mainimpact-en').checked;
-  const mainPct   = +document.getElementById('cf-mainimpact-pct').value || 0;
-  const optOn     = document.getElementById('cf-optin-en').checked;
-  const optTarget = +document.getElementById('cf-optin-target').value || 0;
-  const optFee    = +document.getElementById('cf-optin-fee').value || 0;
-
-  // Read computed outputs
-  const startTxt   = document.getElementById('cf-m-start').textContent;
-  const endTxt     = document.getElementById('cf-m-end').textContent;
-  const cagrTxt    = document.getElementById('cf-m-aumcagr').textContent;
-  const grantsTxt  = document.getElementById('cf-m-grants').textContent;
-  const mainlocTxt = document.getElementById('cf-m-mainloc').textContent;
-  const optinTxt   = document.getElementById('cf-m-optin').textContent;
-  const totalTxt   = document.getElementById('cf-m-total').textContent;
-  const drGrTxt    = document.getElementById('cf-m-drgrants').textContent;
-  const mobTxt     = document.getElementById('cf-m-mob').textContent;
-  const feeIncTxt  = document.getElementById('cf-m-fee').textContent;
-  const discTxt    = document.getElementById('cf-m-disc').textContent;
-  const callout    = (document.getElementById('cf-callout').innerText || '').trim();
-
-  // Set up PDF (US Letter, 0.75in margins)
-  const doc = new jsPDF({ unit:'pt', format:'letter' });
-  const pageW = doc.internal.pageSize.getWidth();
-  const pageH = doc.internal.pageSize.getHeight();
-  const mL = 54, mR = 54;
-  const colW = pageW - mL - mR;
-  let y = 60;
-
-  // Colors
-  const purple = [71,80,162];
-  const black  = [0,0,0];
-  const grayBorder = [226,228,235];
-  const cream  = [255,241,211];
-
-  const setText = (rgb) => doc.setTextColor(rgb[0], rgb[1], rgb[2]);
-  const setFill = (rgb) => doc.setFillColor(rgb[0], rgb[1], rgb[2]);
-  const setStroke = (rgb) => doc.setDrawColor(rgb[0], rgb[1], rgb[2]);
-
-  const ensure = (need) => {
-    if(y + need > pageH - 60){
-      doc.addPage();
-      y = 60;
-    }
-  };
-
-  const title = (text) => {
-    ensure(34);
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(20);
-    setText(purple);
-    doc.text(text, mL, y);
-    y += 26;
-  };
-
-  const sectionHead = (text) => {
-    ensure(28);
-    y += 8;
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(11);
-    setText(purple);
-    doc.text(text.toUpperCase(), mL, y);
-    setStroke(grayBorder);
-    doc.setLineWidth(0.6);
-    doc.line(mL, y + 4, pageW - mR, y + 4);
-    y += 16;
-  };
-
-  const body = (text, opts={}) => {
-    doc.setFont('helvetica', opts.bold ? 'bold' : 'normal');
-    doc.setFontSize(opts.size || 10.5);
-    setText(black);
-    const lines = doc.splitTextToSize(text, colW);
-    ensure(lines.length * 13 + 4);
-    doc.text(lines, mL, y);
-    y += lines.length * 13 + 2;
-  };
-
-  const labelValue = (label, value) => {
-    ensure(15);
-    doc.setFont('helvetica','normal');
-    doc.setFontSize(10.5);
-    setText(black);
-    doc.text(label, mL, y);
-    doc.setFont('helvetica','bold');
-    setText(purple);
-    const vw = doc.getTextWidth(value);
-    doc.text(value, pageW - mR - vw, y);
-    y += 14;
-  };
-
-  const calloutBlock = (label, value, bg) => {
-    ensure(48);
-    setFill(bg);
-    setStroke(grayBorder);
-    doc.roundedRect(mL, y, colW, 40, 5, 5, 'F');
-    doc.setFont('helvetica','normal');
-    doc.setFontSize(8.5);
-    setText(purple);
-    doc.text(label.toUpperCase(), mL + 12, y + 14);
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(15);
-    setText(black);
-    doc.text(value, mL + 12, y + 32);
-    y += 50;
-  };
-
-  // Header
-  title('Community Foundation Scenario');
-  doc.setFont('helvetica','normal');
-  doc.setFontSize(10);
-  setText(black);
-  const today = new Date().toLocaleDateString(undefined, { year:'numeric', month:'long', day:'numeric' });
-  doc.text('Generated ' + today, mL, y);
-  y += 8;
-  setStroke(grayBorder);
-  doc.line(mL, y, pageW - mR, y);
-  y += 18;
-
-  // Inputs section
-  sectionHead('Your Operating Reality');
-  labelValue('Starting AUM', '$' + aum.toFixed(1) + 'M');
-  labelValue('Asset Composition, Board Designated', bd + '%');
-  labelValue('Asset Composition, Undesignated', ud + '%');
-  labelValue('Asset Composition, Donor Restricted', dr + '%');
-  y += 4;
-  labelValue('New Gifts to Discretionary Funds (annual)', '$' + discGifts.toFixed(1) + 'M');
-  labelValue('New Gifts to Donor Restricted Funds (annual)', '$' + drGifts.toFixed(1) + 'M');
-  labelValue('Annual Grant Payout from DR Funds', drPayout + '%');
-  y += 4;
-  labelValue('Share of AUM in Main Pool', mainPool + '%');
-  labelValue('Average Fund Fee on DR Funds', fee + '%');
-
-  // Scenario section
-  sectionHead('Impact Investing Scenario');
-  if(!mainOn && !optOn){
-    body('No impact investing mechanisms enabled. This is a baseline projection.');
-  } else {
-    if(mainOn){
-      labelValue('Impact Allocation in the Main Pool', mainPct + '%');
-    } else {
-      body('Main Pool Impact Allocation. Off.');
-    }
-    if(optOn){
-      labelValue('Opt-In Pool, 10 Year Target Size', '$' + optTarget.toFixed(1) + 'M');
-      labelValue('Opt-In Pool, Additional Donor Fee', optFee + '%');
-    } else {
-      body('Opt-In Pool. Off.');
-    }
+  // Capture the full calculator card with inputs, outputs, chart, and callout
+  const chart = document.getElementById('cf-chart');
+  const card  = chart ? chart.closest('.card') : null;
+  if(!card){
+    alert('Could not find the calculator card to export.');
+    return;
   }
 
-  // Portfolio trajectory
-  sectionHead('10 Year Portfolio Trajectory');
-  labelValue('Starting AUM', startTxt);
-  labelValue('10 Year Ending AUM', endTxt);
-  labelValue('Total AUM Growth (CAGR)', cagrTxt);
+  // Hide the in-card save button so it does not appear in the export
+  const saveRow = card.querySelector('.cf-save-row');
+  const prevVis = saveRow ? saveRow.style.visibility : null;
+  if(saveRow) saveRow.style.visibility = 'hidden';
 
-  // Mission capital
-  sectionHead('Mission Capital Deployed Over 10 Years');
-  labelValue('Discretionary Grants', grantsTxt);
-  labelValue('Local Investing from Main Pool', mainlocTxt);
-  labelValue('Local Investing from Opt-In Pool', optinTxt);
-  y += 4;
-  calloutBlock('Total Mission Capital Mobilized', totalTxt, cream);
-  body('Donor-Directed Grants from DR Funds, ' + drGrTxt + '. Shown for context only and not counted in mission capital mobilized.');
+  // Give Chart.js a beat to finish any pending render before capture
+  await new Promise(r => setTimeout(r, 60));
 
-  // Operating context
-  sectionHead('Operating Context');
-  labelValue('Annual % Mobilized for Local Impact', mobTxt);
-  labelValue('Additional Fee Income (10 Yr)', feeIncTxt);
-  labelValue('Discretionary Capital Tools Growth', discTxt);
+  try {
+    const canvas = await html2canvas(card, {
+      backgroundColor: '#ffffff',
+      scale: 2,
+      useCORS: true,
+      logging: false,
+      windowWidth: card.scrollWidth,
+      windowHeight: card.scrollHeight
+    });
 
-  // What this projection shows
-  if(callout){
-    sectionHead('What This Projection Shows');
-    body(callout);
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF({ unit: 'pt', format: 'letter', orientation: 'portrait' });
+
+    const pageW = pdf.internal.pageSize.getWidth();
+    const pageH = pdf.internal.pageSize.getHeight();
+    const margin = 36;
+    const usableW = pageW - margin * 2;
+    const usableH = pageH - margin * 2;
+
+    const imgW = usableW;
+    const imgH = (canvas.height / canvas.width) * imgW;
+
+    // First page
+    let yPos = margin;
+    pdf.addImage(imgData, 'PNG', margin, yPos, imgW, imgH);
+
+    // If the image is taller than one page, add additional pages and
+    // shift the image up so each page reveals the next slice
+    let consumed = usableH;
+    while (consumed < imgH){
+      pdf.addPage();
+      pdf.addImage(imgData, 'PNG', margin, margin - consumed, imgW, imgH);
+      consumed += usableH;
+    }
+
+    const stamp = new Date().toISOString().slice(0,10);
+    pdf.save('CF-Scenario-' + stamp + '.pdf');
+  } catch (err) {
+    console.error(err);
+    alert('Sorry, the scenario could not be exported. ' + (err && err.message ? err.message : ''));
+  } finally {
+    if(saveRow) saveRow.style.visibility = prevVis || '';
   }
-
-  // Footer note
-  ensure(40);
-  y = Math.max(y, pageH - 80);
-  setStroke(grayBorder);
-  doc.line(mL, y, pageW - mR, y);
-  y += 12;
-  doc.setFont('helvetica','italic');
-  doc.setFontSize(8.5);
-  setText(black);
-  const note = 'Investment returns assume 7% annually, in line with the 10 year community foundation average through 2024. Discretionary grants run at 5% of board designated capital annually. Main pool local allocations deploy over 5 years and recycle on a rolling basis. The opt-in pool ramps at 20% of target annually and recycles after a 5 year hold.';
-  const noteLines = doc.splitTextToSize(note, colW);
-  doc.text(noteLines, mL, y);
-
-  // Filename with timestamp
-  const stamp = new Date().toISOString().slice(0,10);
-  doc.save('CF-Scenario-' + stamp + '.pdf');
 }
 </script>
 </body>
