@@ -1312,29 +1312,18 @@ async function saveCFScenario(){
     });
 
     const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF({ unit: 'pt', format: 'letter', orientation: 'portrait' });
 
-    const pageW = pdf.internal.pageSize.getWidth();
-    const pageH = pdf.internal.pageSize.getHeight();
-    const margin = 36;
+    // Build a single tall page that fits the whole capture. Width stays at
+    // US Letter so the export views naturally, height stretches to content.
+    const margin  = 36;
+    const pageW   = 612; // US Letter width in pt
     const usableW = pageW - margin * 2;
-    const usableH = pageH - margin * 2;
+    const imgW    = usableW;
+    const imgH    = (canvas.height / canvas.width) * imgW;
+    const pageH   = imgH + margin * 2;
 
-    const imgW = usableW;
-    const imgH = (canvas.height / canvas.width) * imgW;
-
-    // First page
-    let yPos = margin;
-    pdf.addImage(imgData, 'PNG', margin, yPos, imgW, imgH);
-
-    // If the image is taller than one page, add additional pages and
-    // shift the image up so each page reveals the next slice
-    let consumed = usableH;
-    while (consumed < imgH){
-      pdf.addPage();
-      pdf.addImage(imgData, 'PNG', margin, margin - consumed, imgW, imgH);
-      consumed += usableH;
-    }
+    const pdf = new jsPDF({ unit: 'pt', format: [pageW, pageH], orientation: 'portrait' });
+    pdf.addImage(imgData, 'PNG', margin, margin, imgW, imgH);
 
     const stamp = new Date().toISOString().slice(0,10);
     pdf.save('CF-Scenario-' + stamp + '.pdf');
