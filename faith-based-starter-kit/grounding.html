@@ -10,7 +10,9 @@
 body{
   font-family:"Familjen Grotesk", system-ui, sans-serif;
   color:#1a1a1a; background:#fff; line-height:1.7; font-size:15px;
-  padding:32px 40px 60px;
+}
+.container{
+  max-width:1200px; margin:0 auto; padding:28px 40px 60px;
 }
 h2{font-size:22px; font-weight:800; color:#149a49; margin:0 0 8px; display:flex; align-items:center; gap:10px}
 h2 svg{width:22px; height:22px; flex-shrink:0}
@@ -70,7 +72,7 @@ h4{font-size:15px; font-weight:700; color:#149a49; margin:20px 0 8px}
 .callout strong{color:#1a1a1a}
 
 @media(max-width:700px){
-  body{padding:24px 18px 48px}
+  .container{padding:24px 18px 48px}
   .pathway-grid{grid-template-columns:1fr}
   .stat-banner{grid-template-columns:1fr 1fr}
 }
@@ -80,6 +82,7 @@ h4{font-size:15px; font-weight:700; color:#149a49; margin:20px 0 8px}
 </style>
 </head>
 <body>
+<div class="container">
 
 <p class="lead">Faith communities were impact investors long before the term existed. As early as the 1700s, Quakers refused to profit from the slave trade and weapons, and John Wesley's Methodist teaching warned against "harmful" gain&mdash;early versions of ethical screens. In the modern era, faith investors organized formally in 1971 with the founding of the <strong>Interfaith Center on Corporate Responsibility</strong>, which used shareholder advocacy to press companies on apartheid, labor, and environmental harms. That same year, two Methodist ministers launched <strong>Pax World</strong>, the first widely available socially responsible mutual fund.</p>
 
@@ -176,6 +179,7 @@ h4{font-size:15px; font-weight:700; color:#149a49; margin:20px 0 8px}
 <div class="callout">
   <p><strong>The typical progression:</strong> Most faith institutions use both paths. They align the public portfolio first, add shareholder advocacy, then build a community-investing sleeve as capacity grows. The GIIN snapshot of faith-aligned investors shows allocations concentrated in public markets with 82% targeting risk-adjusted, market-rate returns.</p>
   <p>This growth represents a fundamental shift&mdash;from simple exclusionary screening to sophisticated strategies that combine ESG integration, shareholder advocacy, and direct community development investments.</p>
+</div>
 </div>
 
 </body>
