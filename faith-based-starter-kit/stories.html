@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FBII in Action</title>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box; margin:0; padding:0}
+body{
+  font-family:"Familjen Grotesk", system-ui, sans-serif;
+  color:#1a1a1a; background:#fff; line-height:1.7; font-size:15px;
+  padding:28px 40px 60px; max-width:960px; margin:0 auto;
+}
+
+h2{font-size:22px; font-weight:800; color:#149a49; margin:0 0 6px; display:flex; align-items:center; gap:10px}
+h2 svg{width:22px; height:22px; flex-shrink:0}
+.subtitle{font-size:14px; color:#555; margin-bottom:24px; max-width:720px}
+
+.filter-bar{
+  display:flex; gap:8px; margin-bottom:28px; flex-wrap:wrap;
+  position:sticky; top:0; z-index:5; background:#fff; padding:8px 0;
+}
+.filter-btn{
+  padding:9px 18px; background:#f4f5f7; border:1px solid transparent;
+  color:#1a1a1a; cursor:pointer; font-size:13px; font-weight:600;
+  border-radius:8px; transition:.15s; font-family:inherit;
+}
+.filter-btn:hover{background:#e0f1d9; color:#149a49}
+.filter-btn.active{background:#149a49; color:#fff; border-color:#117a3a}
+
+.story-card{
+  background:#fff; border:1px solid #e6e8ec; border-radius:12px;
+  padding:28px; margin-bottom:20px; transition:.2s;
+  position:relative; overflow:hidden;
+}
+.story-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.story-card.hidden{display:none}
+
+.story-tag{
+  display:inline-block; font-size:11px; font-weight:700;
+  letter-spacing:.06em; text-transform:uppercase;
+  padding:3px 10px; border-radius:4px; margin-bottom:12px;
+}
+.tag-georgia{background:#e0f1d9; color:#149a49}
+.tag-beyond{background:rgba(83,195,194,0.15); color:#3a9e9d}
+
+.story-card h3{
+  font-size:17px; font-weight:700; color:#1a1a1a; margin:0 0 6px;
+  border:none; padding:0;
+}
+.story-meta{font-size:13px; color:#888; margin-bottom:12px; font-weight:500}
+.story-card p{font-size:14.5px; color:#444; margin-bottom:10px}
+.story-card p:last-child{margin-bottom:0}
+
+.story-stat{
+  display:inline-flex; align-items:center; gap:6px;
+  background:#f4f5f7; padding:6px 14px; border-radius:6px;
+  font-size:13px; font-weight:600; color:#1a1a1a; margin:4px 6px 4px 0;
+}
+.story-stat .num{color:#149a49; font-weight:800}
+.story-stats{margin:14px 0 6px}
+
+.story-quote{
+  border-left:3px solid #53c3c2; padding:10px 18px; margin:14px 0;
+  background:rgba(83,195,194,0.05); border-radius:0 6px 6px 0;
+  font-style:italic; font-size:14px; color:#444;
+}
+.story-quote .attribution{font-style:normal; font-weight:600; color:#1a1a1a; display:block; margin-top:6px; font-size:13px}
+
+.empty-state{
+  text-align:center; padding:60px 20px; color:#888; font-size:15px;
+  display:none;
+}
+
+@media(max-width:700px){
+  body{padding:20px 16px 48px}
+  .story-card{padding:20px}
+}
+</style>
+</head>
+<body>
+
+<div class="filter-bar">
+  <button class="filter-btn active" data-filter="all">All Stories</button>
+  <button class="filter-btn" data-filter="georgia">Stories from Georgia</button>
+  <button class="filter-btn" data-filter="beyond">Stories from Beyond</button>
+</div>
+
+<!-- GEORGIA STORIES -->
+
+<div class="story-card" data-region="georgia">
+  <span class="story-tag tag-georgia">Georgia</span>
+  <h3>Episcopal Church Invests in ACE</h3>
+  <p class="story-meta">Access to Capital for Entrepreneurs &bull; Cleveland &amp; Atlanta, GA</p>
+  <p>The Episcopal Church's Economic Justice Loan Fund maintains a long-term partnership with Access to Capital for Entrepreneurs (ACE), Georgia's largest small business-focused CDFI. In 2023, the Episcopal Church renewed and increased its investment to $400,000, building on successful collaboration history.</p>
+  <p>ACE focuses on providing capital to Black-owned businesses throughout metro Atlanta, women entrepreneurs, and low-income community members facing systemic banking barriers. The organization provided more than $13 million in loans in 2019 alone, primarily to underserved North Georgia and metro Atlanta entrepreneurs, with average loans of $40,000 typically creating 3-5 jobs each.</p>
+  <div class="story-quote">
+    "Equitable access to capital, reducing barriers, helping businesses build assets and create jobs, and supporting communities and families aligns with economic justice."
+    <span class="attribution">&mdash; Martina Edwards, ACE President &amp; CEO</span>
+  </div>
+  <div class="story-stats">
+    <span class="story-stat"><span class="num">$400K</span> Episcopal investment (2023)</span>
+    <span class="story-stat"><span class="num">$13M+</span> loans in 2019</span>
+    <span class="story-stat"><span class="num">3-5</span> jobs per loan</span>
+  </div>
+</div>
+
+<div class="story-card" data-region="georgia">
+  <span class="story-tag tag-georgia">Georgia</span>
+  <h3>Bethany Presbyterian Unlocks Denomination Financing</h3>
+  <p class="story-meta">Presbyterian Investment and Loan Program &bull; Marietta, GA</p>
+  <p>Bethany Presbyterian Church in Marietta accessed financing through the Presbyterian Investment and Loan Program (PILP) to expand facilities serving their growing multicultural community. PILP, founded in 1982, offers construction financing, refinancing, renovation funding, and operational lines of credit from $50,000 to $500,000.</p>
+  <p>PILP's unique capitalization structure involves other Presbyterian churches, members, presbyteries, and synods investing while earning competitive returns (typically 2-4% above bank savings rates). Bethany's expansion was funded by Presbyterian money remaining within the Presbyterian ecosystem. PILP evaluates not just financials but leadership quality, congregational history, and missional vision&mdash;often approving loans banks would reject.</p>
+  <div class="story-stats">
+    <span class="story-stat"><span class="num">2-4%</span> above bank savings</span>
+    <span class="story-stat"><span class="num">$50K-$500K</span> loan range</span>
+  </div>
+</div>
+
+<div class="story-card" data-region="georgia">
+  <span class="story-tag tag-georgia">Georgia</span>
+  <h3>Georgia United Methodist Foundation's Investment Platform</h3>
+  <p class="story-meta">Georgia United Methodist Foundation &bull; Statewide</p>
+  <p>The Georgia United Methodist Foundation represents the state's most comprehensive faith-based investment infrastructure, managing over $236 million for Methodist churches, nonprofits, districts, and conferences. It partners with Wespath Institutional Investments, which manages $25 billion globally with sophisticated ESG integration.</p>
+  <p>The Foundation's innovative Certificate Program allows Methodist individuals and churches to purchase 1-, 2-, 3-, or 4-year certificates starting at just $5,000, earning rates typically 1-2% above bank CDs. These investments become capital for church loans throughout Georgia. The Foundation has loaned over $26 million with zero defaults.</p>
+  <p>The Foundation manages over 160 endowments using socially responsible screens excluding tobacco, weapons manufacturers, private prisons, and companies with poor labor practices while seeking renewable energy, affordable housing, and community development investments. Their Clergy Financial Literacy Academy has trained over 50 pastors.</p>
+  <div class="story-stats">
+    <span class="story-stat"><span class="num">$236M+</span> managed</span>
+    <span class="story-stat"><span class="num">$26M+</span> loaned, zero defaults</span>
+    <span class="story-stat"><span class="num">160+</span> endowments</span>
+    <span class="story-stat"><span class="num">50+</span> pastors trained</span>
+  </div>
+</div>
+
+<div class="story-card" data-region="georgia">
+  <span class="story-tag tag-georgia">Georgia</span>
+  <h3>Georgia Interfaith Power &amp; Light Transforms Energy Infrastructure</h3>
+  <p class="story-meta">GIPL Solar-Wise Program &bull; Statewide</p>
+  <p>Georgia Interfaith Power &amp; Light has emerged as the nation's leading faith-based renewable energy facilitator, helping over 50 Georgia congregations explore solar installations through their Solar-Wise program.</p>
+  <p>Dunwoody United Methodist Church's recent 152-kilowatt solar installation showcases available sophistication. Through a Solar Energy Procurement Agreement with Georgia BRIGHT, the church installed a $300,000+ system with zero upfront costs. Georgia BRIGHT owns and maintains the system while selling power to the church at rates 20% below Georgia Power's standard rates. The church saves $14,300 annually. This structure has been replicated at 12 churches with six more in development.</p>
+  <p>GIPL manages a zero-interest revolving loan fund for solar projects, offers grants up to $10,000 for energy efficiency improvements (requiring dollar-for-dollar matching), and has secured over $2 million in various grants for Georgia congregations.</p>
+  <div class="story-stats">
+    <span class="story-stat"><span class="num">50+</span> congregations served</span>
+    <span class="story-stat"><span class="num">$14.3K</span> annual savings (Dunwoody UMC)</span>
+    <span class="story-stat"><span class="num">$0</span> upfront cost</span>
+    <span class="story-stat"><span class="num">$2M+</span> grants secured</span>
+  </div>
+</div>
+
+<div class="story-card" data-region="georgia">
+  <span class="story-tag tag-georgia">Georgia</span>
+  <h3>Atlanta's Faith-Based Development Initiative</h3>
+  <p class="story-meta">Mayor Dickens' Initiative &bull; Atlanta, GA</p>
+  <p>Several Atlanta churches are exploring property development partnerships following Enterprise Community Partners' national models. Unlike simple land sales, these partnerships structure ground leases or joint ventures where churches retain ownership while developers create affordable housing. Churches receive steady lease income, discounted units for members, and community spaces within developments.</p>
+  <p>Launched February 2022, the Mayor's Faith-Based Development Initiative aims to create or preserve 20,000 affordable homes by 2030, with 2,000 units (10% of total) targeted for church-owned land. Over 200 faith leaders expressed interest, with approximately 15 actively developing projects representing 1,000 planned affordable homes. The initiative provides up to $25,000 in seed money per institution, technical assistance, visioning sessions, peer mentoring, and connections to predevelopment capital.</p>
+  <div class="story-stats">
+    <span class="story-stat"><span class="num">200+</span> faith leaders engaged</span>
+    <span class="story-stat"><span class="num">1,000</span> planned homes</span>
+    <span class="story-stat"><span class="num">$25K</span> seed money per institution</span>
+  </div>
+</div>
+
+<!-- BEYOND GEORGIA STORIES -->
+
+<div class="story-card" data-region="beyond">
+  <span class="story-tag tag-beyond">Beyond Georgia</span>
+  <h3>Presbyterian Innovation in Wisconsin</h3>
+  <p class="story-meta">Pres House &bull; Madison, WI</p>
+  <p>Pres House in Madison, Wisconsin demonstrates how mid-sized faith institutions transform property into mission-aligned investment. The Presbyterian Student Center Foundation secured $11.25 million from Presbyterian church investment funds to refinance their 240-unit student housing facility. The Synod of Lakes and Prairies invested $2.5 million, representing 25% of their endowment.</p>
+  <p>The facility serves 1,000 students annually with affordable housing and provides nearly $70,000 in rent scholarships to approximately 60 residents each year. The property includes a "Next Step" sober living program for students in recovery.</p>
+  <div class="story-stats">
+    <span class="story-stat"><span class="num">$11.25M</span> Presbyterian investment</span>
+    <span class="story-stat"><span class="num">1,000</span> students served annually</span>
+    <span class="story-stat"><span class="num">$70K</span> rent scholarships/year</span>
+  </div>
+</div>
+
+<div class="story-card" data-region="beyond">
+  <span class="story-tag tag-beyond">Beyond Georgia</span>
+  <h3>Jewish Federations Mobilize Donor-Advised Funds</h3>
+  <p class="story-meta">Jewish Community Federation &bull; San Francisco, CA</p>
+  <p>The Jewish Community Federation of San Francisco invested $56 million total, with more than $40 million loaned since 2019 to mission-based financial institutions. Managing over $2 billion across 1,100 donor-advised funds, the Federation pools capital for substantial investments. Nearly $6 million has gone to CNote alone, which created 10,000 small business jobs and 6,000 affordable housing units since 2017.</p>
+  <p>The Jewish Community Foundation of San Diego pioneered similar approaches, becoming the first Jewish community foundation offering an Impact Investment Pool diversified across all asset classes.</p>
+  <div class="story-stats">
+    <span class="story-stat"><span class="num">$56M</span> total invested</span>
+    <span class="story-stat"><span class="num">$2B+</span> managed across 1,100 DAFs</span>
+    <span class="story-stat"><span class="num">10,000</span> jobs created via CNote</span>
+  </div>
+</div>
+
+<div class="story-card" data-region="beyond">
+  <span class="story-tag tag-beyond">Beyond Georgia</span>
+  <h3>Catholic Parishes Transform Land into Housing</h3>
+  <p class="story-meta">Multiple Archdioceses &bull; Richmond, VA &amp; Los Angeles, CA</p>
+  <p>St. Elizabeth Catholic Church in Richmond, Virginia partnered with Catholic Charities to develop 56 affordable rental units on church land. This model scales dramatically in Los Angeles, where the Archdiocese created the Queen of Angels Housing Alliance, converting parking lots and closed schools into affordable housing.</p>
+  <div class="story-quote">
+    "Through Catholic Charities and our ministries on Skid Row, we have been working for many years to provide shelter. With this initiative we see exciting possibilities to make more affordable housing available, especially for families and young people."
+    <span class="attribution">&mdash; Archbishop Jos&eacute; Gomez</span>
+  </div>
+  <div class="story-stats">
+    <span class="story-stat"><span class="num">56</span> affordable units (Richmond)</span>
+  </div>
+</div>
+
+<div class="story-card" data-region="beyond">
+  <span class="story-tag tag-beyond">Beyond Georgia</span>
+  <h3>Church of God in Christ &amp; Enterprise Community Partners</h3>
+  <p class="story-meta">National Partnership &bull; Nationwide</p>
+  <p>Enterprise Community Partners' partnership with the Church of God in Christ will train 200 congregations in affordable housing development, projecting 18,000 affordable homes and 72 community facilities at total development cost exceeding $5 billion. Their Texas expansion, funded by T.D. Jakes Foundation and Wells Fargo, expects to create 800 affordable homes.</p>
+  <p>Macedonia Baptist Church in Arlington, Virginia exemplifies success, having developed 36 affordable units on church land with Enterprise support.</p>
+  <div class="story-stats">
+    <span class="story-stat"><span class="num">200</span> congregations trained</span>
+    <span class="story-stat"><span class="num">18,000</span> projected homes</span>
+    <span class="story-stat"><span class="num">$5B+</span> total development cost</span>
+  </div>
+</div>
+
+<div class="story-card" data-region="beyond">
+  <span class="story-tag tag-beyond">Beyond Georgia</span>
+  <h3>Methodist Community Transformation in Ohio</h3>
+  <p class="story-meta">United Methodist Church for All People &bull; Columbus, OH</p>
+  <p>The United Methodist Church for All People in Columbus, Ohio operates as both congregation and development corporation, creating $12 million in housing annually. Their Free Store distributes $2 million worth of goods to 25,000 people yearly. Their Fresh Market provides 10,000 pounds of produce weekly. The church has become the most racially and economically diverse United Methodist congregation in the Midwest.</p>
+  <div class="story-stats">
+    <span class="story-stat"><span class="num">$12M</span> housing annually</span>
+    <span class="story-stat"><span class="num">25,000</span> people served (Free Store)</span>
+    <span class="story-stat"><span class="num">10,000 lbs</span> produce weekly</span>
+  </div>
+</div>
+
+<div class="empty-state" id="emptyState">No stories match the current filter.</div>
+
+<script>
+(function(){
+  var btns = document.querySelectorAll('.filter-btn');
+  var cards = document.querySelectorAll('.story-card');
+  var empty = document.getElementById('emptyState');
+
+  function applyFilter(filter){
+    btns.forEach(function(b){ b.classList.toggle('active', b.dataset.filter===filter); });
+    var visible = 0;
+    cards.forEach(function(c){
+      var show = filter==='all' || c.dataset.region===filter;
+      c.classList.toggle('hidden', !show);
+      if(show) visible++;
+    });
+    empty.style.display = visible===0 ? 'block' : 'none';
+  }
+
+  btns.forEach(function(b){
+    b.addEventListener('click', function(){ applyFilter(b.dataset.filter); });
+  });
+})();
+</script>
+</body>
+</html>

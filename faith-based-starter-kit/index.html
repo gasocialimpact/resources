@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Faith-Based Impact Investing Starter Kit</title>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#149a49;
+  --secondary-purple:#4750a2;
+  --accent-gold:#eec61a;
+  --accent-teal:#53c3c2;
+  --accent-orange:#f15922;
+  --soft-cream:#fcf3cf;
+  --soft-gray:#f4f5f7;
+  --secondary-green:#e0f1d9;
+  --warn-bg:#f8dcd3;
+  --primary-blue:#dde0fe;
+  --ink:#000;
+  --line:#e6e8ec;
+  --line-dark:#cfd2d8;
+  --shadow:0 4px 14px rgba(0,0,0,.05);
+}
+*{box-sizing:border-box}
+html,body{height:100%; background:#fff}
+body{
+  margin:0; color:var(--ink); overflow:hidden;
+  display:flex; flex-direction:column; height:100vh;
+  font-family:"Familjen Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size:15px; line-height:1.4;
+}
+
+header{flex-shrink:0; z-index:50; background:#fff; border-bottom:1px solid var(--line)}
+.wrap{max-width:1500px; margin:0 auto; padding:14px 24px; display:flex; gap:14px; align-items:center; flex-wrap:wrap}
+.brand-logo{display:flex; align-items:center; gap:10px}
+.brand-mark{
+  width:28px; height:28px; border-radius:6px;
+  background:conic-gradient(from 90deg, var(--secondary-purple), var(--accent-teal), var(--accent-gold), var(--accent));
+  border:1px solid var(--line);
+}
+.kicker{font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink)}
+.controls{margin-left:auto; display:flex; gap:8px; flex-wrap:wrap}
+.btn{
+  background:#fff; color:var(--ink); border:1px solid var(--line-dark);
+  padding:9px 14px; font-weight:600; border-radius:8px; cursor:pointer;
+  font-family:inherit; font-size:13px;
+  display:inline-flex; align-items:center; gap:6px; transition:.15s;
+}
+.btn:hover{background:#f7faf7; border-color:var(--accent)}
+.btn svg{width:14px; height:14px; flex-shrink:0}
+
+main{
+  flex:1; min-height:0;
+  max-width:1500px; width:100%; margin:0 auto; padding:16px 24px;
+  display:grid; grid-template-columns:260px 1fr; gap:24px;
+}
+main > section{min-width:0; min-height:0; display:flex; flex-direction:column}
+aside{
+  align-self:stretch;
+  background:#fff; border:1px solid var(--line);
+  border-radius:12px; padding:14px;
+  overflow-y:auto;
+}
+.nav{display:grid; gap:4px}
+.nav button{
+  width:100%; text-align:left; background:#fff; color:var(--ink);
+  border:1px solid transparent; padding:10px 12px; border-radius:8px; cursor:pointer;
+  font-family:inherit; font-size:14px; font-weight:500;
+  display:flex; align-items:center; gap:10px; transition:.15s;
+}
+.nav button:hover{background:var(--secondary-green); color:var(--accent)}
+.nav button.active{background:var(--secondary-green); color:var(--accent); font-weight:700; border-color:var(--accent)}
+.nav button svg{width:16px; height:16px; flex-shrink:0}
+
+.tip{margin-top:14px; padding-top:14px; border-top:1px solid var(--line); font-size:12.5px; color:var(--ink); line-height:1.5}
+
+.content-frame{
+  flex:1; min-height:0;
+  background:#fff; border:1px solid var(--line); border-radius:12px;
+  overflow:hidden; display:flex; flex-direction:column;
+}
+.section{display:none}
+.section.active{display:flex; flex-direction:column; flex:1; min-height:0}
+
+.section-intro{flex-shrink:0; padding:20px 28px; border-bottom:1px solid var(--line); background:#fff}
+.section-intro h1{font-size:24px; font-weight:800; margin:0 0 8px; color:var(--accent); display:flex; align-items:center; gap:10px}
+.section-intro h1 svg{width:24px; height:24px}
+.section-intro p{font-size:14px; color:var(--ink); margin:0; max-width:780px}
+
+.tool-frame{
+  width:100%; border:none; display:block;
+  flex:1; min-height:0;
+  background:#fff;
+}
+
+.menu-toggle{display:none; background:none; border:1px solid var(--line-dark); border-radius:8px; padding:6px 10px; cursor:pointer; color:var(--ink); font-size:18px; line-height:1}
+
+@media(max-width:1100px){
+  main{grid-template-columns:220px 1fr; gap:20px; padding:14px 18px}
+}
+@media(max-width:768px){
+  .menu-toggle{display:inline-flex}
+  main{grid-template-columns:1fr; padding:12px; gap:12px}
+  aside{
+    position:fixed; left:-300px; top:62px; bottom:0; width:280px;
+    z-index:90; transition:left .3s ease; border-radius:0;
+    max-height:none; height:calc(100vh - 62px);
+    border:none; border-right:1px solid var(--line);
+  }
+  aside.open{left:0; box-shadow:4px 0 20px rgba(0,0,0,.15)}
+  .overlay{display:none; position:fixed; inset:0; background:rgba(0,0,0,.3); z-index:89}
+  .overlay.open{display:block}
+  .wrap{padding:10px 12px}
+  .section-intro{padding:18px 18px}
+  .section-intro h1{font-size:20px}
+}
+@media(max-width:480px){
+  .controls{gap:6px}
+  .btn{padding:7px 10px; font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+    <symbol id="i-printer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></symbol>
+  </defs>
+</svg>
+
+<header>
+  <div class="wrap">
+    <button class="menu-toggle" id="menuToggle" aria-label="Open navigation"><svg width="18" height="18"><use href="#i-menu"/></svg></button>
+    <div class="brand-logo">
+      <div class="brand-mark" aria-hidden="true"></div>
+      <div class="kicker">Faith-Based Impact Investing Starter Kit</div>
+    </div>
+    <div class="controls">
+      <button class="btn" id="exportPrint"><svg><use href="#i-printer"/></svg> Print</button>
+      <button class="btn" id="howBtn"><svg><use href="#i-help"/></svg> How to</button>
+    </div>
+  </div>
+</header>
+
+<div class="overlay" id="menuOverlay"></div>
+<main>
+  <aside>
+    <div class="nav">
+      <button class="active" data-view="grounding"><svg><use href="#i-compass"/></svg> Field-Level Grounding</button>
+      <button data-view="guide"><svg><use href="#i-book"/></svg> 8-Part FBII Guide</button>
+      <button data-view="stories"><svg><use href="#i-pin"/></svg> FBII in Action</button>
+    </div>
+    <div class="tip">
+      Use the tabs above to explore the toolkit. <strong>Field-Level Grounding</strong> covers the history and market landscape. The <strong>8-Part Guide</strong> walks through implementation phase by phase. <strong>FBII in Action</strong> highlights real stories from Georgia and beyond.
+    </div>
+  </aside>
+
+  <section>
+    <div class="content-frame">
+
+      <div id="view-grounding" class="section active">
+        <div class="section-intro">
+          <h1><svg><use href="#i-compass"/></svg> Field-Level Grounding</h1>
+          <p>The roots, scale, and structure of faith-based impact investing&mdash;from centuries-old traditions to today's $1.57 trillion market, including the two distinct pathways faith institutions use to deploy capital.</p>
+        </div>
+        <iframe class="tool-frame" src="grounding.html" title="Field-Level Grounding" loading="lazy"></iframe>
+      </div>
+
+      <div id="view-guide" class="section">
+        <div class="section-intro">
+          <h1><svg><use href="#i-book"/></svg> 8-Part FBII Guide</h1>
+          <p>A practical, phase-by-phase implementation roadmap for faith communities of any size. Each phase covers the key decision, how to run it, what "done" looks like, and when to move forward.</p>
+        </div>
+        <iframe class="tool-frame" src="guide.html" title="8-Part FBII Guide" loading="lazy"></iframe>
+      </div>
+
+      <div id="view-stories" class="section">
+        <div class="section-intro">
+          <h1><svg><use href="#i-pin"/></svg> FBII in Action</h1>
+          <p>Real stories of faith communities putting capital to work for mission. Filter between stories from Georgia and stories from beyond to see the breadth of what's possible.</p>
+        </div>
+        <iframe class="tool-frame" src="stories.html" title="FBII in Action" loading="lazy"></iframe>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  var toggle = document.getElementById('menuToggle');
+  var aside = document.querySelector('aside');
+  var overlay = document.getElementById('menuOverlay');
+  function close(){ aside.classList.remove('open'); overlay.classList.remove('open'); }
+  function open(){ aside.classList.add('open'); overlay.classList.add('open'); }
+  toggle.addEventListener('click', function(){ aside.classList.contains('open') ? close() : open(); });
+  overlay.addEventListener('click', close);
+  aside.querySelectorAll('.nav button').forEach(function(b){ b.addEventListener('click', close); });
+})();
+
+function switchView(view){
+  document.querySelectorAll('aside .nav button').forEach(function(b){ b.classList.remove('active'); });
+  var btn = document.querySelector('aside .nav button[data-view="'+view+'"]');
+  if(btn) btn.classList.add('active');
+  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
+  var target = document.getElementById('view-'+view);
+  if(target) target.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+document.querySelectorAll('aside .nav button').forEach(function(b){
+  b.addEventListener('click', function(){ switchView(b.dataset.view); });
+});
+
+document.getElementById('exportPrint').addEventListener('click', function(){ window.print(); });
+document.getElementById('howBtn').addEventListener('click', function(){
+  alert('How to use this Starter Kit:\n\n1. Field-Level Grounding — Start here to understand the history, market scale, and the two pathways (public-market ESG and place-based community investing).\n\n2. 8-Part FBII Guide — Walk through each implementation phase. Use the sub-tabs to navigate between phases. The asset-size table helps you prioritize.\n\n3. FBII in Action — Browse real stories from Georgia and beyond. Use the filter buttons to focus on local or national examples.\n\nEach section can also be accessed directly via its own URL for embedding.');
+});
+</script>
+</body>
+</html>

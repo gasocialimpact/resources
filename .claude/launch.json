@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "faith-based-starter-kit",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["http-server", "faith-based-starter-kit", "-p", "8765", "-c-1"],
+      "port": 8765
+    }
+  ]
+}

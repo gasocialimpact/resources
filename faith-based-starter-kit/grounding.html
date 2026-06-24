@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Field-Level Grounding</title>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box; margin:0; padding:0}
+body{
+  font-family:"Familjen Grotesk", system-ui, sans-serif;
+  color:#1a1a1a; background:#fff; line-height:1.7; font-size:15px;
+  padding:32px 40px 60px;
+  max-width:900px; margin:0 auto;
+}
+h2{font-size:22px; font-weight:800; color:#149a49; margin:0 0 8px; display:flex; align-items:center; gap:10px}
+h2 svg{width:22px; height:22px; flex-shrink:0}
+.subtitle{font-size:14px; color:#555; margin-bottom:28px; max-width:720px}
+.lead{font-size:15.5px; line-height:1.8; color:#333; margin-bottom:20px}
+.lead strong{color:#1a1a1a}
+.section-divider{
+  border:none; border-top:2px solid #e6e8ec; margin:36px 0;
+}
+h3{font-size:18px; font-weight:700; color:#1a1a1a; margin:0 0 14px}
+h4{font-size:15px; font-weight:700; color:#149a49; margin:20px 0 8px}
+
+.stat-banner{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:16px;
+  margin:28px 0;
+}
+.stat-card{
+  background:#f4f5f7; border-radius:10px; padding:20px; text-align:center;
+  border-top:3px solid #53c3c2;
+}
+.stat-card .number{font-size:28px; font-weight:800; color:#53c3c2; display:block}
+.stat-card .label{font-size:13px; color:#555; margin-top:4px}
+
+.pathway-grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:20px; margin:24px 0;
+}
+.pathway-card{
+  background:#f4f5f7; border-radius:10px; padding:24px;
+  border-left:4px solid; border-image:linear-gradient(to bottom, #149a49, #53c3c2) 1;
+}
+.pathway-card h4{margin-top:0; color:#149a49}
+.pathway-card p{font-size:14px; color:#444; margin-bottom:10px}
+.pathway-card ul{margin:8px 0 0 18px; font-size:14px; color:#444}
+.pathway-card li{margin-bottom:6px}
+
+.comparison-table{
+  width:100%; border-collapse:collapse; margin:24px 0; font-size:14px;
+  border:1px solid #e6e8ec; border-radius:8px; overflow:hidden;
+}
+.comparison-table th{
+  background:#f4f5f7; color:#1a1a1a; padding:12px 16px; text-align:left;
+  font-weight:700; font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+  border-bottom:1px solid #e6e8ec;
+}
+.comparison-table td{
+  padding:14px 16px; border-bottom:1px solid #e6e8ec; color:#444; vertical-align:top;
+}
+.comparison-table tbody tr:last-child td{border-bottom:none}
+.comparison-table .dim{font-weight:600; color:#1a1a1a}
+
+.callout{
+  background:#f4f5f7; border-left:4px solid #53c3c2;
+  border-radius:8px; padding:20px 24px; margin:24px 0;
+}
+.callout p{font-size:14px; color:#444; margin-bottom:8px}
+.callout p:last-child{margin-bottom:0}
+.callout strong{color:#1a1a1a}
+
+@media(max-width:700px){
+  body{padding:24px 18px 48px}
+  .pathway-grid{grid-template-columns:1fr}
+  .stat-banner{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){
+  .stat-banner{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<p class="lead">Faith communities were impact investors long before the term existed. As early as the 1700s, Quakers refused to profit from the slave trade and weapons, and John Wesley's Methodist teaching warned against "harmful" gain&mdash;early versions of ethical screens. In the modern era, faith investors organized formally in 1971 with the founding of the <strong>Interfaith Center on Corporate Responsibility</strong>, which used shareholder advocacy to press companies on apartheid, labor, and environmental harms. That same year, two Methodist ministers launched <strong>Pax World</strong>, the first widely available socially responsible mutual fund.</p>
+
+<p class="lead">Through the 1980s&ndash;90s, denominations refined guidelines and expanded tools&mdash;from screened public funds to community development lending and early microfinance. Mennonite, Jewish, and Islamic investors likewise built robust traditions shaped by stewardship, justice, and prohibitions against harmful finance.</p>
+
+<p class="lead">In the 2000s&ndash;2010s, faith institutions helped mainstream ESG while accelerating place-based investing through deposits in CDFIs, affordable-housing funds, and green bonds. Faith institutions accelerated divestment from fossil fuels, with <strong>36% of the nearly 1,600 institutions</strong> committed to divestment representing faith-based organizations. Major denominations&mdash;including the Episcopal Church, Church of England, and Presbyterian Church (USA)&mdash;completed full fossil fuel divestment between 2022&ndash;2024.</p>
+
+<p class="lead">While the means and manner of faith-based impact investing have changed over the years, the through-line is consistent: <strong>align money with mission, leverage ownership to drive change, and direct capital to people and places historically left out.</strong></p>
+
+<hr class="section-divider">
+
+<h3>The Market Landscape</h3>
+
+<div class="stat-banner">
+  <div class="stat-card">
+    <span class="number">~$5T</span>
+    <span class="label">Total assets controlled by major religious groups globally</span>
+  </div>
+  <div class="stat-card">
+    <span class="number">$1.57T</span>
+    <span class="label">Global AUM invested for impact (2024), up from $502B in 2019</span>
+  </div>
+  <div class="stat-card">
+    <span class="number">$200-400B</span>
+    <span class="label">U.S. faith-based impact investments today</span>
+  </div>
+  <div class="stat-card">
+    <span class="number">11%</span>
+    <span class="label">Share of potential&mdash;vast untapped capacity remains</span>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<h3>A Growing Field with Two Distinct Pathways</h3>
+
+<p class="lead">Not all faith-based impact investing looks the same. Market data reveals two distinct approaches&mdash;<strong>public markets ESG/SRI</strong> and <strong>private markets place-based impact investing</strong> (often through a community development lens). While distinct, these function as complementary strategies along a spectrum of capital deployment, each with different risk-return profiles, liquidity characteristics, and institutional capacity requirements.</p>
+
+<div class="pathway-grid">
+  <div class="pathway-card">
+    <h4>Public Markets ESG/SRI</h4>
+    <p>Liquid, market-rate exposure with screens, integration, and active ownership. Congregations can implement this quickly through faith-aligned funds.</p>
+    <ul>
+      <li>Faith-based funds & ETFs number in the hundreds with $100B+ aggregate assets</li>
+      <li>ESG funds achieved median returns of 1.7% vs. 1.1% for traditional funds (H1 2024)</li>
+      <li>Faith coalitions filed ~1/3 of ESG shareholder proposals despite modest asset share</li>
+    </ul>
+  </div>
+  <div class="pathway-card">
+    <h4>Place-Based Community Development</h4>
+    <p>Capital channeled directly to underserved borrowers through deposits, notes, and loan funds. Deeper community connection with structured returns.</p>
+    <ul>
+      <li>Calvert Community Investment Notes: 0-3% over 1-10 year terms; 1/6 of investors choose 0%</li>
+      <li>OFN reports &lt;0.001% loss rate across its entire historical portfolio</li>
+      <li>CDFI banks averaged 0.37% net charge-offs vs. 0.89% for larger banks (1984-2024)</li>
+    </ul>
+  </div>
+</div>
+
+<h3>Comparing the Two Pathways</h3>
+
+<table class="comparison-table">
+  <thead>
+    <tr>
+      <th>Dimension</th>
+      <th>Public Markets ESG/SRI</th>
+      <th>Place-Based Impact Investing</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="dim">Risk-Return</td>
+      <td>Targets market-rate returns (7-10% equities, 2-5% bonds). No clear performance penalty vs. conventional funds.</td>
+      <td>Accepts different risk-return combinations for local impact. Loan funds typically 0-4%. Decades of strong financial merit with very low loss rates.</td>
+    </tr>
+    <tr>
+      <td class="dim">Liquidity</td>
+      <td>Conventional liquidity. Buy/sell daily with 1-2 day settlement. Instant pricing on public exchanges.</td>
+      <td>Longer commitments. CD terms 3 months to 10 years. Loan fund investments often 3-5 years. 19% of faith investors cite exit/liquidity concerns.</td>
+    </tr>
+    <tr>
+      <td class="dim">Capacity</td>
+      <td>Minimal beyond conventional investing. Small churches with volunteer trustees can implement via single fund selections. Products like Inspire's PTL ETF (0.09% expense ratio) simplify entry.</td>
+      <td>Evaluating local CDFIs requires assessing financial strength, community roles, and impact records. 41% of faith investors struggle to find aligned opportunities. Often needs intermediary support.</td>
+    </tr>
+    <tr>
+      <td class="dim">Best For</td>
+      <td>Aligning the public portfolio first. Any size institution. Quick implementation with immediate values alignment.</td>
+      <td>Building a community-investing sleeve as capacity grows. Deeper local connection. Visible, tangible outcomes.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout">
+  <p><strong>The typical progression:</strong> Most faith institutions use both paths. They align the public portfolio first, add shareholder advocacy, then build a community-investing sleeve as capacity grows. The GIIN snapshot of faith-aligned investors shows allocations concentrated in public markets with 82% targeting risk-adjusted, market-rate returns.</p>
+  <p>This growth represents a fundamental shift&mdash;from simple exclusionary screening to sophisticated strategies that combine ESG integration, shareholder advocacy, and direct community development investments.</p>
+</div>
+
+</body>
+</html>

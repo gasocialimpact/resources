@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8-Part FBII Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box; margin:0; padding:0}
+body{
+  font-family:"Familjen Grotesk", system-ui, sans-serif;
+  color:#1a1a1a; background:#fff; line-height:1.7; font-size:15px;
+}
+
+.phase-nav{
+  position:sticky; top:0; z-index:10;
+  background:#fff; border-bottom:1px solid #e6e8ec;
+  padding:12px 24px; display:flex; flex-wrap:wrap; gap:8px;
+}
+.phase-btn{
+  padding:9px 16px; background:#f4f5f7; border:1px solid transparent;
+  color:#1a1a1a; cursor:pointer; font-size:13px; font-weight:600;
+  border-radius:8px; transition:.15s; font-family:inherit;
+  white-space:nowrap;
+}
+.phase-btn:hover{background:#e0f1d9; color:#149a49}
+.phase-btn.active{background:#149a49; color:#fff; border-color:#117a3a}
+
+.phase-panel{display:none; padding:28px 40px 60px; max-width:900px; margin:0 auto}
+.phase-panel.active{display:block}
+
+.phase-header{
+  display:flex; align-items:center; gap:16px; margin-bottom:24px; flex-wrap:wrap;
+}
+.phase-number{
+  width:48px; height:48px; border-radius:50%;
+  background:#149a49; color:#fff; font-size:22px; font-weight:800;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.phase-title{font-size:22px; font-weight:800; color:#1a1a1a}
+.phase-duration{
+  background:#e0f1d9; color:#149a49; font-size:12px; font-weight:600;
+  padding:4px 12px; border-radius:20px;
+}
+
+.decision-box{
+  background:#f4f5f7; border-left:4px solid #53c3c2;
+  border-radius:8px; padding:20px 24px; margin-bottom:28px;
+}
+.decision-box .label{font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#53c3c2; margin-bottom:6px}
+.decision-box p{font-size:15px; color:#333; font-weight:500}
+
+h3{font-size:16px; font-weight:700; color:#149a49; margin:24px 0 10px;
+  border-bottom:2px solid #e0f1d9; padding-bottom:6px}
+p{margin-bottom:14px; color:#444}
+ul{margin:10px 0 16px 20px}
+li{margin-bottom:8px; color:#444}
+li strong{color:#1a1a1a}
+
+.outcomes-grid{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:16px;
+  margin:20px 0 28px;
+}
+.outcome-card{
+  background:#f4f5f7; padding:18px; border-radius:10px;
+  border-top:3px solid; border-image:linear-gradient(to right, #149a49, #53c3c2) 1;
+}
+.outcome-card h4{font-size:14px; font-weight:700; color:#149a49; margin-bottom:6px}
+.outcome-card p{font-size:13.5px; color:#444; margin:0}
+.outcome-card ul{font-size:13.5px; margin:8px 0 0 16px}
+.outcome-card li{margin-bottom:4px; font-size:13.5px}
+
+.progress-bar{
+  display:flex; gap:4px; padding:16px 24px; background:#f9faf9;
+  border-top:1px solid #e6e8ec; position:sticky; bottom:0;
+}
+.progress-dot{
+  flex:1; height:6px; border-radius:3px; background:#e6e8ec; transition:.3s;
+  cursor:pointer;
+}
+.progress-dot.done{background:#149a49}
+.progress-dot.current{background:#53c3c2}
+
+.intro-text{
+  padding:28px 40px 0; max-width:900px; margin:0 auto;
+}
+.intro-text p{font-size:15px; color:#444; margin-bottom:14px; max-width:780px}
+.intro-text .asset-table{
+  width:100%; border-collapse:collapse; margin:20px 0 8px; font-size:14px;
+  border:1px solid #e6e8ec; border-radius:8px; overflow:hidden;
+}
+.intro-text .asset-table th{
+  background:#f4f5f7; color:#1a1a1a; padding:12px 16px; text-align:left;
+  font-weight:700; font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+  border-bottom:1px solid #e6e8ec;
+}
+.intro-text .asset-table td{padding:14px 16px; border-bottom:1px solid #e6e8ec; color:#444; vertical-align:top}
+.intro-text .asset-table tbody tr:last-child td{border-bottom:none}
+.intro-text .asset-table .size{font-weight:600; color:#1a1a1a}
+
+@media(max-width:700px){
+  .phase-panel{padding:20px 18px 48px}
+  .phase-nav{padding:10px 12px; gap:6px}
+  .phase-btn{font-size:12px; padding:7px 10px}
+  .outcomes-grid{grid-template-columns:1fr}
+  .intro-text{padding:20px 18px 0}
+}
+</style>
+</head>
+<body>
+
+<div class="intro-text" id="guideIntro">
+  <p><strong>How to use this guide:</strong> Each phase explains the decision you're making, how to run it, what "done" looks like, and when to move forward. Use the tabs below to navigate between phases. Georgia's UPMIFA (the law that governs charitable investments) expects boards to balance return, risk, and mission. This roadmap helps you do that in a way a congregation can understand.</p>
+  <table class="asset-table">
+    <thead>
+      <tr><th>Asset Size</th><th>Priority Phases</th><th>Key Focus</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="size">Under $500K</td><td>Phases 1, 2, 5</td><td>Start with cash and simple swaps. Focus on insured deposits at CDFIs and one screened fund.</td></tr>
+      <tr><td class="size">$500K &ndash; $2M</td><td>Phases 1-5, 7</td><td>Add community notes and proxy voting. Build a simple IPS. Annual review matters more than quarterly metrics.</td></tr>
+      <tr><td class="size">$2M &ndash; $10M</td><td>All phases</td><td>Full implementation makes sense. Consider an advisor RFP. Build measurement rhythm. Explore pooled opportunities.</td></tr>
+      <tr><td class="size">Above $10M</td><td>All, emphasis 4, 6, 8</td><td>Robust governance and measurement essential. Lead collaborative efforts. Consider direct investments.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="phase-nav" id="phaseNav">
+  <button class="phase-btn active" data-phase="1">1. Learn</button>
+  <button class="phase-btn" data-phase="2">2. Reflect</button>
+  <button class="phase-btn" data-phase="3">3. Assess</button>
+  <button class="phase-btn" data-phase="4">4. Strategize</button>
+  <button class="phase-btn" data-phase="5">5. Invest</button>
+  <button class="phase-btn" data-phase="6">6. Measure</button>
+  <button class="phase-btn" data-phase="7">7. Review</button>
+  <button class="phase-btn" data-phase="8">8. Share</button>
+</div>
+
+<!-- Phase 1 -->
+<div class="phase-panel active" data-phase="1">
+  <div class="phase-header">
+    <div class="phase-number">1</div>
+    <span class="phase-title">Learn and Explore</span>
+    <span class="phase-duration">3-6 months</span>
+  </div>
+  <div class="decision-box">
+    <div class="label">Key Decision</div>
+    <p>Do we have the will and the capacity to align our money with our mission, and who will lead?</p>
+  </div>
+  <h3>How to Run It</h3>
+  <p>Start with a practical inventory: every account that holds cash or investments, the custodians and advisors, any current screens or proxy-voting practices, and how much cash must stay available over the next 3, 6, and 12 months.</p>
+  <p>In parallel, schedule three short conversations: one with a peer congregation, one with a denominational foundation, and one with an intermediary you could actually use (for example, a community lender or energy-upgrade partner). These conversations turn vague ideas into names, forms, and timelines.</p>
+  <p>Pull it together in a short board deck that makes the fiduciary case: where holdings conflict with your values; what lower-friction alternatives exist (insured deposits, diversified community notes, screened funds); how return and liquidity stay intact; and what UPMIFA expects of stewards. Include a modest budget for the next phase.</p>
+  <div class="outcomes-grid">
+    <div class="outcome-card">
+      <h4>What "Done" Looks Like</h4>
+      <p>A short landscape scan, two or three peer briefs with real numbers, and a board-ready presentation that answers common objections without hand-waving.</p>
+    </div>
+    <div class="outcome-card">
+      <h4>Proceed When</h4>
+      <p>Leadership agrees to continue and releases a modest budget.</p>
+    </div>
+    <div class="outcome-card">
+      <h4>Minimum Documentation</h4>
+      <ul>
+        <li>5-10-page landscape scan</li>
+        <li>2-3 peer briefs</li>
+        <li>Board deck with Q&A</li>
+        <li>Phase-2 budget request</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Phase 2 -->
+<div class="phase-panel" data-phase="2">
+  <div class="phase-header">
+    <div class="phase-number">2</div>
+    <span class="phase-title">Reflect and Define</span>
+    <span class="phase-duration">2-4 months</span>
+  </div>
+  <div class="decision-box">
+    <div class="label">Key Decision</div>
+    <p>Which teachings guide our investing, and how do we express them in clear, workable terms?</p>
+  </div>
+  <h3>How to Run It</h3>
+  <p>Hold two or three short sessions that connect your faith to money: creation care, fair access to credit, dignity of work, and stewardship. From those sessions, draft a two-page values statement that names your focus areas (for example, affordable housing, small-business lending, clean energy) and your exclusions (for example, predatory lending).</p>
+  <p>Decide if you intend market-rate returns across the portfolio. If you are open to a small portion with a lower return for mission reasons, say where and why. Invite a few voices who are not usually at the investment table&mdash;young adults and neighbors directly affected by housing or credit&mdash;to react to the draft. Then write a one-page explainer in your own voice for the congregation.</p>
+  <div class="outcomes-grid">
+    <div class="outcome-card">
+      <h4>What "Done" Looks Like</h4>
+      <p>The board adopts a short values and screens statement. The congregation hears the "why" in plain language.</p>
+    </div>
+    <div class="outcome-card">
+      <h4>Proceed When</h4>
+      <p>Values and screens are approved and shared internally.</p>
+    </div>
+    <div class="outcome-card">
+      <h4>Minimum Documentation</h4>
+      <ul>
+        <li>2-3-page values and screens</li>
+        <li>One-page congregational explainer</li>
+        <li>One-page note on return posture and cash needs</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Phase 3 -->
+<div class="phase-panel" data-phase="3">
+  <div class="phase-header">
+    <div class="phase-number">3</div>
+    <span class="phase-title">Assess and Benchmark</span>
+    <span class="phase-duration">1-2 months</span>
+  </div>
+  <div class="decision-box">
+    <div class="label">Key Decision</div>
+    <p>How far are we from our compass, and what small changes will move us the farthest with the least risk?</p>
+  </div>
+  <h3>How to Run It</h3>
+  <p>Pull complete holdings. Where possible, look into what your largest funds actually hold. Use public tools to spot obvious misalignments. Read your Investment Policy Statement, bylaws, gift agreements, and your advisor's engagement letter.</p>
+  <p>Flag "maximum return" language that ignores mission, note donor restrictions, and list what's missing (for example, no proxy-voting direction). Ask your advisor, plainly, if they can implement your screens, find locally relevant options, and report on impact. If not, plan a short RFP in the next phase.</p>
+  <div class="outcomes-grid">
+    <div class="outcome-card">
+      <h4>What "Done" Looks Like</h4>
+      <p>A baseline report showing the largest misalignments and easiest fixes, a memo on governance gaps, and a clear view of whether your advisor can execute.</p>
+    </div>
+    <div class="outcome-card">
+      <h4>Proceed When</h4>
+      <p>Leadership accepts the baseline and authorizes policy updates (and an advisor RFP if needed).</p>
+    </div>
+    <div class="outcome-card">
+      <h4>Minimum Documentation</h4>
+      <ul>
+        <li>Baseline alignment summary</li>
+        <li>Governance-gaps memo</li>
+        <li>Advisor capability note</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Phase 4 -->
+<div class="phase-panel" data-phase="4">
+  <div class="phase-header">
+    <div class="phase-number">4</div>
+    <span class="phase-title">Evaluate and Strategize</span>
+    <span class="phase-duration">1-2 months</span>
+  </div>
+  <div class="decision-box">
+    <div class="label">Key Decision</div>
+    <p>What are our rules of the road, and what is our plan for the next three years?</p>
+  </div>
+  <h3>How to Run It</h3>
+  <p>Rewrite your IPS in plain English. State your purpose under UPMIFA. Set targets for each asset class and for cash you need in the short, medium, and long term. Include your screens and focus areas. Create a set-aside for mission-driven investments (for example, 1-10% in community lenders, diversified notes, or green bonds). Say how you will vote proxies and when you will report. Keep reporting lean so it actually happens.</p>
+  <p>If your current advisor cannot implement the mandate, run a focused RFP. Ask for example portfolios with tickers, how they vote proxies, how they will source locally relevant options, and the full fee schedule. Keep responses short and ask for a live walk-through.</p>
+  <div class="outcomes-grid">
+    <div class="outcome-card">
+      <h4>What "Done" Looks Like</h4>
+      <p>A readable IPS with a one-page summary, a three-year roadmap, a first-year budget, and an advisor who agrees in writing to your mandate.</p>
+    </div>
+    <div class="outcome-card">
+      <h4>Proceed When</h4>
+      <p>The board adopts the IPS and the Year-1 plan.</p>
+    </div>
+    <div class="outcome-card">
+      <h4>Minimum Documentation</h4>
+      <ul>
+        <li>Final IPS plus a one-page summary</li>
+        <li>Advisor RFP and selection memo (if applicable)</li>
+        <li>Three-year roadmap and Year-1 budget</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Phase 5 -->
+<div class="phase-panel" data-phase="5">
+  <div class="phase-header">
+    <div class="phase-number">5</div>
+    <span class="phase-title">Source and Invest</span>
+    <span class="phase-duration">First wins in 1-3 months; then ongoing</span>
+  </div>
+  <div class="decision-box">
+    <div class="label">Key Decision</div>
+    <p>Choose first moves that build confidence, comfortably stretch your culture around risk, and excite key stakeholders.</p>
+  </div>
+  <h3>How to Run It</h3>
+  <p>Begin where friction is lowest. Move a slice of idle cash into federally insured, mission-aligned deposits at community banks, credit unions, or national community lenders. Buy a small ladder of diversified community notes with terms of one to three years. In public equities, replace your largest general index fund with a faith-screened fund already available on your platform. None of these changes should alter your overall risk. They change what your money enables.</p>
+  <p>As confidence builds, add a green or social bond sleeve and term notes that match your cash needs. Adopt your proxy-voting approach and either align with denominational guidance or join a coalition for shared engagement. Larger pools can explore private or real-asset options only if they fit your plan and you can size them prudently.</p>
+  <div class="outcomes-grid">
+    <div class="outcome-card">
+      <h4>What "Done" Looks Like (Year 1)</h4>
+      <p>Three confidence-building moves executed (deposits, one note ladder, one screened-fund swap), a simple pipeline in motion, and five minutes on every committee agenda.</p>
+    </div>
+    <div class="outcome-card">
+      <h4>Proceed When</h4>
+      <p>The first reallocations are complete and the pipeline rhythm is in place.</p>
+    </div>
+    <div class="outcome-card">
+      <h4>Minimum Documentation</h4>
+      <ul>
+        <li>Executed instructions</li>
+        <li>Pipeline tracker with name, type, minimums, liquidity, fit, fees, status</li>
+        <li>Two-page diligence note for each candidate</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Phase 6 -->
+<div class="phase-panel" data-phase="6">
+  <div class="phase-header">
+    <div class="phase-number">6</div>
+    <span class="phase-title">Measure and Communicate</span>
+    <span class="phase-duration">Start by month 3; then quarterly and annually</span>
+  </div>
+  <div class="decision-box">
+    <div class="label">Key Decision</div>
+    <p>How will we stay accountable without turning into a data factory?</p>
+  </div>
+  <h3>How to Run It</h3>
+  <p>Pick three to five indicators that match your focus areas and that partners can report. Examples: jobs supported (with a simple breakdown for lower-income or minority-owned businesses), affordable units created or preserved, small-business loans in your county, kilowatt-hours of clean energy and emissions avoided.</p>
+  <p>Track two alignment indicators: the share of the portfolio that meets your screens and the number of proxy votes cast in line with your policy. Pair the numbers with one human story each year, with permission.</p>
+  <p>Publish a two-to-three-page annual update that sits next to your financials. Plain charts. Two photos. One page on what's next.</p>
+  <div class="outcomes-grid">
+    <div class="outcome-card">
+      <h4>What "Done" Looks Like</h4>
+      <p>A one-page quarterly dashboard for the committee and an annual update the congregation can read and share.</p>
+    </div>
+    <div class="outcome-card">
+      <h4>Proceed When</h4>
+      <p>Indicators are selected, populated, and the first annual update is published.</p>
+    </div>
+    <div class="outcome-card">
+      <h4>Minimum Documentation</h4>
+      <ul>
+        <li>Quarterly one-pager</li>
+        <li>Annual impact update (2-3 pages) with one or two short stories</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Phase 7 -->
+<div class="phase-panel" data-phase="7">
+  <div class="phase-header">
+    <div class="phase-number">7</div>
+    <span class="phase-title">Review and Refine</span>
+    <span class="phase-duration">Annually</span>
+  </div>
+  <div class="decision-box">
+    <div class="label">Key Decision</div>
+    <p>Is the portfolio doing its financial job and telling a mission-honest story? What should we adjust?</p>
+  </div>
+  <h3>How to Run It</h3>
+  <p>Once a year, look at returns against benchmarks and your cash targets. Look at values and impact against the IPS. Review governance. Are meetings regular and useful? Do you have the right skills at the table? Is the advisor doing what they promised?</p>
+  <p>Invite a trusted peer reviewer from your denomination or a statewide intermediary to one meeting for candid feedback. Make a small number of changes unless a manager has broken a rule.</p>
+  <div class="outcomes-grid">
+    <div class="outcome-card">
+      <h4>What "Done" Looks Like</h4>
+      <p>A concise annual review that names what worked, what did not, and the few changes you will make next year.</p>
+    </div>
+    <div class="outcome-card">
+      <h4>Proceed When</h4>
+      <p>The board acknowledges the review and approves Year-2 adjustments.</p>
+    </div>
+    <div class="outcome-card">
+      <h4>Minimum Documentation</h4>
+      <ul>
+        <li>Annual review packet</li>
+        <li>Updated IPS pages if needed</li>
+        <li>Refreshed roadmap</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Phase 8 -->
+<div class="phase-panel" data-phase="8">
+  <div class="phase-header">
+    <div class="phase-number">8</div>
+    <span class="phase-title">Share and Scale</span>
+    <span class="phase-duration">Ongoing</span>
+  </div>
+  <div class="decision-box">
+    <div class="label">Key Decision</div>
+    <p>How open will we be, and who will we partner with so costs go down and results grow?</p>
+  </div>
+  <h3>How to Run It</h3>
+  <p>Package your journey into a short case study with your IPS excerpt, a diligence template, and one dashboard. Share it through your judicatory, statewide partners, or an evening roundtable.</p>
+  <p>Consider pooled actions with peers: a deposit campaign, a coordinated purchase of community notes, or joint diligence on an affordable-housing vehicle.</p>
+  <div class="outcomes-grid">
+    <div class="outcome-card">
+      <h4>What "Done" Looks Like</h4>
+      <p>Peers save time because you shared. Your own pipeline grows because collaborators bring ideas you would not have seen.</p>
+    </div>
+    <div class="outcome-card">
+      <h4>Proceed When</h4>
+      <p>Your toolkit is published and at least one pooled action is scoped.</p>
+    </div>
+    <div class="outcome-card">
+      <h4>Minimum Documentation</h4>
+      <ul>
+        <li>5-10-page case study</li>
+        <li>Templates</li>
+        <li>A short collaboration proposal</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<script>
+(function(){
+  var btns = document.querySelectorAll('.phase-btn');
+  var panels = document.querySelectorAll('.phase-panel');
+  var bar = document.getElementById('progressBar');
+
+  // Build progress dots
+  for(var i=0;i<8;i++){
+    var dot = document.createElement('div');
+    dot.className = 'progress-dot' + (i===0?' current':'');
+    dot.dataset.phase = i+1;
+    dot.addEventListener('click', function(){ switchPhase(this.dataset.phase); });
+    bar.appendChild(dot);
+  }
+
+  function switchPhase(num){
+    num = parseInt(num);
+    btns.forEach(function(b){ b.classList.toggle('active', parseInt(b.dataset.phase)===num); });
+    panels.forEach(function(p){ p.classList.toggle('active', parseInt(p.dataset.phase)===num); });
+    bar.querySelectorAll('.progress-dot').forEach(function(d,i){
+      d.className = 'progress-dot';
+      if(i < num-1) d.classList.add('done');
+      if(i === num-1) d.classList.add('current');
+    });
+    window.scrollTo({top:0});
+  }
+
+  btns.forEach(function(b){
+    b.addEventListener('click', function(){ switchPhase(b.dataset.phase); });
+  });
+})();
+</script>
+</body>
+</html>
