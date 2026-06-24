@@ -9,6 +9,7 @@ Each tool is a self-contained static page that can be opened on its own or embed
 - Landing page (roll-up): https://gasocialimpact.github.io/resources/
 - Nonprofit Capital Access Hub: https://gasocialimpact.github.io/resources/atlanta-nonprofit-ecosystem-hub/
 - Foundation Impact Investing Starter Kit: https://gasocialimpact.github.io/resources/foundation-toolkit/
+- Faith-Based Impact Investing Starter Kit: https://gasocialimpact.github.io/resources/faith-based-starter-kit/
 - Innovation Library: https://gasocialimpact.github.io/resources/innovation-library/
 
 ## Repository structure
@@ -18,6 +19,7 @@ Each tool is a self-contained static page that can be opened on its own or embed
 ├── index.html                       # Roll-up landing page linking to each tool
 ├── atlanta-nonprofit-ecosystem-hub/ # Nonprofit Capital Access Hub
 ├── foundation-toolkit/              # Foundation Impact Investing Starter Kit
+├── faith-based-starter-kit/         # Faith-Based Impact Investing Starter Kit
 ├── innovation-library/              # Innovation Library (keeps its own format)
 ├── _template/                       # Reusable starter for building new tools
 └── README.md
@@ -29,6 +31,7 @@ Folder paths are intentionally stable because they are the source of live iframe
 
 - **Nonprofit Capital Access Hub** — Resources, analysis, and a self-assessment for nonprofits and funders navigating capital access.
 - **Foundation Impact Investing Starter Kit** — Guidance, calculators, case studies, and evaluation tools for foundations beginning impact investing.
+- **Faith-Based Impact Investing Starter Kit** — Field-level grounding, an 8-phase implementation guide, and real stories of faith communities deploying capital for mission.
 - **Innovation Library** — A self-guided learning journey for the impact investing ecosystem, presented in its own distinct format.
 
 ## Adding a new tool
@@ -43,5 +46,4 @@ Each tool is pure HTML, CSS, and JavaScript with no build step, which keeps the 
 
 Older, non-active tools and components have been moved to a separate private archive repository for reference and are not published here.
 
----
 Maintained by the Georgia Social Impact Collaborative.
