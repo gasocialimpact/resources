@@ -1,147 +1,47 @@
-# Impact Ecosystem Navigator
+# GSIC Tools
 
-An interactive web application for exploring Georgia's impact investing ecosystem, featuring comprehensive information about organizations, strategies, and resources.
+Interactive, embeddable web tools for Georgia's social impact and impact investing ecosystem, maintained by the Georgia Social Impact Collaborative (GSIC).
 
-## 🚀 Quick Start
+Each tool is a self-contained static page that can be opened on its own or embedded as an iframe on the GSIC website. A roll-up landing page collects them in one place. The site is published with GitHub Pages.
 
-### Local Development
-```bash
-# Navigate to the app directory
-cd impact-ecosystem-navigator-app
+## Live site
 
-# Start a local server
-python -m http.server 8000
+- Landing page (roll-up): https://gasocialimpact.github.io/resources/
+- Nonprofit Capital Access Hub: https://gasocialimpact.github.io/resources/atlanta-nonprofit-ecosystem-hub/
+- Foundation Impact Investing Starter Kit: https://gasocialimpact.github.io/resources/foundation-toolkit/
+- Innovation Library: https://gasocialimpact.github.io/resources/innovation-library/
 
-# Open http://localhost:8000 in your browser
-```
-
-## 📁 Repository Structure
+## Repository structure
 
 ```
 /
-├── impact-ecosystem-navigator-app/    # Main application
-│   ├── index.html                     # Complete single-file app
-│   ├── package.json                   # Project metadata
-│   ├── README.md                      # App documentation
-│   └── assets/                        # Ready for modularization
-│       ├── css/
-│       ├── js/
-│       └── images/
-└── archive/                           # Historical versions
-    └── impact-ecosystem-navigator/
-        └── impact-ecosystem-navigator.html
+├── index.html                       # Roll-up landing page linking to each tool
+├── atlanta-nonprofit-ecosystem-hub/ # Nonprofit Capital Access Hub
+├── foundation-toolkit/              # Foundation Impact Investing Starter Kit
+├── innovation-library/              # Innovation Library (keeps its own format)
+├── _template/                       # Reusable starter for building new tools
+└── README.md
 ```
 
-## ✨ Features
+Folder paths are intentionally stable because they are the source of live iframe embeds. Renaming a folder would break the embeds on the GSIC website, so display names are changed in each tool's markup rather than by moving folders.
 
-### Core Functionality
-- **Framework View** - Interactive stakeholder mapping across 5 segments
-- **Strategies Explorer** - 20+ impact investing strategies with case studies
-- **Georgia Tab** - State-specific ecosystem data and organizations
-- **Glossary** - Impact investing terminology and tools
+## Tools
 
-### Interactive Elements
-- ✅ Search and filter functionality
-- ✅ Function lens (Capital Provision, Origination, Execution, Opportunity)
-- ✅ Detailed stakeholder cards with dependencies
-- ✅ Strategy case studies with step-by-step examples
-- ✅ Embedded Airtable integration for Georgia data
-- ✅ Responsive design
+- **Nonprofit Capital Access Hub** — Resources, analysis, and a self-assessment for nonprofits and funders navigating capital access.
+- **Foundation Impact Investing Starter Kit** — Guidance, calculators, case studies, and evaluation tools for foundations beginning impact investing.
+- **Innovation Library** — A self-guided learning journey for the impact investing ecosystem, presented in its own distinct format.
 
-## 📊 Content Overview
+## Adding a new tool
 
-### Stakeholder Segments (5)
-1. **Capital Supply** - Institutional investors, foundations, government
-2. **Capital Aggregators** - Fund managers, CDFIs, DFIs
-3. **Capital Seekers** - Social enterprises, community orgs, developers
-4. **Capital Enablers** - TA providers, professional services
-5. **Infrastructure** - Impact measurement, policy, technology platforms
+Copy the `_template/` folder to a new, descriptively named directory, then edit its `index.html`. Once committed to `main`, GitHub Pages serves it at `https://gasocialimpact.github.io/resources/<your-folder>/`, and it can be linked from the landing page or embedded directly.
 
-### Functions (4)
-- Capital Provision
-- Deal Origination & Sourcing
-- Evaluation, Structuring & Execution
-- Opportunity Development
+## Technology
 
-### Strategies Include
-- Divesting (Exclusions) + Reallocation
-- ESG Integration & Stewardship
-- Thematic Impact Investing
-- Place-Based Impact Investing
-- And more...
+Each tool is pure HTML, CSS, and JavaScript with no build step, which keeps the pages portable and easy to embed. Hosting is handled by GitHub Pages.
 
-## 🛠️ Technology Stack
+## Archive
 
-- **Pure HTML/CSS/JavaScript** - No build process required
-- **Self-contained** - All code in single file for portability
-- **Airtable Integration** - Live data for Georgia ecosystem
-- **Responsive Design** - Works on desktop and mobile
-
-## 📝 Making Changes
-
-### Update Content
-1. Open `impact-ecosystem-navigator-app/index.html`
-2. Find the relevant section (clearly marked with HTML comments)
-3. Edit the content
-4. Save and refresh browser
-
-### Modify Data
-The data structure is in JavaScript at the bottom of index.html:
-```javascript
-var dataV10 = {
-  functions: [...],
-  segments: [...],
-  nodes: [...],
-  strategies: [...],
-  glossary: [...]
-}
-```
-
-### Customize Styling
-CSS variables are defined at the top of the `<style>` section:
-```css
-:root{
-  --brand-dk:#1E2951; 
-  --brand-grn:#0F7938; 
-  --brand-ylw:#D4AF37; 
-  --brand-lbl:#6FBFB3;
-}
-```
-
-## 🎯 Use Cases
-
-- **Ecosystem Mapping** - Understand stakeholder roles and relationships
-- **Strategy Planning** - Learn from detailed case studies
-- **Partnership Development** - Identify organizations and their functions
-- **Education** - Teach impact investing concepts and terminology
-- **Research** - Analyze Georgia's impact ecosystem
-
-## 📖 Documentation
-
-- See `impact-ecosystem-navigator-app/README.md` for detailed app documentation
-- The app includes inline help text and tooltips
-- All stakeholder cards include detailed information about:
-  - Key functions
-  - Capacities
-  - Challenges
-  - Dependencies
-
-## 🔄 Future Enhancements
-
-Potential improvements for future versions:
-- Extract CSS to modular files
-- Separate JavaScript into modules
-- Move data to external JSON files
-- Add backend API integration
-- Implement user accounts and saved filters
-- Enhanced data visualization
-
-## 📞 Support
-
-For questions or issues with the Impact Ecosystem Navigator, contact the Georgia Social Impact Collaborative team.
+Older, non-active tools and components have been moved to a separate private archive repository for reference and are not published here.
 
 ---
-
-**Version**: 10.0  
-**Last Updated**: December 2024  
-**Maintained by**: Georgia Social Impact Collaborative
+Maintained by the Georgia Social Impact Collaborative.
