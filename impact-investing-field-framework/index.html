@@ -40,6 +40,7 @@
     --trn-text: #149a49;
   }
 
+  html, body { height: 100%; }
   body {
     font-family: 'Familjen Grotesk', system-ui, sans-serif;
     font-weight: 400;
@@ -48,12 +49,18 @@
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     font-size: 14px;
+    /* Viewport-locked: header + tab bar stay fixed at top; only the
+       centered content column scrolls, so its scrollbar sits at the
+       content edge rather than the screen edge. */
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
   /* ════════ STICKY TOPBAR ════════ */
   .topbar {
-    position: sticky;
-    top: 0;
+    flex-shrink: 0;
     z-index: 100;
     background: #ffffff;
     border-bottom: 1px solid var(--line);
@@ -111,8 +118,7 @@
 
   /* ════════ STICKY TAB BAR ════════ */
   .tabbar {
-    position: sticky;
-    top: 53px;
+    flex-shrink: 0;
     z-index: 99;
     background: #ffffff;
     border-bottom: 1px solid var(--line);
@@ -151,14 +157,19 @@
 
   /* ════════ MAIN CONTENT ════════ */
   .main {
+    flex: 1;
+    min-height: 0;
     background: #ffffff;
-    min-height: calc(100vh - 110px);
-    padding: 32px 0 60px;
+    display: flex;
+    justify-content: center;
   }
   .inner {
     max-width: 1320px;
-    margin: 0 auto;
-    padding: 0 28px;
+    width: 100%;
+    /* This is the scroll container — scrollbar lands at the right edge
+       of the content column, not the screen edge. */
+    overflow-y: auto;
+    padding: 32px 28px 60px;
   }
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
