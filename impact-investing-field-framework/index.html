@@ -17,7 +17,7 @@
     --text: #1a1a1a;
     --soft: #5a5a5a;
     --muted: #8a8a8a;
-    --line: #e6e6e6;
+    --line: #e6e8ec;
     --line-soft: #efefef;
 
     --accent: #149a49;
@@ -54,6 +54,21 @@
        content edge rather than the screen edge. */
     height: 100vh;
     overflow: hidden;
+  }
+
+  /* ════════ BAKED-IN 6% ZOOM ════════
+     The whole app is rendered at a slightly smaller logical size and
+     scaled back up to fill the viewport, so embeds look ~6% zoomed in
+     with no horizontal overflow and no scaling math in the iframe code.
+     To change the zoom: set --zoom and the width/height divisors stay
+     in sync via calc(). Modals live OUTSIDE this wrapper so their
+     position:fixed stays anchored to the true viewport. */
+  .zoom-root {
+    --zoom: 1.06;            /* single knob: bump to 1.10 for more, 1.03 for less */
+    width: calc(100% / var(--zoom));
+    height: calc(100% / var(--zoom));
+    transform: scale(var(--zoom));
+    transform-origin: 0 0;
     display: flex;
     flex-direction: column;
   }
@@ -875,6 +890,9 @@
 </style>
 </head>
 <body>
+
+<!-- Everything inside .zoom-root is rendered ~6% zoomed in (see CSS). -->
+<div class="zoom-root">
 
 <!-- STICKY HEADER -->
 <header class="topbar">
@@ -2226,6 +2244,8 @@
 
   </div>
 </main>
+
+</div><!-- /.zoom-root -->
 
 <!-- REFERENCES MODAL -->
 <div class="modal-overlay" id="refsModal" onclick="closeModalOnOverlay(event)">
