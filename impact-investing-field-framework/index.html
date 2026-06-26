@@ -1,0 +1,2360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Impact Investing Field & Portfolio Framework</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Familjen+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #ffffff;
+    --canvas: #f7f8f9;
+    --card: #ffffff;
+    --text: #1a1a1a;
+    --soft: #5a5a5a;
+    --muted: #8a8a8a;
+    --line: #e6e6e6;
+    --line-soft: #efefef;
+
+    --accent: #149a49;
+    --accent-soft: #e0f1d9;
+    --accent-deep: #0f7a3a;
+
+    --inc-bg: #dde0fe;
+    --inc-bg-soft: #ecedfd;
+    --inc-bdr: #b6bce8;
+    --inc-text: #4750a2;
+
+    --res-bg: #fff1d3;
+    --res-bg-soft: #fff8e6;
+    --res-bdr: #e8d59a;
+    --res-text: #a67d10;
+
+    --trn-bg: #e0f1d9;
+    --trn-bg-soft: #effaeb;
+    --trn-bdr: #a8d49a;
+    --trn-text: #149a49;
+  }
+
+  body {
+    font-family: 'Familjen Grotesk', system-ui, sans-serif;
+    font-weight: 400;
+    background: var(--card);
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+  }
+
+  /* ════════ STICKY TOPBAR ════════ */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #ffffff;
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 12px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brand-icon {
+    width: 28px;
+    height: 28px;
+    display: block;
+    border-radius: 6px;
+    background: conic-gradient(from 90deg, #4750a2, #53c3c2, #eec61a, #149a49);
+    border: 1px solid var(--line);
+  }
+  .brand-title {
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 13.5px;
+    letter-spacing: 1.6px;
+    color: var(--text);
+  }
+  .topbar-actions { display: flex; gap: 8px; }
+  .tb-btn {
+    background: #ffffff;
+    border: 1px solid var(--line);
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .tb-btn:hover { border-color: var(--accent); background: #fafafa; }
+  .tb-btn svg {
+    width: 14px; height: 14px;
+    stroke: currentColor; fill: none; stroke-width: 1.8;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  /* ════════ STICKY TAB BAR ════════ */
+  .tabbar {
+    position: sticky;
+    top: 53px;
+    z-index: 99;
+    background: #ffffff;
+    border-bottom: 1px solid var(--line);
+  }
+  .tabbar-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 28px;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+  }
+  .tab-link {
+    background: none;
+    border: none;
+    padding: 14px 18px;
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--soft);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .tab-link:hover { color: var(--accent); }
+  .tab-link.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+  .tab-link svg {
+    width: 16px; height: 16px;
+    stroke: currentColor; fill: none; stroke-width: 1.8;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  /* ════════ MAIN CONTENT ════════ */
+  .main {
+    background: #ffffff;
+    min-height: calc(100vh - 110px);
+    padding: 32px 0 60px;
+  }
+  .inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .lead {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--text);
+    max-width: 1000px;
+    margin-bottom: 22px;
+  }
+  .lead strong { color: var(--accent); font-weight: 600; }
+
+  /* ════════════════ TAB 1: STRATEGIES ════════════════ */
+  .spectrum-wrap {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 24px 24px 8px;
+    margin-bottom: 18px;
+  }
+  .spectrum-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .strategy-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .scol {
+    background: var(--card);
+    border: 1px solid;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .scol.c-inc { border-color: var(--inc-bdr); }
+  .scol.c-res { border-color: var(--res-bdr); }
+  .scol.c-trn { border-color: var(--trn-bdr); }
+  .scol-head {
+    padding: 16px 22px 14px;
+    border-bottom: 3px solid;
+  }
+  .scol.c-inc .scol-head { background: var(--inc-bg); border-bottom-color: var(--inc-text); }
+  .scol.c-res .scol-head { background: var(--res-bg); border-bottom-color: var(--res-text); }
+  .scol.c-trn .scol-head { background: var(--trn-bg); border-bottom-color: var(--trn-text); }
+  .scol-head .stier {
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-weight: 300;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    margin-bottom: 3px;
+  }
+  .scol-head h2 {
+    font-family: 'Young Serif', serif;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.1;
+    margin-bottom: 4px;
+    letter-spacing: -0.3px;
+  }
+  .scol-head .smandate {
+    font-size: 12.5px;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+  .scol.c-inc .stier, .scol.c-inc h2, .scol.c-inc .smandate { color: var(--inc-text); }
+  .scol.c-res .stier, .scol.c-res h2, .scol.c-res .smandate { color: var(--res-text); }
+  .scol.c-trn .stier, .scol.c-trn h2, .scol.c-trn .smandate { color: var(--trn-text); }
+
+  .scol-body { padding: 16px 22px 18px; flex: 1; }
+  .substrat {
+    border-top: 1px solid var(--line);
+    padding: 14px 0 4px;
+  }
+  .substrat:first-child { border-top: none; padding-top: 0; }
+  .substrat h3 {
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 14.5px;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+  .scol.c-inc .substrat h3 { color: var(--inc-text); }
+  .scol.c-res .substrat h3 { color: var(--res-text); }
+  .scol.c-trn .substrat h3 { color: var(--trn-text); }
+  .substrat p { font-size: 13px; line-height: 1.55; margin-bottom: 8px; }
+  .ex-box {
+    font-size: 12.5px;
+    line-height: 1.5;
+    padding: 8px 11px;
+    background: #fafafa;
+    border-left: 2px solid;
+    border-radius: 0 4px 4px 0;
+    margin-bottom: 6px;
+  }
+  .scol.c-inc .ex-box { border-left-color: var(--inc-text); }
+  .scol.c-res .ex-box { border-left-color: var(--res-text); }
+  .scol.c-trn .ex-box { border-left-color: var(--trn-text); }
+  .ex-box .ex-lbl {
+    font-weight: 700;
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    margin-right: 5px;
+  }
+  .scol.c-inc .ex-lbl { color: var(--inc-text); }
+  .scol.c-res .ex-lbl { color: var(--res-text); }
+  .scol.c-trn .ex-lbl { color: var(--trn-text); }
+
+  .scol-strip {
+    padding: 12px 22px;
+    border-top: 1px solid var(--line);
+    background: #fafafa;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .ss-block .ss-lbl {
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-weight: 300;
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--soft);
+    margin-bottom: 3px;
+  }
+  .ss-block .ss-val { font-size: 12.5px; line-height: 1.45; font-weight: 600; }
+  .scol.c-inc .ss-val { color: var(--inc-text); }
+  .scol.c-res .ss-val { color: var(--res-text); }
+  .scol.c-trn .ss-val { color: var(--trn-text); }
+
+  .guided-band {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .gb-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .gb-tag {
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.3px;
+    color: var(--accent);
+    padding: 5px 11px;
+    background: var(--accent-soft);
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .gb-text { font-size: 13px; line-height: 1.5; color: var(--text); }
+
+  .reading-note {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px 22px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .reading-note h3 {
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  /* ════════════════ TAB 2: VEHICLES MATRIX ════════════════ */
+  .filters {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+  }
+  .filter-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .filter-lbl {
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--soft);
+    margin-right: 6px;
+  }
+  .fbtn {
+    background: #ffffff;
+    border: 1px solid var(--line);
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .fbtn:hover { border-color: var(--accent); }
+  .fbtn.f-inc { color: var(--inc-text); border-color: var(--inc-bdr); }
+  .fbtn.f-inc.active { background: var(--inc-text); color: #fff; border-color: var(--inc-text); }
+  .fbtn.f-res { color: var(--res-text); border-color: var(--res-bdr); }
+  .fbtn.f-res.active { background: var(--res-text); color: #fff; border-color: var(--res-text); }
+  .fbtn.f-trn { color: var(--trn-text); border-color: var(--trn-bdr); }
+  .fbtn.f-trn.active { background: var(--trn-text); color: #fff; border-color: var(--trn-text); }
+  .filter-clear {
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-size: 12px;
+    cursor: pointer;
+    padding: 6px 10px;
+    margin-left: auto;
+    font-family: inherit;
+  }
+  .filter-clear:hover { text-decoration: underline; }
+
+  .matrix {
+    display: grid;
+    grid-template-columns: 180px 1fr 1fr 1fr;
+    gap: 10px;
+    align-items: stretch;
+  }
+  .matrix-corner {
+    padding: 14px 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    color: var(--soft);
+  }
+  .matrix-corner .mc-line {
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    line-height: 1.5;
+  }
+  .matrix-corner .mc-arrow { font-size: 14px; color: var(--accent); margin: 4px 0; }
+  .matrix-col-hdr {
+    padding: 14px 18px;
+    border-radius: 8px 8px 0 0;
+    border: 1px solid;
+    border-bottom: 3px solid;
+    cursor: pointer;
+    transition: opacity 0.15s, box-shadow 0.15s;
+  }
+  .matrix-col-hdr:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .matrix-col-hdr.dimmed { opacity: 0.55; }
+  .matrix-col-hdr.c-inc { background: var(--inc-bg); border-color: var(--inc-bdr); border-bottom-color: var(--inc-text); }
+  .matrix-col-hdr.c-res { background: var(--res-bg); border-color: var(--res-bdr); border-bottom-color: var(--res-text); }
+  .matrix-col-hdr.c-trn { background: var(--trn-bg); border-color: var(--trn-bdr); border-bottom-color: var(--trn-text); }
+  .matrix-col-hdr .mch-cap {
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-weight: 300;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 1.3px;
+    margin-bottom: 4px;
+  }
+  .matrix-col-hdr h3 {
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+  .matrix-col-hdr .mch-strat { font-size: 12.5px; font-weight: 500; }
+  .matrix-col-hdr.c-inc .mch-cap, .matrix-col-hdr.c-inc h3, .matrix-col-hdr.c-inc .mch-strat { color: var(--inc-text); }
+  .matrix-col-hdr.c-res .mch-cap, .matrix-col-hdr.c-res h3, .matrix-col-hdr.c-res .mch-strat { color: var(--res-text); }
+  .matrix-col-hdr.c-trn .mch-cap, .matrix-col-hdr.c-trn h3, .matrix-col-hdr.c-trn .mch-strat { color: var(--trn-text); }
+
+  .matrix-row-hdr {
+    padding: 16px 14px 16px 4px;
+    border-right: 2px solid var(--accent);
+    display: flex;
+    flex-direction: column;
+  }
+  .matrix-row-hdr .mrh-icon {
+    width: 30px; height: 30px;
+    background: var(--accent-soft);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 8px;
+  }
+  .matrix-row-hdr .mrh-icon svg {
+    width: 16px; height: 16px;
+    stroke: var(--accent); fill: none; stroke-width: 1.8;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+  .matrix-row-hdr h3 {
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .matrix-row-hdr .mrh-desc { font-size: 11.5px; color: var(--soft); line-height: 1.5; }
+  .matrix-cell {
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-self: stretch;
+    min-height: 130px;
+  }
+  .matrix-cell.c-inc { background: rgba(221,224,254,0.25); }
+  .matrix-cell.c-res { background: rgba(255,241,211,0.3); }
+  .matrix-cell.c-trn { background: rgba(224,241,217,0.35); }
+  .cell-prompt {
+    text-align: center;
+    padding: 28px 14px;
+    color: var(--soft);
+    font-size: 12.5px;
+    line-height: 1.55;
+    margin: auto 0;
+  }
+  .cell-prompt .cp-arrow {
+    font-size: 20px;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .matrix-cell.c-inc .cell-prompt .cp-arrow, .matrix-cell.c-inc .cell-prompt strong { color: var(--inc-text); }
+  .matrix-cell.c-res .cell-prompt .cp-arrow, .matrix-cell.c-res .cell-prompt strong { color: var(--res-text); }
+  .matrix-cell.c-trn .cell-prompt .cp-arrow, .matrix-cell.c-trn .cell-prompt strong { color: var(--trn-text); }
+  .cell-prompt strong { font-weight: 600; }
+
+  .vcard {
+    border: 1px solid;
+    border-radius: 8px;
+    background: #fff;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.15s, border-color 0.15s;
+  }
+  .vcard:hover { box-shadow: 0 3px 14px rgba(0,0,0,0.06); }
+  .vcard.c-inc { border-color: var(--inc-bdr); }
+  .vcard.c-res { border-color: var(--res-bdr); }
+  .vcard.c-trn { border-color: var(--trn-bdr); }
+  .vcard.c-inc:hover { border-color: var(--inc-text); }
+  .vcard.c-res:hover { border-color: var(--res-text); }
+  .vcard.c-trn:hover { border-color: var(--trn-text); }
+
+  .vcard-top { padding: 11px 14px 12px; }
+  .vcard.c-inc .vcard-top { background: var(--inc-bg-soft); }
+  .vcard.c-res .vcard-top { background: var(--res-bg-soft); }
+  .vcard.c-trn .vcard-top { background: var(--trn-bg-soft); }
+  .vcard-strat {
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 3px;
+  }
+  .vcard.c-inc .vcard-strat { color: var(--inc-text); }
+  .vcard.c-res .vcard-strat { color: var(--res-text); }
+  .vcard.c-trn .vcard-strat { color: var(--trn-text); }
+  .vcard-name {
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 14.5px;
+    line-height: 1.2;
+    color: var(--text);
+  }
+  .vcard-body { padding: 12px 14px; flex: 1; }
+  .vsum { font-size: 12.5px; line-height: 1.55; margin-bottom: 10px; }
+  .vrec { margin-bottom: 10px; }
+  .vrec-lbl {
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 1.1px;
+    margin-bottom: 4px;
+  }
+  .vcard.c-inc .vrec-lbl { color: var(--inc-text); }
+  .vcard.c-res .vrec-lbl { color: var(--res-text); }
+  .vcard.c-trn .vrec-lbl { color: var(--trn-text); }
+  .vrec ul { list-style: none; padding: 0; }
+  .vrec ul li {
+    font-size: 12px;
+    line-height: 1.45;
+    padding: 2px 0 2px 14px;
+    position: relative;
+  }
+  .vrec ul li::before {
+    content: ""; position: absolute;
+    left: 3px; top: 9px;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+  }
+  .vcard.c-inc .vrec ul li::before { background: var(--inc-text); }
+  .vcard.c-res .vrec ul li::before { background: var(--res-text); }
+  .vcard.c-trn .vrec ul li::before { background: var(--trn-text); }
+  .vreturns {
+    padding: 8px 11px;
+    background: #fafafa;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .vreturns .vr-lbl {
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.1px;
+    color: var(--soft);
+  }
+  .vreturns .vr-val { font-weight: 700; font-size: 12.5px; color: var(--text); }
+  .vaccess {
+    font-size: 11px;
+    color: var(--soft);
+    padding: 4px 8px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+  }
+
+  .pri-note {
+    margin-top: 18px;
+    padding: 14px 18px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .pri-note strong { color: var(--accent); font-weight: 600; }
+
+  /* ════════════════ TAB 3 ════════════════ */
+  .view-toggle {
+    display: inline-flex;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 4px;
+    margin-bottom: 22px;
+    gap: 2px;
+  }
+  .vt-btn {
+    background: none;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--soft);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .vt-btn:hover { color: var(--accent); }
+  .vt-btn.active { background: var(--accent); color: #fff; font-weight: 600; }
+
+  .audience-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 22px;
+    padding: 12px 14px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  .apill {
+    background: #fff;
+    border: 1px solid var(--line);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .apill:hover { border-color: var(--accent); }
+  .apill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .apill svg {
+    width: 14px; height: 14px;
+    stroke: currentColor; fill: none; stroke-width: 1.8;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  .view-block { display: none; }
+  .view-block.active { display: block; }
+  .audience-panel { display: none; }
+  .audience-panel.active { display: block; }
+
+  .ap-head {
+    margin-bottom: 16px;
+    padding: 16px 20px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+  }
+  .ap-head h2 {
+    font-family: 'Young Serif', serif;
+    font-weight: 400;
+    font-size: 24px;
+    color: var(--accent);
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
+  }
+  .ap-head p { font-size: 13.5px; line-height: 1.55; margin-bottom: 6px; }
+  .ap-head .ap-constraint {
+    font-size: 12px;
+    color: var(--soft);
+    line-height: 1.5;
+    padding-top: 6px;
+    border-top: 1px solid var(--line-soft);
+  }
+  .ap-head .ap-constraint strong { color: var(--accent); }
+
+  .ap-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .ap-cell {
+    border-radius: 10px;
+    border: 1px solid;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .ap-cell.c-inc { border-color: var(--inc-bdr); background: var(--inc-bg-soft); }
+  .ap-cell.c-res { border-color: var(--res-bdr); background: var(--res-bg-soft); }
+  .ap-cell.c-trn { border-color: var(--trn-bdr); background: var(--trn-bg-soft); }
+  .ap-cell-head { padding: 12px 16px; border-bottom: 2px solid; }
+  .ap-cell.c-inc .ap-cell-head { background: var(--inc-bg); border-bottom-color: var(--inc-text); }
+  .ap-cell.c-res .ap-cell-head { background: var(--res-bg); border-bottom-color: var(--res-text); }
+  .ap-cell.c-trn .ap-cell-head { background: var(--trn-bg); border-bottom-color: var(--trn-text); }
+  .ap-cell-head .apc-cap {
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.3px;
+    margin-bottom: 2px;
+  }
+  .ap-cell-head h3 {
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1.15;
+  }
+  .ap-cell.c-inc .apc-cap, .ap-cell.c-inc h3 { color: var(--inc-text); }
+  .ap-cell.c-res .apc-cap, .ap-cell.c-res h3 { color: var(--res-text); }
+  .ap-cell.c-trn .apc-cap, .ap-cell.c-trn h3 { color: var(--trn-text); }
+  .ap-cell-body { padding: 14px 16px 16px; flex: 1; font-size: 12.5px; line-height: 1.55; }
+  .ap-cell-body p { margin-bottom: 10px; }
+  .ap-cell-body .ap-tools {
+    margin-top: 8px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(0,0,0,0.1);
+  }
+  .ap-cell-body .ap-tools-lbl {
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 5px;
+  }
+  .ap-cell.c-inc .ap-tools-lbl { color: var(--inc-text); }
+  .ap-cell.c-res .ap-tools-lbl { color: var(--res-text); }
+  .ap-cell.c-trn .ap-tools-lbl { color: var(--trn-text); }
+  .ap-cell-body .ap-tools ul { list-style: none; padding: 0; }
+  .ap-cell-body .ap-tools ul li {
+    padding: 2px 0 2px 14px;
+    position: relative;
+    font-size: 12px;
+  }
+  .ap-cell-body .ap-tools ul li::before { content: "→"; position: absolute; left: 0; font-weight: 600; }
+  .ap-cell.c-inc .ap-tools ul li::before { color: var(--inc-text); }
+  .ap-cell.c-res .ap-tools ul li::before { color: var(--res-text); }
+  .ap-cell.c-trn .ap-tools ul li::before { color: var(--trn-text); }
+
+  /* ════════════════ MODAL ════════════════ */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: #fff;
+    border-radius: 10px;
+    max-width: 560px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+  }
+  .modal-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--line);
+  }
+  .modal-head h2 {
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--accent);
+    letter-spacing: -0.1px;
+  }
+  .modal-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--soft);
+    padding: 4px;
+    display: flex;
+  }
+  .modal-close:hover { color: var(--accent); }
+  .modal-close svg {
+    width: 18px; height: 18px;
+    stroke: currentColor; fill: none; stroke-width: 1.8;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+  .modal-body { padding: 18px 22px 22px; }
+  .modal-body p.modal-lead {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+  .ref-list { list-style: none; padding: 0; }
+  .ref-list li {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line-soft);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .ref-list li:last-child { border-bottom: none; }
+  .ref-list a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .ref-list a:hover { text-decoration: underline; }
+  .ref-list .ref-author {
+    color: var(--soft);
+    font-size: 12px;
+    margin-top: 2px;
+  }
+
+  @media (max-width: 1000px) {
+    .strategy-cols { grid-template-columns: 1fr; }
+    .guided-band { grid-template-columns: 1fr; }
+    .matrix { grid-template-columns: 160px 1fr 1fr 1fr; }
+    .ap-grid { grid-template-columns: 1fr; }
+    .tab-link { padding: 12px 12px; font-size: 13px; }
+  }
+  @media (max-width: 700px) {
+    .matrix { grid-template-columns: 1fr; }
+    .matrix-corner { display: none; }
+    .matrix-col-hdr { margin-top: 16px; }
+    .matrix-row-hdr { border-right: none; border-top: 2px solid var(--accent); padding: 14px 0 6px; margin-top: 20px; }
+    .filter-row { flex-direction: column; align-items: flex-start; }
+    .topbar-actions { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- STICKY HEADER -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-icon" aria-hidden="true"></div>
+      <span class="brand-title">IMPACT INVESTING FIELD &amp; PORTFOLIO FRAMEWORK</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="tb-btn" onclick="window.print()">
+        <svg viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><rect x="4" y="9" width="16" height="9" rx="1"/><rect x="7" y="14" width="10" height="6"/></svg>
+        Print
+      </button>
+      <button class="tb-btn" onclick="openModal('howto')">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 4.9 0c0 1.5-2.4 1.9-2.4 3.5"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/></svg>
+        How to
+      </button>
+      <button class="tb-btn" onclick="openModal('refs')">
+        <svg viewBox="0 0 24 24"><path d="M4 5h12a3 3 0 0 1 3 3v12H7a3 3 0 0 1-3-3z"/><path d="M4 17a3 3 0 0 1 3-3h12"/></svg>
+        References
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- STICKY TAB BAR -->
+<nav class="tabbar" role="tablist">
+  <div class="tabbar-inner">
+    <button class="tab-link active" data-tab="tab1" onclick="switchTab('tab1')" role="tab">
+      <svg viewBox="0 0 24 24"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+      Strategies &amp; Substrategies
+    </button>
+    <button class="tab-link" data-tab="tab2" onclick="switchTab('tab2')" role="tab">
+      <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg>
+      Vehicles &amp; Recipients
+    </button>
+    <button class="tab-link" data-tab="tab3" onclick="switchTab('tab3')" role="tab">
+      <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 21c0-3.5 2.5-6 6-6s6 2.5 6 6"/><circle cx="17" cy="6" r="2.2"/><path d="M14 14c.7-1 2-1.5 3-1.5 2.5 0 4.5 1.7 4.5 4"/></svg>
+      How This Plays Out Differently
+    </button>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="inner">
+
+    <!-- ════════════════ TAB 1: STRATEGIES & SUBSTRATEGIES ════════════════ -->
+    <div class="tab-panel active" data-tab="tab1">
+
+      <p class="lead">Impact investing covers three top-level strategy families and six sub-strategies between them. The lines between families blur as investors move along the spectrum. Read the spectrum visualization to see how the families overlap, then open each strategy below to see its sub-strategies.</p>
+
+      <!-- SPECTRUM VISUALIZATION -->
+      <div class="spectrum-wrap">
+        <svg class="spectrum-svg" viewBox="0 0 1280 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Impact investing spectrum with three overlapping strategy families and six sub-strategies">
+          <defs>
+            <linearGradient id="bandInc" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#dde0fe" stop-opacity="1"/>
+              <stop offset="0.75" stop-color="#dde0fe" stop-opacity="1"/>
+              <stop offset="1" stop-color="#dde0fe" stop-opacity="0.3"/>
+            </linearGradient>
+            <linearGradient id="bandRes" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#fff1d3" stop-opacity="0.3"/>
+              <stop offset="0.2" stop-color="#fff1d3" stop-opacity="1"/>
+              <stop offset="0.75" stop-color="#fff1d3" stop-opacity="1"/>
+              <stop offset="1" stop-color="#fff1d3" stop-opacity="0.3"/>
+            </linearGradient>
+            <linearGradient id="bandTrn" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#e0f1d9" stop-opacity="0.3"/>
+              <stop offset="0.2" stop-color="#e0f1d9" stop-opacity="1"/>
+              <stop offset="1" stop-color="#e0f1d9" stop-opacity="1"/>
+            </linearGradient>
+          </defs>
+
+          <g>
+            <rect x="40" y="10" width="800" height="32" fill="#ecedfd" stroke="#b6bce8" rx="6"/>
+            <text x="440" y="31" text-anchor="middle" font-family="Familjen Grotesk" font-size="12" fill="#4750a2" font-weight="600" letter-spacing="0.6">ESG CRITERIA GUIDE DECISIONS</text>
+            <rect x="850" y="10" width="390" height="32" fill="#effaeb" stroke="#a8d49a" rx="6"/>
+            <text x="1045" y="31" text-anchor="middle" font-family="Familjen Grotesk" font-size="12" fill="#149a49" font-weight="600" letter-spacing="0.6">MISSION, PURPOSE &amp; FOUNDING CHARTER GUIDE DECISIONS</text>
+          </g>
+
+          <g>
+            <rect x="40" y="62" width="480" height="70" fill="url(#bandInc)" stroke="#4750a2" stroke-width="1.5" rx="35"/>
+            <text x="200" y="103" text-anchor="middle" font-family="Familjen Grotesk" font-size="17" fill="#4750a2" font-weight="700">Responsible Investing</text>
+
+            <rect x="380" y="62" width="520" height="70" fill="url(#bandRes)" stroke="#a67d10" stroke-width="1.5" rx="35"/>
+            <text x="640" y="103" text-anchor="middle" font-family="Familjen Grotesk" font-size="17" fill="#a67d10" font-weight="700">Values-Aligned Investing</text>
+
+            <rect x="760" y="62" width="480" height="70" fill="url(#bandTrn)" stroke="#149a49" stroke-width="1.5" rx="35"/>
+            <text x="1000" y="103" text-anchor="middle" font-family="Familjen Grotesk" font-size="17" fill="#149a49" font-weight="700">Impact-First Investing</text>
+          </g>
+
+          <g stroke-width="1" stroke-dasharray="2 3" fill="none">
+            <line x1="140" y1="132" x2="140" y2="170" stroke="#b6bce8"/>
+            <line x1="320" y1="132" x2="320" y2="170" stroke="#b6bce8"/>
+            <line x1="500" y1="132" x2="500" y2="170" stroke="#e8d59a"/>
+            <line x1="700" y1="132" x2="700" y2="170" stroke="#e8d59a"/>
+            <line x1="900" y1="132" x2="900" y2="170" stroke="#a8d49a"/>
+            <line x1="1080" y1="132" x2="1080" y2="170" stroke="#a8d49a"/>
+          </g>
+
+          <g>
+            <rect x="40" y="170" width="200" height="58" fill="#ffffff" stroke="#4750a2" stroke-width="1.2" rx="6"/>
+            <text x="140" y="192" text-anchor="middle" font-family="Familjen Grotesk" font-size="11" fill="#4750a2" font-weight="700" letter-spacing="0.5">DIVESTING /</text>
+            <text x="140" y="207" text-anchor="middle" font-family="Familjen Grotesk" font-size="11" fill="#4750a2" font-weight="700" letter-spacing="0.5">NEGATIVE ESG SCREENING</text>
+            <text x="140" y="221" text-anchor="middle" font-family="Familjen Grotesk" font-size="9.5" fill="#4750a2">Screen out misaligned holdings</text>
+
+            <rect x="260" y="170" width="200" height="58" fill="#ffffff" stroke="#4750a2" stroke-width="1.2" rx="6"/>
+            <text x="360" y="192" text-anchor="middle" font-family="Familjen Grotesk" font-size="11" fill="#4750a2" font-weight="700" letter-spacing="0.5">ACTIVIST INVESTING</text>
+            <text x="360" y="206" text-anchor="middle" font-family="Familjen Grotesk" font-size="9.5" fill="#4750a2">Shareholder activism to</text>
+            <text x="360" y="220" text-anchor="middle" font-family="Familjen Grotesk" font-size="9.5" fill="#4750a2">promote a mission agenda</text>
+
+            <rect x="480" y="170" width="200" height="58" fill="#ffffff" stroke="#a67d10" stroke-width="1.2" rx="6"/>
+            <text x="580" y="192" text-anchor="middle" font-family="Familjen Grotesk" font-size="11" fill="#a67d10" font-weight="700" letter-spacing="0.5">ESG INCLUSION INVESTING</text>
+            <text x="580" y="206" text-anchor="middle" font-family="Familjen Grotesk" font-size="9.5" fill="#a67d10">Buy into companies that</text>
+            <text x="580" y="220" text-anchor="middle" font-family="Familjen Grotesk" font-size="9.5" fill="#a67d10">score high on ESG factors</text>
+
+            <rect x="700" y="170" width="200" height="58" fill="#ffffff" stroke="#a67d10" stroke-width="1.2" rx="6"/>
+            <text x="800" y="192" text-anchor="middle" font-family="Familjen Grotesk" font-size="11" fill="#a67d10" font-weight="700" letter-spacing="0.5">THEMATIC IMPACT INVESTING</text>
+            <text x="800" y="206" text-anchor="middle" font-family="Familjen Grotesk" font-size="9.5" fill="#a67d10">Lens-based allocation across</text>
+            <text x="800" y="220" text-anchor="middle" font-family="Familjen Grotesk" font-size="9.5" fill="#a67d10">asset classes and return profiles</text>
+
+            <rect x="920" y="170" width="200" height="58" fill="#ffffff" stroke="#149a49" stroke-width="1.2" rx="6"/>
+            <text x="1020" y="192" text-anchor="middle" font-family="Familjen Grotesk" font-size="11" fill="#149a49" font-weight="700" letter-spacing="0.5">CATALYTIC IMPACT INVESTING</text>
+            <text x="1020" y="206" text-anchor="middle" font-family="Familjen Grotesk" font-size="9.5" fill="#149a49">Greater risk, flexible terms,</text>
+            <text x="1020" y="220" text-anchor="middle" font-family="Familjen Grotesk" font-size="9.5" fill="#149a49">patient capital, impact-adjusted return</text>
+
+            <rect x="1040" y="248" width="200" height="58" fill="#ffffff" stroke="#149a49" stroke-width="1.2" rx="6"/>
+            <text x="1140" y="270" text-anchor="middle" font-family="Familjen Grotesk" font-size="11" fill="#149a49" font-weight="700" letter-spacing="0.5">PLACE-BASED IMPACT</text>
+            <text x="1140" y="284" text-anchor="middle" font-family="Familjen Grotesk" font-size="9.5" fill="#149a49">Local companies, orgs, or funds</text>
+            <text x="1140" y="298" text-anchor="middle" font-family="Familjen Grotesk" font-size="9.5" fill="#149a49">for measurable community benefit</text>
+
+            <line x1="1140" y1="248" x2="1140" y2="228" stroke="#a8d49a" stroke-dasharray="2 3"/>
+            <line x1="1140" y1="228" x2="1080" y2="228" stroke="#a8d49a" stroke-dasharray="2 3"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- THREE STRATEGY COLUMN CARDS -->
+      <div class="strategy-cols">
+
+        <div class="scol c-inc">
+          <div class="scol-head">
+            <div class="stier">Incremental intent</div>
+            <h2>Responsible Investing</h2>
+            <div class="smandate">Avoid harm. Set an impact floor across the existing portfolio.</div>
+          </div>
+          <div class="scol-body">
+            <div class="substrat">
+              <h3>Divesting and Negative ESG Screening</h3>
+              <p>Selling or screening out stocks that are not ESG-aligned or are detrimental to the asset holder's mission. Usually applied across the entire portfolio.</p>
+              <div class="ex-box"><span class="ex-lbl">Example</span>A health-focused foundation instructs its investment manager to screen out alcohol, tobacco, and firearm stocks because of adverse health impacts.</div>
+            </div>
+            <div class="substrat">
+              <h3>Activist Investing (Shareholder Activism)</h3>
+              <p>Buying stock in publicly traded companies to become a shareholder activist and promote an agenda aligned with the investor's mission.</p>
+              <div class="ex-box"><span class="ex-lbl">Example</span>An institutional investor buys stock in a company to promote better workplace practices or board diversity through shareholder advocacy.</div>
+            </div>
+          </div>
+          <div class="scol-strip">
+            <div class="ss-block"><div class="ss-lbl">Return profile</div><div class="ss-val">Market rate</div></div>
+            <div class="ss-block"><div class="ss-lbl">Typical access</div><div class="ss-val">Mostly indirect</div></div>
+          </div>
+        </div>
+
+        <div class="scol c-res">
+          <div class="scol-head">
+            <div class="stier">Restorative intent</div>
+            <h2>Values-Aligned Investing</h2>
+            <div class="smandate">Select positively for contribution. Articulate impact goals more precisely.</div>
+          </div>
+          <div class="scol-body">
+            <div class="substrat">
+              <h3>ESG Inclusion Investing</h3>
+              <p>Buying stocks in companies that are highly aligned with ESG factors or values, such as diverse executive leadership or strong environmental stewardship.</p>
+              <div class="ex-box"><span class="ex-lbl">Example</span>An investor allocates to a public equity fund that overweights companies with strong climate disclosure and diverse leadership.</div>
+            </div>
+            <div class="substrat">
+              <h3>Thematic Impact Investing</h3>
+              <p>Using a particular thematic lens to invest across asset classes and return profiles to advance a targeted impact area like climate, health, or housing.</p>
+              <div class="ex-box"><span class="ex-lbl">Example</span>A donor-advised fund offers a clean energy investment pool that fundholders can elect to direct a percentage of their assets into.</div>
+            </div>
+          </div>
+          <div class="scol-strip">
+            <div class="ss-block"><div class="ss-lbl">Return profile</div><div class="ss-val">Market to near-market</div></div>
+            <div class="ss-block"><div class="ss-lbl">Typical access</div><div class="ss-val">Mixed direct &amp; indirect</div></div>
+          </div>
+        </div>
+
+        <div class="scol c-trn">
+          <div class="scol-head">
+            <div class="stier">Transformational intent</div>
+            <h2>Impact-First Investing</h2>
+            <div class="smandate">Bring capital into direct relationship with mission, purpose, and community.</div>
+          </div>
+          <div class="scol-body">
+            <div class="substrat">
+              <h3>Catalytic Impact Investing</h3>
+              <p>Tolerating greater risk, embracing more flexible structures, offering more patient capital terms, and accepting impact-adjusted financial rate of return.</p>
+              <div class="ex-box"><span class="ex-lbl">Example</span>A foundation provides a recoverable grant or first-loss capital so that a community development project can attract conventional senior debt.</div>
+            </div>
+            <div class="substrat">
+              <h3>Place-Based Impact Investing</h3>
+              <p>Investing in local companies, organizations, or funds with the intention to generate measurable community benefit and financial returns.</p>
+              <div class="ex-box"><span class="ex-lbl">Example</span>An investor seeds a new microlender to invest in local small businesses, or makes a bridge loan to a nonprofit awaiting government reimbursement.</div>
+            </div>
+          </div>
+          <div class="scol-strip">
+            <div class="ss-block"><div class="ss-lbl">Return profile</div><div class="ss-val">Below-market to recoverable</div></div>
+            <div class="ss-block"><div class="ss-lbl">Typical access</div><div class="ss-val">Mostly direct</div></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- GUIDED BY BAND -->
+      <div class="guided-band">
+        <div class="gb-card">
+          <span class="gb-tag" style="color: var(--inc-text); background: var(--inc-bg);">Guided by</span>
+          <span class="gb-text">Environmental, Social, and Governance (ESG) criteria guide decisions across Responsible and Values-Aligned strategies.</span>
+        </div>
+        <div class="gb-card">
+          <span class="gb-tag">Guided by</span>
+          <span class="gb-text">Mission, Purpose, and Founding Charter criteria guide Impact-First decisions.</span>
+        </div>
+      </div>
+
+      <!-- READING THE STRATEGIES -->
+      <div class="reading-note">
+        <h3>Reading the strategies</h3>
+        <p>The three categories form a progression. Responsible Investing focuses on the lens of avoiding harm and shaping company behavior. Values-Aligned Investing actively selects companies and themes that match what the investor stands for. Impact-First Investing prioritizes measurable community outcomes, with capital structured to support the investee rather than to maximize returns. Each investor can pick where to start and grow into deeper alignment over time.</p>
+      </div>
+
+    </div>
+
+    <!-- ════════════════ TAB 2: VEHICLES & RECIPIENTS ════════════════ -->
+    <div class="tab-panel" data-tab="tab2">
+
+      <p class="lead">The marketplace organized into a matrix. Rows are portfolio asset categories. Columns are the three intent tiers. The matrix starts empty. Click a strategy below to reveal the vehicles that live in that column.</p>
+
+      <div class="filters">
+        <div class="filter-row">
+          <span class="filter-lbl">Reveal by strategy</span>
+          <button class="fbtn f-inc" data-strategy="inc" onclick="toggleStrategy('inc')">Responsible</button>
+          <button class="fbtn f-res" data-strategy="res" onclick="toggleStrategy('res')">Values Aligned</button>
+          <button class="fbtn f-trn" data-strategy="trn" onclick="toggleStrategy('trn')">Impact-First</button>
+          <button class="filter-clear" onclick="clearStrategies()">Hide all</button>
+        </div>
+      </div>
+
+      <div class="matrix" id="matrix">
+
+        <div class="matrix-corner">
+          <span class="mc-line">Asset class</span>
+          <span class="mc-arrow">↓</span>
+          <span class="mc-line">Intent →</span>
+        </div>
+        <div class="matrix-col-hdr c-inc dimmed" data-col="inc" onclick="toggleStrategy('inc')">
+          <div class="mch-cap">Incremental</div>
+          <h3>Responsible</h3>
+          <div class="mch-strat">Avoid harm, set an impact floor</div>
+        </div>
+        <div class="matrix-col-hdr c-res dimmed" data-col="res" onclick="toggleStrategy('res')">
+          <div class="mch-cap">Restorative</div>
+          <h3>Values Aligned</h3>
+          <div class="mch-strat">Select positively for contribution</div>
+        </div>
+        <div class="matrix-col-hdr c-trn dimmed" data-col="trn" onclick="toggleStrategy('trn')">
+          <div class="mch-cap">Transformational</div>
+          <h3>Impact-First</h3>
+          <div class="mch-strat">Lead with mission</div>
+        </div>
+
+        <!-- ROW 1: CASH & BANKING -->
+        <div class="matrix-row-hdr">
+          <div class="mrh-icon"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 11h20"/><circle cx="7" cy="16" r="1"/></svg></div>
+          <h3>Cash &amp; Banking</h3>
+          <div class="mrh-desc">Where operating cash, reserves, and personal deposits sit.</div>
+        </div>
+        <div class="matrix-cell c-inc" data-col="inc">
+          <div class="vcard c-inc" data-strategy="inc">
+            <div class="vcard-top">
+              <div class="vcard-strat">Responsible</div>
+              <div class="vcard-name">Socially Responsible Banks</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">Banks that integrate ESG criteria into lending and avoid financing for industries like fossil fuels, weapons, or tobacco. Same FDIC-insured checking and savings as a mainstream bank.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients via re-lending</div>
+                <ul>
+                  <li>Companies meeting ESG screens</li>
+                  <li>Sustainable businesses passing internal lending policies</li>
+                </ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">Standard deposit rates</span></div>
+              <span class="vaccess">Direct</span>
+            </div>
+          </div>
+        </div>
+        <div class="matrix-cell c-res" data-col="res">
+          <div class="vcard c-res" data-strategy="res">
+            <div class="vcard-top">
+              <div class="vcard-strat">Values Aligned</div>
+              <div class="vcard-name">Minority Depository Institutions</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">Banks certified by federal regulators as minority-owned or as primarily serving minority communities. Deposits unlock lending into communities mainstream finance has overlooked.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients via re-lending</div>
+                <ul>
+                  <li>Borrowers in Black, Latino, Asian, and Native American communities</li>
+                  <li>Small businesses underserved by mainstream credit</li>
+                </ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">Standard deposit rates</span></div>
+              <span class="vaccess">Direct</span>
+            </div>
+          </div>
+          <div class="vcard c-res" data-strategy="res">
+            <div class="vcard-top">
+              <div class="vcard-strat">Values Aligned</div>
+              <div class="vcard-name">Climate-Focused Banks</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">Banks whose lending book is focused on climate solutions, energy transition, decarbonization, and resilience. Typically pair an explicit fossil fuel exclusion with active climate lending.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients via re-lending</div>
+                <ul>
+                  <li>Climate solutions companies and operators</li>
+                  <li>Energy efficiency and renewable energy borrowers</li>
+                </ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">Standard deposit rates</span></div>
+              <span class="vaccess">Direct</span>
+            </div>
+          </div>
+        </div>
+        <div class="matrix-cell c-trn" data-col="trn">
+          <div class="vcard c-trn" data-strategy="trn">
+            <div class="vcard-top">
+              <div class="vcard-strat">Impact-First</div>
+              <div class="vcard-name">Credit Unions</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">Member-owned cooperative financial institutions. Members are the owners, not external shareholders. Returns to members come through better rates and lower fees.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients</div>
+                <ul>
+                  <li>Members through better consumer banking</li>
+                  <li>Local borrowers and small businesses</li>
+                </ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">Deposit rates plus member dividends</span></div>
+              <span class="vaccess">Direct</span>
+            </div>
+          </div>
+          <div class="vcard c-trn" data-strategy="trn">
+            <div class="vcard-top">
+              <div class="vcard-strat">Impact-First</div>
+              <div class="vcard-name">Local Community Banks</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">Small community-rooted banks serving specific geographies through relationship-based lending. Different from large national banks in scale, focus, and how close decisions sit to the borrower.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients via re-lending</div>
+                <ul>
+                  <li>Local small businesses</li>
+                  <li>Homebuyers and community organizations</li>
+                </ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">Standard deposit rates</span></div>
+              <span class="vaccess">Direct</span>
+            </div>
+          </div>
+          <div class="vcard c-trn" data-strategy="trn">
+            <div class="vcard-top">
+              <div class="vcard-strat">Impact-First</div>
+              <div class="vcard-name">Community Development Banks &amp; Credit Unions</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">Financial institutions certified by the U.S. Treasury's CDFI Fund as primarily serving low-income, underserved, or distressed communities.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients via re-lending</div>
+                <ul>
+                  <li>Borrowers locked out of mainstream credit</li>
+                  <li>Mission-aligned community projects</li>
+                </ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">Standard deposit rates</span></div>
+              <span class="vaccess">Direct</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROW 2: FIXED INCOME, DEBT & LOANS -->
+        <div class="matrix-row-hdr">
+          <div class="mrh-icon"><svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg></div>
+          <h3>Fixed Income, Debt &amp; Loans</h3>
+          <div class="mrh-desc">Bonds, notes, and loans. The yield-bearing layer.</div>
+        </div>
+        <div class="matrix-cell c-inc" data-col="inc">
+          <div class="vcard c-inc" data-strategy="inc">
+            <div class="vcard-top">
+              <div class="vcard-strat">Responsible</div>
+              <div class="vcard-name">ESG-Integrated Bonds</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">Corporate, sovereign, and supranational debt with ESG criteria built into manager selection and security inclusion. Liquidity follows the underlying bond market.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients</div>
+                <ul>
+                  <li>Investment-grade issuers passing ESG threshold</li>
+                  <li>Corporate borrowers improving on material ESG factors</li>
+                </ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">3-6%</span></div>
+              <span class="vaccess">Indirect</span>
+            </div>
+          </div>
+        </div>
+        <div class="matrix-cell c-res" data-col="res">
+          <div class="vcard c-res" data-strategy="res">
+            <div class="vcard-top">
+              <div class="vcard-strat">Values Aligned</div>
+              <div class="vcard-name">Green &amp; Social Bonds</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">Debt instruments where the issuer commits to use proceeds for specific environmental or social projects. The fastest-growing wedge of the labeled debt market.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients</div>
+                <ul>
+                  <li>Issuers with qualifying green or social projects</li>
+                  <li>Multilateral and sovereign development banks</li>
+                </ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">3-6%</span></div>
+              <span class="vaccess">Indirect</span>
+            </div>
+          </div>
+          <div class="vcard c-res" data-strategy="res">
+            <div class="vcard-top">
+              <div class="vcard-strat">Values Aligned</div>
+              <div class="vcard-name">Thematic Private Debt Funds</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">Private credit funds underwriting senior secured debt to borrowers in a defined theme such as climate transition, inclusive entrepreneurship, or affordable housing finance.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients</div>
+                <ul>
+                  <li>Mid-market borrowers in the named theme</li>
+                  <li>Companies too small or specialized for public debt markets</li>
+                </ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">5-10%</span></div>
+              <span class="vaccess">Indirect</span>
+            </div>
+          </div>
+        </div>
+        <div class="matrix-cell c-trn" data-col="trn">
+          <div class="vcard c-trn" data-strategy="trn">
+            <div class="vcard-top">
+              <div class="vcard-strat">Impact-First</div>
+              <div class="vcard-name">Intermediary-Level Loans</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">Loans to financial intermediaries that re-lend at retail. Includes CDFI investor notes, loans to private investment funds, and loans to revolving loan funds. The investor gets diversification across the intermediary's lending portfolio.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients via the intermediary</div>
+                <ul>
+                  <li>Small businesses, housing developers, community projects</li>
+                  <li>Borrowers chosen by the intermediary's mission</li>
+                </ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">1-4%</span></div>
+              <span class="vaccess">Direct</span>
+            </div>
+          </div>
+          <div class="vcard c-trn" data-strategy="trn">
+            <div class="vcard-top">
+              <div class="vcard-strat">Impact-First</div>
+              <div class="vcard-name">Direct Loans</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">Loans made directly from investor to end borrower without an intermediary. Includes loans to specific real estate projects, to non-intermediary nonprofits, and to social enterprises or mission-driven businesses.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients</div>
+                <ul>
+                  <li>Specific real estate projects</li>
+                  <li>Nonprofit operating and bridge capital</li>
+                  <li>Mission-driven businesses and social enterprises</li>
+                </ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">0-6%</span></div>
+              <span class="vaccess">Direct</span>
+            </div>
+          </div>
+          <div class="vcard c-trn" data-strategy="trn">
+            <div class="vcard-top">
+              <div class="vcard-strat">Impact-First</div>
+              <div class="vcard-name">Recoverable Grants</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">Grants structured to expect principal repayment if specified conditions are met. Function as zero-interest patient capital for predevelopment, capacity building, or proof of concept.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients</div>
+                <ul>
+                  <li>Predevelopment on community projects</li>
+                  <li>Intermediary capacity building</li>
+                  <li>Early-stage pilot programs</li>
+                </ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">0%, principal expected</span></div>
+              <span class="vaccess">Direct</span>
+            </div>
+          </div>
+          <div class="vcard c-trn" data-strategy="trn">
+            <div class="vcard-top">
+              <div class="vcard-strat">Impact-First</div>
+              <div class="vcard-name">Guarantees &amp; Credit Enhancement</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">Contractual commitments to cover losses on senior debt so the senior layer can underwrite at conventional terms. Includes partial guarantees, letters of credit, and loan loss reserves.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients via de-risked deals</div>
+                <ul>
+                  <li>Senior bank lenders to community development</li>
+                  <li>CDFI loan funds expanding balance sheets</li>
+                </ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">0-2%, capital at risk</span></div>
+              <span class="vaccess">Direct</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROW 3: EQUITIES -->
+        <div class="matrix-row-hdr">
+          <div class="mrh-icon"><svg viewBox="0 0 24 24"><path d="M3 19l5-7 4 4 6-9 3 5"/><path d="M3 21h18"/></svg></div>
+          <h3>Equities</h3>
+          <div class="mrh-desc">Ownership stakes in public companies, private companies, and community-owned ventures.</div>
+        </div>
+        <div class="matrix-cell c-inc" data-col="inc">
+          <div class="vcard c-inc" data-strategy="inc">
+            <div class="vcard-top">
+              <div class="vcard-strat">Responsible</div>
+              <div class="vcard-name">SRI Equity Mutual Funds &amp; ETFs</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">Pooled public equity funds with negative screens, exclusion lists, and ESG integration. The most accessible entry point on the spectrum.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients</div>
+                <ul><li>Listed public companies passing the screen</li></ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">7-12%</span></div>
+              <span class="vaccess">Indirect</span>
+            </div>
+          </div>
+          <div class="vcard c-inc" data-strategy="inc">
+            <div class="vcard-top">
+              <div class="vcard-strat">Responsible</div>
+              <div class="vcard-name">Screened SMAs &amp; Custom Indices</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">Separately managed accounts with investor-specific exclusion lists. Customization above what off-the-shelf funds allow, and direct ownership enables proxy voting.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients</div>
+                <ul><li>Listed companies passing customized screens</li></ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">7-12%</span></div>
+              <span class="vaccess">Direct</span>
+            </div>
+          </div>
+          <div class="vcard c-inc" data-strategy="inc">
+            <div class="vcard-top">
+              <div class="vcard-strat">Responsible</div>
+              <div class="vcard-name">ESG-Integrated Private Equity</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">Conventional private equity, venture capital, and infrastructure funds with ESG due diligence layered into underwriting and portfolio company engagement.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients</div>
+                <ul><li>Private companies passing ESG diligence</li></ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">8-18% net to LPs</span></div>
+              <span class="vaccess">Indirect</span>
+            </div>
+          </div>
+        </div>
+        <div class="matrix-cell c-res" data-col="res">
+          <div class="vcard c-res" data-strategy="res">
+            <div class="vcard-top">
+              <div class="vcard-strat">Values Aligned</div>
+              <div class="vcard-name">Thematic Public Equity</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">Active and passive public equity funds built around a specific theme. Indexes and active strategies that overweight companies aligned to the thesis.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients</div>
+                <ul><li>Listed companies aligned to thematic exposure</li></ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">7-12%</span></div>
+              <span class="vaccess">Indirect</span>
+            </div>
+          </div>
+          <div class="vcard c-res" data-strategy="res">
+            <div class="vcard-top">
+              <div class="vcard-strat">Values Aligned</div>
+              <div class="vcard-name">Thematic Private Equity</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">PE and VC funds built around a specific impact thesis. The manager underwrites to the named outcome at the portfolio company level and reports against impact KPIs.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients</div>
+                <ul><li>Private companies aligned to the named thesis</li></ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">8-15% net to LPs</span></div>
+              <span class="vaccess">Indirect</span>
+            </div>
+          </div>
+        </div>
+        <div class="matrix-cell c-trn" data-col="trn">
+          <div class="vcard c-trn" data-strategy="trn">
+            <div class="vcard-top">
+              <div class="vcard-strat">Impact-First</div>
+              <div class="vcard-name">Risk-Tolerant Equity</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">Equity positions that accept greater risk and impact-adjusted returns to support high-impact ventures. Includes equity in mission-aligned joint ventures, direct equity in high-impact enterprises or companies, and impact-aligned GP/LP fund structures.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients</div>
+                <ul>
+                  <li>High-impact enterprises and social ventures</li>
+                  <li>Mission-aligned joint ventures</li>
+                  <li>Impact-first GP/LP fund structures</li>
+                </ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">0-8%, often capped or patient</span></div>
+              <span class="vaccess">Direct or indirect</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROW 4: ALTERNATIVES & REAL ASSETS -->
+        <div class="matrix-row-hdr">
+          <div class="mrh-icon"><svg viewBox="0 0 24 24"><path d="M3 21l3-9 4 5 4-8 4 6 3-4v10z"/></svg></div>
+          <h3>Alternatives &amp; Real Assets</h3>
+          <div class="mrh-desc">Real estate, infrastructure, REITs, tax credit equity, integrated capital, and direct deals.</div>
+        </div>
+        <div class="matrix-cell c-inc" data-col="inc">
+          <div class="vcard c-inc" data-strategy="inc">
+            <div class="vcard-top">
+              <div class="vcard-strat">Responsible</div>
+              <div class="vcard-name">ESG-Integrated Real Estate &amp; Infrastructure</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">Conventional real estate and infrastructure funds with ESG due diligence in asset selection, building operations, and tenant standards.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients</div>
+                <ul>
+                  <li>Commercial and multifamily properties meeting ESG standards</li>
+                  <li>Conventional infrastructure with environmental controls</li>
+                </ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">6-12%</span></div>
+              <span class="vaccess">Indirect</span>
+            </div>
+          </div>
+        </div>
+        <div class="matrix-cell c-res" data-col="res">
+          <div class="vcard c-res" data-strategy="res">
+            <div class="vcard-top">
+              <div class="vcard-strat">Values Aligned</div>
+              <div class="vcard-name">Tax Credit Syndications</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">Equity ownership in partnerships that own qualifying property or projects, monetizing federal tax credits. The credit yield is the principal return driver and the structure is broadly similar across affordable housing, community development, and clean energy credits.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients</div>
+                <ul>
+                  <li>Qualifying real estate or energy projects</li>
+                  <li>Project sponsors needing equity to close</li>
+                </ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">4-8% yield on credit</span></div>
+              <span class="vaccess">Indirect</span>
+            </div>
+          </div>
+          <div class="vcard c-res" data-strategy="res">
+            <div class="vcard-top">
+              <div class="vcard-strat">Values Aligned</div>
+              <div class="vcard-name">Impact-Focused REITs</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">Real estate investment trusts including Regulation A+ structures that accept non-accredited investors at low minimums alongside institutions.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients</div>
+                <ul><li>Mission-aligned multifamily and mixed-use real estate</li></ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">5-10% total return</span></div>
+              <span class="vaccess">Indirect</span>
+            </div>
+          </div>
+          <div class="vcard c-res" data-strategy="res">
+            <div class="vcard-top">
+              <div class="vcard-strat">Values Aligned</div>
+              <div class="vcard-name">Sustainable Real Assets</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">Direct or fund ownership of working forests, sustainable farmland, conserved land, or renewable energy infrastructure. Long-dated cash flows with environmental thesis.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients</div>
+                <ul><li>Working land, farmland, and forests under sustainable management</li></ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">4-9%</span></div>
+              <span class="vaccess">Direct or indirect</span>
+            </div>
+          </div>
+        </div>
+        <div class="matrix-cell c-trn" data-col="trn">
+          <div class="vcard c-trn" data-strategy="trn">
+            <div class="vcard-top">
+              <div class="vcard-strat">Impact-First</div>
+              <div class="vcard-name">Integrated Capital Stacks</div>
+            </div>
+            <div class="vcard-body">
+              <div class="vsum">Single transactions that layer grants, subordinate debt, senior debt, and equity from different sources into one closing. Assembles capital no single source could provide alone.</div>
+              <div class="vrec">
+                <div class="vrec-lbl">Recipients</div>
+                <ul>
+                  <li>Community-owned real estate developments</li>
+                  <li>Cooperative buyouts and conversions</li>
+                  <li>Place-based mission projects</li>
+                </ul>
+              </div>
+              <div class="vreturns"><span class="vr-lbl">Returns</span><span class="vr-val">Blended 0-6% by layer</span></div>
+              <span class="vaccess">Direct</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pri-note">
+        <strong>A note on Program-Related Investments.</strong> PRIs are an IRS designation, not a vehicle. A PRI can be structured as debt, equity, deposits, or guarantees as long as it meets the IRS test (primary charitable purpose, no significant private benefit). Most of the Impact-First vehicles above can be issued or received as PRIs when a foundation is on one side of the transaction.
+      </div>
+
+    </div>
+
+    <!-- ════════════════ TAB 3 ════════════════ -->
+    <div class="tab-panel" data-tab="tab3">
+
+      <p class="lead">The same three strategies look different depending on whose seat you sit in or which impact area you have in view. Toggle between an allocator perspective and an impact sector perspective.</p>
+
+      <div class="view-toggle">
+        <button class="vt-btn active" data-view="allocator" onclick="setView('allocator')">By Allocator Type</button>
+        <button class="vt-btn" data-view="sector" onclick="setView('sector')">By Impact Sector</button>
+      </div>
+
+      <!-- BY ALLOCATOR TYPE -->
+      <div class="view-block active" data-view="allocator">
+
+        <div class="audience-pills">
+          <button class="apill active" data-audience="individual" onclick="setAudience('individual')">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 22c0-5 4-8 8-8s8 3 8 8"/></svg>
+            Individual investors
+          </button>
+          <button class="apill" data-audience="pension" onclick="setAudience('pension')">
+            <svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V8l7-4 7 4v13"/><path d="M9 21v-7h6v7"/></svg>
+            Pension funds
+          </button>
+          <button class="apill" data-audience="foundation" onclick="setAudience('foundation')">
+            <svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V11l7-4 7 4v10"/><path d="M10 21v-6h4v6"/></svg>
+            Foundations &amp; mission endowments
+          </button>
+          <button class="apill" data-audience="family" onclick="setAudience('family')">
+            <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2"/><path d="M3 21c0-3 2.5-5 6-5s6 2 6 5"/><path d="M14 19c.5-2 2-3 4-3s3 1 3 3"/></svg>
+            High net worth &amp; family offices
+          </button>
+          <button class="apill" data-audience="faith" onclick="setAudience('faith')">
+            <svg viewBox="0 0 24 24"><path d="M12 3v18M5 11h14"/></svg>
+            Faith-based institutions
+          </button>
+          <button class="apill" data-audience="anchor" onclick="setAudience('anchor')">
+            <svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M9 14h6M9 18h6"/></svg>
+            Anchor institutions
+          </button>
+          <button class="apill" data-audience="corporate" onclick="setAudience('corporate')">
+            <svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="15" rx="1"/><path d="M9 6V3h6v3"/><path d="M9 11h6M9 15h6"/></svg>
+            Corporate treasuries
+          </button>
+        </div>
+
+        <div class="audience-panel active" data-audience="individual">
+          <div class="ap-head">
+            <h2>Individual investors</h2>
+            <p>Everyday investors whose primary capital sits in brokerage accounts, retirement plans, and bank deposits. Most often access impact investing through pooled vehicles, with a growing set of direct options at low minimums.</p>
+            <div class="ap-constraint"><strong>Common constraints.</strong> Smaller dollar amounts per investment. Limited access to private placements. Choices often restricted to what an advisor or workplace retirement plan menu offers.</div>
+          </div>
+          <div class="ap-grid">
+            <div class="ap-cell c-inc">
+              <div class="ap-cell-head"><div class="apc-cap">Incremental</div><h3>Responsible</h3></div>
+              <div class="ap-cell-body">
+                <p>Pick ESG-screened mutual funds or ETFs in your brokerage or workplace retirement plan. Choose a sustainable robo-advisor. Move checking and savings to a community bank or credit union.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>SRI mutual funds and ETFs in your 401(k) or IRA</li>
+                  <li>Robo-advisors that pick sustainable funds</li>
+                  <li>Move deposits to a community bank or credit union</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-res">
+              <div class="ap-cell-head"><div class="apc-cap">Restorative</div><h3>Values Aligned</h3></div>
+              <div class="ap-cell-body">
+                <p>Allocate into thematic ETFs and mutual funds. Buy a community investment note. Buy into an impact real estate fund at a low minimum. Use a donor-advised fund with thematic giving options.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Thematic ETFs (climate, gender, equity)</li>
+                  <li>Community investment notes at low minimums</li>
+                  <li>Impact REITs open to non-accredited investors</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-trn">
+              <div class="ap-cell-head"><div class="apc-cap">Transformational</div><h3>Impact-First</h3></div>
+              <div class="ap-cell-body">
+                <p>Buy a direct loan to a community lender. Participate in a crowdfunded community investment for a local cooperative or community land trust. Become a member-owner at a credit union or food cooperative.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Direct investor notes to community lenders</li>
+                  <li>Crowdfunded community investments</li>
+                  <li>Credit union and food cooperative membership</li>
+                </ul></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="audience-panel" data-audience="pension">
+          <div class="ap-head">
+            <h2>Pension funds</h2>
+            <p>Public and corporate pension plans, plus large workplace retirement plans. Operate under a strict legal duty to plan participants, which shapes how impact can be incorporated and how it must be framed.</p>
+            <div class="ap-constraint"><strong>Common constraints.</strong> Fiduciary duty to plan beneficiaries. Regulatory scrutiny. Scale requirements. Conservative investment policy norms. Multi-year cycles for adopting new mandates.</div>
+          </div>
+          <div class="ap-grid">
+            <div class="ap-cell c-inc">
+              <div class="ap-cell-head"><div class="apc-cap">Incremental</div><h3>Responsible</h3></div>
+              <div class="ap-cell-body">
+                <p>Add ESG factors to manager selection. Apply targeted exclusions tied to material risk. Set policies for how managers vote on shareholder issues.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>ESG language in the investment policy</li>
+                  <li>Stewardship and proxy voting guidelines</li>
+                  <li>ESG questionnaires for asset managers</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-res">
+              <div class="ap-cell-head"><div class="apc-cap">Restorative</div><h3>Values Aligned</h3></div>
+              <div class="ap-cell-body">
+                <p>Set aside a piece of the portfolio for climate-aligned investments and sustainable infrastructure. Buy green and social bonds. Build dedicated thematic mandates where the investment policy allows.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Climate-aligned public equity mandate</li>
+                  <li>Sustainable infrastructure fund commitments</li>
+                  <li>Green and social bond allocations</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-trn">
+              <div class="ap-cell-head"><div class="apc-cap">Transformational</div><h3>Impact-First</h3></div>
+              <div class="ap-cell-body">
+                <p>Limited but real. Some pensions carve out a small piece of the portfolio for investments that benefit the geography the pension serves, framed inside fiduciary duty as risk-adjusted return with local benefit.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>In-state private equity and debt mandates</li>
+                  <li>Workforce and affordable housing infrastructure</li>
+                  <li>Targeted economic development partnerships</li>
+                </ul></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="audience-panel" data-audience="foundation">
+          <div class="ap-head">
+            <h2>Foundations and mission endowments</h2>
+            <p>Private and community foundations, plus mission-driven endowments. The institutions with the most flexibility on the spectrum because mission-aligned tools like Program-Related Investments and recoverable grants sit inside the legal toolbox.</p>
+            <div class="ap-constraint"><strong>Common constraints.</strong> Board governance cycles. Annual payout requirements. Internal capacity to underwrite non-standard deals. The gap between program staff and investment staff.</div>
+          </div>
+          <div class="ap-grid">
+            <div class="ap-cell c-inc">
+              <div class="ap-cell-head"><div class="apc-cap">Incremental</div><h3>Responsible</h3></div>
+              <div class="ap-cell-body">
+                <p>Update the investment policy with exclusions tied to mission. Add ESG integration language. Run shareholder engagement on a small set of priority issues.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Mission-aligned exclusion list</li>
+                  <li>ESG integration into manager underwriting</li>
+                  <li>Shareholder advocacy on priority issues</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-res">
+              <div class="ap-cell-head"><div class="apc-cap">Restorative</div><h3>Values Aligned</h3></div>
+              <div class="ap-cell-body">
+                <p>Allocate Mission-Related Investments from the endowment into thematic public and private vehicles. Build a dedicated thematic sleeve. Move endowment cash into mission-aligned banks and credit unions.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Mission-Related Investments from the endowment</li>
+                  <li>Thematic private debt and private equity funds</li>
+                  <li>Mission deposits at community-serving banks</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-trn">
+              <div class="ap-cell-head"><div class="apc-cap">Transformational</div><h3>Impact-First</h3></div>
+              <div class="ap-cell-body">
+                <p>Run a Program-Related Investment strategy alongside the grantmaking pipeline. Issue recoverable grants for predevelopment. Take catalytic positions in funds. Anchor place-based capital stacks.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>PRI portfolio (loans, equity, guarantees)</li>
+                  <li>Recoverable grants for predevelopment</li>
+                  <li>Catalytic positions in mission funds</li>
+                </ul></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="audience-panel" data-audience="family">
+          <div class="ap-head">
+            <h2>High net worth investors and family offices</h2>
+            <p>Wealthy households and the single and multi-family offices that serve them. Carry the broadest direct access to private market opportunities and the fastest paths to bespoke structures.</p>
+            <div class="ap-constraint"><strong>Common constraints.</strong> Family alignment across generations. Internal capacity to underwrite direct deals. Comfort with illiquidity. Vulnerability to advisor product preferences over independent thesis.</div>
+          </div>
+          <div class="ap-grid">
+            <div class="ap-cell c-inc">
+              <div class="ap-cell-head"><div class="apc-cap">Incremental</div><h3>Responsible</h3></div>
+              <div class="ap-cell-body">
+                <p>Customized investment accounts with family-specific exclusion lists. ESG-integrated private equity commitments. Proxy voting tied to family priorities.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Customized separately managed accounts</li>
+                  <li>ESG-integrated private equity</li>
+                  <li>Family-aligned proxy voting</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-res">
+              <div class="ap-cell-head"><div class="apc-cap">Restorative</div><h3>Values Aligned</h3></div>
+              <div class="ap-cell-body">
+                <p>Direct thematic positions in climate, gender, or place. Bespoke sustainable real assets. Co-investment alongside thematic fund managers. Mission deposit programs.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Direct thematic venture and growth equity</li>
+                  <li>Co-investment with thematic fund managers</li>
+                  <li>Bespoke sustainable real assets</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-trn">
+              <div class="ap-cell-head"><div class="apc-cap">Transformational</div><h3>Impact-First</h3></div>
+              <div class="ap-cell-body">
+                <p>Direct catalytic positions in mission deals. Family foundation PRI strategy paired with grantmaking. Underwriting integrated capital stacks alongside mission developers.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Direct catalytic positions in mission deals</li>
+                  <li>Family foundation PRI strategy</li>
+                  <li>Bespoke integrated capital stacks</li>
+                </ul></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="audience-panel" data-audience="faith">
+          <div class="ap-head">
+            <h2>Faith-based institutions</h2>
+            <p>Denominational pension funds, religious endowments, congregational investment committees, and faith-aligned investor networks. Carry the longest continuous history of values-based investing in the United States.</p>
+            <div class="ap-constraint"><strong>Common constraints.</strong> Denominational governance and review cycles. Doctrinal alignment requirements. Varied scale across congregations.</div>
+          </div>
+          <div class="ap-grid">
+            <div class="ap-cell c-inc">
+              <div class="ap-cell-head"><div class="apc-cap">Incremental</div><h3>Responsible</h3></div>
+              <div class="ap-cell-body">
+                <p>Apply faith-aligned exclusion screens grounded in denominational ethical investment guidelines. Run active shareholder advocacy through faith-based corporate responsibility coalitions.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Faith-aligned exclusion screens</li>
+                  <li>Faith-based shareholder advocacy</li>
+                  <li>Proxy voting policy tied to doctrine</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-res">
+              <div class="ap-cell-head"><div class="apc-cap">Restorative</div><h3>Values Aligned</h3></div>
+              <div class="ap-cell-body">
+                <p>Faith-screened thematic funds. Mission deposits at religious credit unions and community-serving banks. Climate-aligned allocations grounded in creation care priorities.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Faith-screened thematic mutual funds</li>
+                  <li>Mission deposits at religious credit unions</li>
+                  <li>Climate-aligned denominational pools</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-trn">
+              <div class="ap-cell-head"><div class="apc-cap">Transformational</div><h3>Impact-First</h3></div>
+              <div class="ap-cell-body">
+                <p>Religious endowment PRIs paired with grantmaking. Faith-land housing partnerships. Congregational lending circles. Direct investments in community-rooted projects.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Religious endowment PRI strategy</li>
+                  <li>Faith-land housing partnerships</li>
+                  <li>Congregational lending circles</li>
+                </ul></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="audience-panel" data-audience="anchor">
+          <div class="ap-head">
+            <h2>Anchor institutions (Eds and Meds)</h2>
+            <p>Universities, college systems, hospitals, and health systems whose physical footprint, employment, and economic activity are rooted in a specific place. Uniquely able to do place-based impact at scale.</p>
+            <div class="ap-constraint"><strong>Common constraints.</strong> Endowment governance separate from operations and community affairs. Complex internal politics. Regulatory and accreditation pressure. Community benefit reporting for nonprofit hospitals.</div>
+          </div>
+          <div class="ap-grid">
+            <div class="ap-cell c-inc">
+              <div class="ap-cell-head"><div class="apc-cap">Incremental</div><h3>Responsible</h3></div>
+              <div class="ap-cell-body">
+                <p>Endowment SRI policy. Exclusion of weapons, fossil fuels, or other categories tied to institutional mission. ESG integration through the investment office.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Endowment SRI policy</li>
+                  <li>Manager-level ESG integration</li>
+                  <li>Sustainable purchasing policies in operations</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-res">
+              <div class="ap-cell-head"><div class="apc-cap">Restorative</div><h3>Values Aligned</h3></div>
+              <div class="ap-cell-body">
+                <p>Local procurement programs that shift institutional spending to local businesses. Place-based investments tied to mission. Health system community benefit investments in social determinants of health.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Local procurement programs</li>
+                  <li>Place-based real estate investments</li>
+                  <li>Community benefit investments in housing, food, child care</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-trn">
+              <div class="ap-cell-head"><div class="apc-cap">Transformational</div><h3>Impact-First</h3></div>
+              <div class="ap-cell-body">
+                <p>Direct lending and investing to local businesses and developers. Worker cooperative incubation. Partnerships between hospitals and community lenders for housing, food access, and small business development.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Anchor mission investment program</li>
+                  <li>Worker cooperative incubation</li>
+                  <li>Hospital partnerships with community lenders</li>
+                </ul></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="audience-panel" data-audience="corporate">
+          <div class="ap-head">
+            <h2>Corporate treasuries</h2>
+            <p>Corporate cash management and balance sheet investments on the asset side, plus the workplace retirement and benefits programs that touch employee savings on the staff side. Both channels move large dollar amounts that most corporate executives never connect to impact.</p>
+            <div class="ap-constraint"><strong>Common constraints.</strong> Treasury risk policies oriented to liquidity and capital preservation. Fiduciary duty for workplace retirement plans. The gap between corporate sustainability strategy and treasury operations.</div>
+          </div>
+          <div class="ap-grid">
+            <div class="ap-cell c-inc">
+              <div class="ap-cell-head"><div class="apc-cap">Incremental</div><h3>Responsible</h3></div>
+              <div class="ap-cell-body">
+                <p><strong>Corporate assets.</strong> ESG-screened cash management. ESG-integrated short-term bond and commercial paper holdings.</p>
+                <p><strong>Staff benefits.</strong> ESG fund options in the workplace retirement plan menu.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Sustainable money market funds</li>
+                  <li>ESG-integrated short-duration mandates</li>
+                  <li>ESG fund options in 401(k) menus</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-res">
+              <div class="ap-cell-head"><div class="apc-cap">Restorative</div><h3>Values Aligned</h3></div>
+              <div class="ap-cell-body">
+                <p><strong>Corporate assets.</strong> Mission deposits at community-serving banks for cash reserves. Green bond allocations.</p>
+                <p><strong>Staff benefits.</strong> Climate-aligned target date funds. Thematic and gender-lens fund options in retirement plan menus.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Mission deposits at community-serving banks</li>
+                  <li>Corporate green bond purchases</li>
+                  <li>Climate-aligned target date funds in retirement plans</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-trn">
+              <div class="ap-cell-head"><div class="apc-cap">Transformational</div><h3>Impact-First</h3></div>
+              <div class="ap-cell-body">
+                <p><strong>Corporate assets.</strong> Community development deposit programs, often paired with Community Reinvestment Act goals. Corporate catalytic capital supporting workforce, supply chain, or community development.</p>
+                <p><strong>Staff benefits.</strong> Self-directed brokerage windows that give employees access to mission options.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Community development deposit programs</li>
+                  <li>Corporate catalytic capital for supplier development</li>
+                  <li>Self-directed brokerage windows in retirement plans</li>
+                </ul></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- BY IMPACT SECTOR -->
+      <div class="view-block" data-view="sector">
+
+        <div class="audience-pills">
+          <button class="apill active" data-sector="housing" onclick="setSector('housing')">
+            <svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H10v7H4a1 1 0 0 1-1-1z"/></svg>
+            Housing
+          </button>
+          <button class="apill" data-sector="climate" onclick="setSector('climate')">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M4.2 4.2l2.2 2.2M17.6 17.6l2.2 2.2M2 12h3M19 12h3M4.2 19.8l2.2-2.2M17.6 6.4l2.2-2.2"/></svg>
+            Climate &amp; Energy
+          </button>
+          <button class="apill" data-sector="business" onclick="setSector('business')">
+            <svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V4h8v3"/><path d="M3 13h18"/></svg>
+            Business &amp; Workforce
+          </button>
+          <button class="apill" data-sector="place" onclick="setSector('place')">
+            <svg viewBox="0 0 24 24"><path d="M12 22s7-7 7-12a7 7 0 0 0-14 0c0 5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            Place-Based
+          </button>
+          <button class="apill" data-sector="land" onclick="setSector('land')">
+            <svg viewBox="0 0 24 24"><path d="M12 3v18M5 21c4-6 10-6 14 0"/><path d="M9 9c0-3 1-5 3-5s3 2 3 5-1 5-3 5-3-2-3-5z"/></svg>
+            Land &amp; Natural Resources
+          </button>
+        </div>
+
+        <div class="audience-panel active" data-sector="housing">
+          <div class="ap-head">
+            <h2>Housing</h2>
+            <p>Affordable rental, ownership, and shared housing structures. One of the largest and most developed sectors in impact investing, with a deep stack of tax credit, debt, equity, and community ownership instruments.</p>
+            <div class="ap-constraint"><strong>What this sector touches.</strong> Multifamily and single-family affordable rental. Permanent affordability. Homeownership pathways. Manufactured housing communities. Community ownership of land and buildings.</div>
+          </div>
+          <div class="ap-grid">
+            <div class="ap-cell c-inc">
+              <div class="ap-cell-head"><div class="apc-cap">Incremental</div><h3>Responsible</h3></div>
+              <div class="ap-cell-body">
+                <p>ESG-screened housing exposure through public REITs and ESG-integrated real estate funds. Exclusion of operators with predatory practices.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>ESG-screened public REITs</li>
+                  <li>Real estate ESG integration in private funds</li>
+                  <li>Operator-level exclusion screens</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-res">
+              <div class="ap-cell-head"><div class="apc-cap">Restorative</div><h3>Values Aligned</h3></div>
+              <div class="ap-cell-body">
+                <p>Affordable housing financing at scale through tax credits, dedicated REITs, social bonds, and preservation funds. Where most of today's institutional affordable housing capital sits.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Low-Income Housing Tax Credit equity</li>
+                  <li>Housing authority and agency social bonds</li>
+                  <li>Affordable housing REITs and preservation funds</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-trn">
+              <div class="ap-cell-head"><div class="apc-cap">Transformational</div><h3>Impact-First</h3></div>
+              <div class="ap-cell-body">
+                <p>Community ownership and place-rooted housing structures. Capital that supports permanent affordability and community governance, often through bespoke capital stacks.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Community land trusts</li>
+                  <li>Resident-owned manufactured housing communities</li>
+                  <li>Faith-land housing partnerships</li>
+                  <li>Housing CDFI loans and predevelopment grants</li>
+                </ul></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="audience-panel" data-sector="climate">
+          <div class="ap-head">
+            <h2>Climate &amp; Energy</h2>
+            <p>Decarbonization, clean energy, and climate resilience finance. The fastest-growing sector across the spectrum in dollar volume, with deeply different vehicles at each tier.</p>
+            <div class="ap-constraint"><strong>What this sector touches.</strong> Renewable generation. Energy efficiency. Transmission and storage. Climate adaptation. Climate tech ventures. Community-owned energy.</div>
+          </div>
+          <div class="ap-grid">
+            <div class="ap-cell c-inc">
+              <div class="ap-cell-head"><div class="apc-cap">Incremental</div><h3>Responsible</h3></div>
+              <div class="ap-cell-body">
+                <p>Climate risk integration into public equity and fixed income manager selection. Fossil fuel exclusions. ESG-integrated infrastructure mandates.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Climate-risk integrated public equity</li>
+                  <li>Fossil fuel exclusions</li>
+                  <li>ESG infrastructure funds</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-res">
+              <div class="ap-cell-head"><div class="apc-cap">Restorative</div><h3>Values Aligned</h3></div>
+              <div class="ap-cell-body">
+                <p>Climate-aligned debt and equity at scale. Labeled bonds, tax equity, thematic VC and PE in climate solutions, and renewable infrastructure funds.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Green and sustainability-linked bonds</li>
+                  <li>Investment Tax Credit equity for clean energy</li>
+                  <li>Climate tech VC and energy transition PE</li>
+                  <li>Renewable infrastructure funds</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-trn">
+              <div class="ap-cell-head"><div class="apc-cap">Transformational</div><h3>Impact-First</h3></div>
+              <div class="ap-cell-body">
+                <p>Community-owned clean energy and climate justice finance. Capital that anchors generation and resilience assets in the communities most affected by climate transition costs and benefits.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Community-owned solar and utilities</li>
+                  <li>Solar cooperative member equity</li>
+                  <li>Green bank and climate CDFI investor notes</li>
+                  <li>Recoverable grants for community climate projects</li>
+                </ul></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="audience-panel" data-sector="business">
+          <div class="ap-head">
+            <h2>Business &amp; Workforce</h2>
+            <p>Inclusive entrepreneurship, small business growth, business transition finance, and worker ownership. Where the marketplace meets the engines of local employment and wealth creation.</p>
+            <div class="ap-constraint"><strong>What this sector touches.</strong> Diverse-founded startups and growth companies. Small business lending in underserved markets. Worker cooperatives and conversions. Business transition through ownership change.</div>
+          </div>
+          <div class="ap-grid">
+            <div class="ap-cell c-inc">
+              <div class="ap-cell-head"><div class="apc-cap">Incremental</div><h3>Responsible</h3></div>
+              <div class="ap-cell-body">
+                <p>ESG-integrated public equity with workforce diversity and supply chain criteria. Engagement on board diversity and worker practices.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>ESG-screened public equity holdings</li>
+                  <li>Workforce diversity screens</li>
+                  <li>Supply chain ESG criteria</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-res">
+              <div class="ap-cell-head"><div class="apc-cap">Restorative</div><h3>Values Aligned</h3></div>
+              <div class="ap-cell-body">
+                <p>Inclusive business growth equity and tax credit-supported community business finance. Capital that backs underrepresented founders and businesses serving underserved markets.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Inclusive entrepreneurship VC</li>
+                  <li>Gender-lens funds</li>
+                  <li>New Markets Tax Credit equity</li>
+                  <li>Thematic private debt for inclusive small business</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-trn">
+              <div class="ap-cell-head"><div class="apc-cap">Transformational</div><h3>Impact-First</h3></div>
+              <div class="ap-cell-body">
+                <p>Worker ownership, business transition finance, and direct community business capital. Capital that supports new forms of ownership and reaches borrowers conventional credit will not.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Worker cooperative equity and conversions</li>
+                  <li>Direct loans to mission-driven businesses</li>
+                  <li>Recoverable grants for emerging social enterprises</li>
+                  <li>CDFI lending to underserved small business</li>
+                </ul></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="audience-panel" data-sector="place">
+          <div class="ap-head">
+            <h2>Place-Based</h2>
+            <p>Capital that follows a specific geography to build community wealth. The lens that turns abstract impact investing into investing in a particular set of streets, neighborhoods, and people.</p>
+            <div class="ap-constraint"><strong>What this sector touches.</strong> Local economic development. Community-owned real estate and businesses. Place-based intermediaries. Mission deposits in local financial institutions. Anchor institution investment.</div>
+          </div>
+          <div class="ap-grid">
+            <div class="ap-cell c-inc">
+              <div class="ap-cell-head"><div class="apc-cap">Incremental</div><h3>Responsible</h3></div>
+              <div class="ap-cell-body">
+                <p>Place-conscious manager selection and operational policies. Compliance investments that meet regulatory requirements like the Community Reinvestment Act.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Local procurement programs</li>
+                  <li>Community Reinvestment Act qualifying allocations</li>
+                  <li>Geography-conscious manager selection</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-res">
+              <div class="ap-cell-head"><div class="apc-cap">Restorative</div><h3>Values Aligned</h3></div>
+              <div class="ap-cell-body">
+                <p>Place-based thematic capital deployed in service of a specific community. Mission deposits, place-based funds, and partnerships with local intermediaries.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Mission deposits at local community banks and MDIs</li>
+                  <li>Place-based thematic funds</li>
+                  <li>Local economic development partnerships</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-trn">
+              <div class="ap-cell-head"><div class="apc-cap">Transformational</div><h3>Impact-First</h3></div>
+              <div class="ap-cell-body">
+                <p>Place-rooted ownership and direct local capital. Community-owned real estate, direct lending to local businesses, and integrated capital that knits anchor institutions, foundations, and community lenders together.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Community land trusts and community-owned real estate</li>
+                  <li>Direct loans to local businesses and developers</li>
+                  <li>Place-based integrated capital partnerships</li>
+                  <li>Recoverable grants for community capacity</li>
+                </ul></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="audience-panel" data-sector="land">
+          <div class="ap-head">
+            <h2>Land &amp; Natural Resources</h2>
+            <p>Working land, forestry, agriculture, and natural resource investment. The sector that holds the long-dated cash flows and conservation stewardship that other asset classes do not.</p>
+            <div class="ap-constraint"><strong>What this sector touches.</strong> Working forests. Farmland and food systems. Conservation easements. Producer cooperatives. Indigenous and community land stewardship.</div>
+          </div>
+          <div class="ap-grid">
+            <div class="ap-cell c-inc">
+              <div class="ap-cell-head"><div class="apc-cap">Incremental</div><h3>Responsible</h3></div>
+              <div class="ap-cell-body">
+                <p>ESG integration in farmland, forestry, and resource-related holdings. Sustainability screens on commodity exposures.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>ESG-integrated farmland and forestry funds</li>
+                  <li>Sustainability screens on commodity exposures</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-res">
+              <div class="ap-cell-head"><div class="apc-cap">Restorative</div><h3>Values Aligned</h3></div>
+              <div class="ap-cell-body">
+                <p>Sustainable real assets focused on environmental and stewardship outcomes. Working forests, regenerative farmland, and conservation-aligned land holdings.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Sustainable working forestry funds</li>
+                  <li>Regenerative farmland funds</li>
+                  <li>Conservation easements</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ap-cell c-trn">
+              <div class="ap-cell-head"><div class="apc-cap">Transformational</div><h3>Impact-First</h3></div>
+              <div class="ap-cell-body">
+                <p>Community and indigenous land stewardship. Capital that supports new ownership structures and producer-led cooperatives, often with long timelines and patient terms.</p>
+                <div class="ap-tools"><div class="ap-tools-lbl">Typical tools</div><ul>
+                  <li>Indigenous land trusts</li>
+                  <li>Community-owned land cooperatives</li>
+                  <li>Direct investment in producer cooperatives</li>
+                  <li>Recoverable grants for land transition</li>
+                </ul></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<!-- REFERENCES MODAL -->
+<div class="modal-overlay" id="refsModal" onclick="closeModalOnOverlay(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <h2>Reference Material</h2>
+      <button class="modal-close" onclick="closeModal('refs')" aria-label="Close">
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M6 18L18 6"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-lead">This framework draws on the following publicly available research, thought leadership, and tools.</p>
+      <ul class="ref-list">
+        <li>
+          <a href="https://www.bridgesfundmanagement.com/insight/bridges-spectrum-of-capital/" target="_blank" rel="noopener">Bridges Fund Management, Spectrum of Capital</a>
+          <div class="ref-author">Foundational framework for organizing the impact investing spectrum.</div>
+        </li>
+        <li>
+          <a href="https://thegiin.org/impact-investing/" target="_blank" rel="noopener">Global Impact Investing Network (GIIN)</a>
+          <div class="ref-author">Market size data and core characteristics of impact investing.</div>
+        </li>
+        <li>
+          <a href="https://www.temasektrust.org.sg/what-we-do/impact-hub/article-details/making-impact-investing-and-practices-work-for-you" target="_blank" rel="noopener">Temasek Trust, Making Impact Investing and Practices Work for You</a>
+          <div class="ref-author">Overlapping spectrum framing for strategy families.</div>
+        </li>
+        <li>
+          <a href="https://moneyfortherestofus.com/investment-vehicles/" target="_blank" rel="noopener">Money for the Rest of Us, A Complete Guide to Investment Vehicles</a>
+          <div class="ref-author">Direct versus indirect investment framing.</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- HOW TO MODAL -->
+<div class="modal-overlay" id="howtoModal" onclick="closeModalOnOverlay(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <h2>How to use this framework</h2>
+      <button class="modal-close" onclick="closeModal('howto')" aria-label="Close">
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M6 18L18 6"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-lead">Three tabs, three lenses on the same impact investing marketplace.</p>
+      <ul class="ref-list">
+        <li>
+          <strong>Strategies and Substrategies.</strong>
+          <div class="ref-author">Compare the three top-level strategy families and the six sub-strategies inside them.</div>
+        </li>
+        <li>
+          <strong>Vehicles and Recipients.</strong>
+          <div class="ref-author">Click each strategy to reveal the vehicles in that column. Walking through Responsible, then Values Aligned, then Impact-First shows how investor agency and impact specificity rise as you move across the spectrum.</div>
+        </li>
+        <li>
+          <strong>How This Plays Out Differently.</strong>
+          <div class="ref-author">Toggle between an allocator perspective and an impact sector perspective. Pick a pill to load that profile.</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchTab(name) {
+    document.querySelectorAll('.tab-link').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelector('.tab-link[data-tab="' + name + '"]').classList.add('active');
+    document.querySelector('.tab-panel[data-tab="' + name + '"]').classList.add('active');
+  }
+
+  function openModal(name) {
+    document.getElementById(name + 'Modal').classList.add('active');
+  }
+  function closeModal(name) {
+    document.getElementById(name + 'Modal').classList.remove('active');
+  }
+  function closeModalOnOverlay(e) {
+    e.currentTarget.classList.remove('active');
+  }
+
+  function setView(name) {
+    document.querySelectorAll('.vt-btn').forEach(b => b.classList.toggle('active', b.dataset.view === name));
+    document.querySelectorAll('.view-block').forEach(b => b.classList.toggle('active', b.dataset.view === name));
+  }
+
+  function setAudience(name) {
+    document.querySelectorAll('.apill[data-audience]').forEach(b => b.classList.toggle('active', b.dataset.audience === name));
+    document.querySelectorAll('.audience-panel[data-audience]').forEach(p => p.classList.toggle('active', p.dataset.audience === name));
+  }
+
+  function setSector(name) {
+    document.querySelectorAll('.apill[data-sector]').forEach(b => b.classList.toggle('active', b.dataset.sector === name));
+    document.querySelectorAll('.audience-panel[data-sector]').forEach(p => p.classList.toggle('active', p.dataset.sector === name));
+  }
+
+  let activeStrategies = new Set();
+  function toggleStrategy(s) {
+    if (activeStrategies.has(s)) activeStrategies.delete(s);
+    else activeStrategies.add(s);
+    document.querySelectorAll('.fbtn[data-strategy]').forEach(b => {
+      b.classList.toggle('active', activeStrategies.has(b.dataset.strategy));
+    });
+    document.querySelectorAll('.matrix-col-hdr').forEach(h => {
+      h.classList.toggle('dimmed', !activeStrategies.has(h.dataset.col));
+    });
+    applyFilters();
+  }
+  function clearStrategies() {
+    activeStrategies.clear();
+    document.querySelectorAll('.fbtn[data-strategy]').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.matrix-col-hdr').forEach(h => h.classList.add('dimmed'));
+    applyFilters();
+  }
+  function applyFilters() {
+    document.querySelectorAll('#matrix .vcard').forEach(card => {
+      card.style.display = activeStrategies.has(card.dataset.strategy) ? '' : 'none';
+    });
+    document.querySelectorAll('.matrix-cell').forEach(cell => {
+      const col = cell.dataset.col;
+      let prompt = cell.querySelector('.cell-prompt');
+      if (prompt) prompt.remove();
+      if (!activeStrategies.has(col)) {
+        const labels = { inc: 'Responsible', res: 'Values Aligned', trn: 'Impact-First' };
+        const p = document.createElement('div');
+        p.className = 'cell-prompt';
+        p.innerHTML = '<span class="cp-arrow">↑</span>Click <strong>' + labels[col] + '</strong><br>to reveal vehicles';
+        cell.appendChild(p);
+      }
+    });
+  }
+  applyFilters();
+
+  // ESC closes modal
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+    }
+  });
+</script>
+
+</body>
+</html>

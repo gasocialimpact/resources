@@ -11,6 +11,7 @@ Each tool is a self-contained static page that can be opened on its own or embed
 - Foundation Impact Investing Starter Kit: https://gasocialimpact.github.io/resources/foundation-toolkit/
 - Faith-Based Impact Investing Starter Kit: https://gasocialimpact.github.io/resources/faith-based-starter-kit/
 - Innovation Library: https://gasocialimpact.github.io/resources/innovation-library/
+- Impact Investing Field & Portfolio Framework: https://gasocialimpact.github.io/resources/impact-investing-field-framework/
 
 ## Repository structure
 
@@ -21,6 +22,7 @@ Each tool is a self-contained static page that can be opened on its own or embed
 ├── foundation-toolkit/              # Foundation Impact Investing Starter Kit
 ├── faith-based-starter-kit/         # Faith-Based Impact Investing Starter Kit
 ├── innovation-library/              # Innovation Library (keeps its own format)
+├── impact-investing-field-framework/ # Impact Investing Field & Portfolio Framework
 ├── _template/                       # Reusable starter for building new tools
 └── README.md
 ```
@@ -33,6 +35,7 @@ Folder paths are intentionally stable because they are the source of live iframe
 - **Foundation Impact Investing Starter Kit** — Guidance, calculators, case studies, and evaluation tools for foundations beginning impact investing.
 - **Faith-Based Impact Investing Starter Kit** — Field-level grounding, an 8-phase implementation guide, and real stories of faith communities deploying capital for mission.
 - **Innovation Library** — A self-guided learning journey for the impact investing ecosystem, presented in its own distinct format.
+- **Impact Investing Field & Portfolio Framework** — An interactive map of the impact investing marketplace: three strategy families and their sub-strategies, the vehicles and recipients in each, and how the spectrum plays out by allocator type and impact sector. Uses top-level tab navigation to give the wide matrix and grids full width.
 
 ## Adding a new tool
 
