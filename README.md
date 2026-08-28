@@ -13,6 +13,24 @@ Each tool is a self-contained static page that can be opened on its own or embed
 - Innovation Library: https://gasocialimpact.github.io/resources/innovation-library/
 - Impact Investing Field & Portfolio Framework: https://gasocialimpact.github.io/resources/impact-investing-field-framework/
 
+### Standalone feature pages
+
+Some features inside a tool also stand on their own so they can be embedded individually, for example on a single blog post.
+
+- Georgia Foundation Impact Investor Case Studies: https://gasocialimpact.github.io/resources/foundation-toolkit/case-studies.html
+
+Embed one with an iframe:
+
+```html
+<iframe src="https://gasocialimpact.github.io/resources/foundation-toolkit/case-studies.html"
+        title="Georgia Foundation Impact Investor Case Studies"
+        width="100%" height="1400" style="border:0" loading="lazy"></iframe>
+```
+
+Adding `?embed=1` to the URL hides the page's own title and footer, which is how the Starter Kit loads it. Leave the parameter off for a blog embed so the page keeps its title and the link back to the full Starter Kit.
+
+The page posts its content height to the parent window (`{frame: 'foundation-case-studies', type: 'gsic:resize', height}`), so a host page that wants an auto-sizing iframe can listen for it. With a fixed height, the iframe simply scrolls internally.
+
 ## Repository structure
 
 ```

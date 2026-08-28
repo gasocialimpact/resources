@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Georgia Foundation Impact Investor Case Studies</title>
+<meta name="description" content="How four Georgia foundations became impact investors: their motivations, where the capital comes from, what they invest in, how decisions get made, and the lessons they learned.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Georgia Foundation Impact Investor Case Studies">
+<meta property="og:description" content="How four Georgia foundations became impact investors: their motivations, where the capital comes from, what they invest in, how decisions get made, and the lessons they learned.">
+<meta property="og:url" content="https://gasocialimpact.github.io/resources/foundation-toolkit/case-studies.html">
+<meta property="og:site_name" content="Georgia Social Impact Collaborative">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://gasocialimpact.github.io/resources/foundation-toolkit/case-studies.html">
 <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -38,6 +46,7 @@ header{
   padding:32px 0;
   margin-bottom:24px;
 }
+.header-inner{max-width:1200px; margin:0 auto; padding:0 24px}
 header h1{
   font-size:26px; font-weight:800; color:var(--accent);
   text-align:center; margin-bottom:10px; line-height:1.2;
@@ -46,6 +55,22 @@ header h1{
   text-align:center; font-size:15px; color:var(--ink);
   max-width:780px; margin:0 auto;
 }
+
+.page-footer{
+  border-top:1px solid var(--line); background:var(--soft-gray);
+  padding:24px 0; margin-top:8px;
+}
+.footer-inner{
+  max-width:1200px; margin:0 auto; padding:0 24px;
+  font-size:13.5px; line-height:1.55; text-align:center;
+}
+.page-footer a{color:var(--accent); font-weight:600}
+
+/* Embed mode (case-studies.html?embed=1): drop the standalone chrome so the
+   page can sit inside the Starter Kit, which supplies its own title bar. */
+body.embed header,
+body.embed .page-footer{display:none}
+body.embed .container{padding-top:24px}
 
 .foundation-selector{
   display:grid; grid-template-columns:repeat(4, 1fr); gap:10px;
@@ -222,6 +247,14 @@ li{margin-bottom:6px; line-height:1.55; font-size:14px}
 </style>
 </head>
 <body>
+
+<header>
+  <div class="header-inner">
+    <h1>Georgia Foundation Impact Investor Case Studies</h1>
+    <p class="header-subtitle">Four Georgia foundations and how they have pioneered impact investing. Select a foundation to see what motivated it, where its capital comes from, what it invests in, how decisions get made, and the lessons it has learned.</p>
+  </div>
+</header>
+
 <div class="container">
   <div class="foundation-selector">
     <button class="foundation-button active" onclick="showFoundation('sapelo', this)">
@@ -644,14 +677,60 @@ li{margin-bottom:6px; line-height:1.55; font-size:14px}
   </div>
 </div>
 
+<footer class="page-footer">
+  <div class="footer-inner">
+    These case studies are part of the
+    <a href="https://gasocialimpact.github.io/resources/foundation-toolkit/" target="_blank" rel="noopener">Foundation Impact Investing Starter Kit</a>,
+    a free resource from the Georgia Social Impact Collaborative.
+  </div>
+</footer>
+
 <script>
+// Embed mode hides the standalone header and footer. The Starter Kit loads this
+// page as case-studies.html?embed=1; a blog embed uses the plain URL.
+if(new URLSearchParams(location.search).get('embed') === '1'){
+  document.body.classList.add('embed');
+}
+
 function showFoundation(id, btn){
   document.querySelectorAll('.foundation-content').forEach(c => c.classList.remove('active'));
   document.querySelectorAll('.foundation-button').forEach(b => b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   btn.classList.add('active');
-  window.scrollTo({top: document.querySelector('.foundation-selector').offsetTop - 20, behavior: 'smooth'});
+  var top = document.querySelector('.foundation-selector').offsetTop - 20;
+  // Only scroll when this document actually scrolls. In an auto-height iframe it
+  // does not, and the parent page is told where to scroll instead.
+  if(document.documentElement.scrollHeight > window.innerHeight + 1){
+    window.scrollTo({top: top, behavior: 'smooth'});
+  } else {
+    postToParent({type:'gsic:scrollTo', offset: top});
+  }
+  reportHeight();
 }
+
+// Broadcast our height so a host page can size the iframe to the content.
+// Optional: an iframe with a fixed height simply scrolls internally instead.
+function postToParent(msg){
+  if(window.parent === window) return;
+  msg.frame = 'foundation-case-studies';
+  window.parent.postMessage(msg, '*');
+}
+
+var lastHeight = 0;
+function reportHeight(){
+  var h = Math.ceil(document.documentElement.getBoundingClientRect().height);
+  if(h !== lastHeight){
+    lastHeight = h;
+    postToParent({type:'gsic:resize', height: h});
+  }
+}
+
+window.addEventListener('load', reportHeight);
+window.addEventListener('resize', reportHeight);
+if(window.ResizeObserver){
+  new ResizeObserver(reportHeight).observe(document.body);
+}
+reportHeight();
 </script>
 </body>
 </html>
