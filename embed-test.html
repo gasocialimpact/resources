@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Embed test</title>
+<style>
+  body{font-family:system-ui,sans-serif; margin:0; background:#f0f0f0}
+  .post{max-width:860px; margin:0 auto; background:#fff; padding:40px}
+  .after{height:600px; background:#ffe}
+</style>
+</head>
+<body>
+<div class="post">
+  <h1>Blog post headline</h1>
+  <p>Some intro copy before the embed.</p>
+
+  <iframe id="gsic-case-studies"
+          src="http://localhost:8766/foundation-toolkit/case-studies.html"
+          title="Georgia Foundation Impact Investor Case Studies"
+          width="100%" height="1400" scrolling="no"
+          style="border:0; width:100%; display:block" loading="lazy"></iframe>
+  <script>
+  (function(){
+    var frame = document.getElementById('gsic-case-studies');
+    window.addEventListener('message', function(e){
+      if(e.origin !== 'http://localhost:8766') return;
+      var d = e.data;
+      if(!d || d.frame !== 'foundation-case-studies') return;
+      if(d.type === 'gsic:resize' && d.height){
+        frame.style.height = d.height + 'px';
+        window.__lastHeight = d.height;
+      }
+      if(d.type === 'gsic:scrollTo'){
+        window.__lastScroll = d.offset;
+        var top = frame.getBoundingClientRect().top + window.pageYOffset + (d.offset || 0);
+        window.scrollTo({top: top, behavior: 'smooth'});
+      }
+    });
+  })();
+  </script>
+
+  <p>Copy after the embed.</p>
+  <div class="after">tall block after</div>
+</div>
+</body>
+</html>

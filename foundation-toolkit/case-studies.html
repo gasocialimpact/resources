@@ -38,39 +38,21 @@ body{
   font-size:15px;
   line-height:1.4;
 }
-.container{max-width:1200px; margin:0 auto; padding:24px}
-
-header{
-  background:#fff;
-  border-bottom:1px solid var(--line);
-  padding:32px 0;
-  margin-bottom:24px;
-}
-.header-inner{max-width:1200px; margin:0 auto; padding:0 24px}
-header h1{
-  font-size:26px; font-weight:800; color:var(--accent);
-  text-align:center; margin-bottom:10px; line-height:1.2;
-}
-.header-subtitle{
-  text-align:center; font-size:15px; color:var(--ink);
-  max-width:780px; margin:0 auto;
-}
+.container{max-width:1600px; margin:0 auto; padding:20px 16px}
 
 .page-footer{
   border-top:1px solid var(--line); background:var(--soft-gray);
-  padding:24px 0; margin-top:8px;
+  padding:20px 0; margin-top:8px;
 }
 .footer-inner{
-  max-width:1200px; margin:0 auto; padding:0 24px;
+  max-width:1600px; margin:0 auto; padding:0 16px;
   font-size:13.5px; line-height:1.55; text-align:center;
 }
 .page-footer a{color:var(--accent); font-weight:600}
 
-/* Embed mode (case-studies.html?embed=1): drop the standalone chrome so the
-   page can sit inside the Starter Kit, which supplies its own title bar. */
-body.embed header,
+/* Embed mode (case-studies.html?embed=1): drop the footer so the page can sit
+   inside the Starter Kit, which supplies its own chrome. */
 body.embed .page-footer{display:none}
-body.embed .container{padding-top:24px}
 
 .foundation-selector{
   display:grid; grid-template-columns:repeat(4, 1fr); gap:10px;
@@ -235,26 +217,16 @@ body.embed .container{padding-top:24px}
 ul{padding-left:20px; margin:10px 0}
 li{margin-bottom:6px; line-height:1.55; font-size:14px}
 
-@media(max-width:900px){
+@media(max-width:780px){
   .foundation-selector{grid-template-columns:1fr 1fr}
 }
-@media(max-width:600px){
+@media(max-width:520px){
   .foundation-selector{grid-template-columns:1fr}
-  .container{padding:16px}
-  header{padding:22px 0}
-  header h1{font-size:22px}
+  .container{padding:16px 12px}
 }
 </style>
 </head>
 <body>
-
-<header>
-  <div class="header-inner">
-    <h1>Georgia Foundation Impact Investor Case Studies</h1>
-    <p class="header-subtitle">Four Georgia foundations and how they have pioneered impact investing. Select a foundation to see what motivated it, where its capital comes from, what it invests in, how decisions get made, and the lessons it has learned.</p>
-  </div>
-</header>
-
 <div class="container">
   <div class="foundation-selector">
     <button class="foundation-button active" onclick="showFoundation('sapelo', this)">
@@ -698,14 +670,14 @@ function showFoundation(id, btn){
   document.getElementById(id).classList.add('active');
   btn.classList.add('active');
   var top = document.querySelector('.foundation-selector').offsetTop - 20;
-  // Only scroll when this document actually scrolls. In an auto-height iframe it
-  // does not, and the parent page is told where to scroll instead.
-  if(document.documentElement.scrollHeight > window.innerHeight + 1){
-    window.scrollTo({top: top, behavior: 'smooth'});
-  } else {
-    postToParent({type:'gsic:scrollTo', offset: top});
-  }
+  // Report the new height first so a host page sizing the iframe has already
+  // grown it by the time it handles the scroll request below.
   reportHeight();
+  // Ask the host to scroll back to the buttons (auto-height embeds, where this
+  // document itself does not scroll) and scroll here too (fixed-height embeds
+  // and the standalone page). Whichever one applies, the other is a no-op.
+  postToParent({type:'gsic:scrollTo', offset: top});
+  window.scrollTo({top: top, behavior: 'smooth'});
 }
 
 // Broadcast our height so a host page can size the iframe to the content.
