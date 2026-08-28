@@ -658,8 +658,8 @@ li{margin-bottom:6px; line-height:1.55; font-size:14px}
 </footer>
 
 <script>
-// Embed mode hides the standalone header and footer. The Starter Kit loads this
-// page as case-studies.html?embed=1; a blog embed uses the plain URL.
+// Embed mode hides the footer. The Starter Kit loads this page as
+// case-studies.html?embed=1; a blog embed uses the plain URL.
 if(new URLSearchParams(location.search).get('embed') === '1'){
   document.body.classList.add('embed');
 }
@@ -689,18 +689,29 @@ function postToParent(msg){
 }
 
 var lastHeight = 0;
-function reportHeight(){
+function reportHeight(force){
   var h = Math.ceil(document.documentElement.getBoundingClientRect().height);
-  if(h !== lastHeight){
+  if(force || h !== lastHeight){
     lastHeight = h;
     postToParent({type:'gsic:resize', height: h});
   }
 }
 
+// A host page may attach its listener after we have already reported, which
+// would strand the iframe at its starting height. Two defenses: answer any
+// later request for the height, and re-announce it over the first few seconds.
+window.addEventListener('message', function(e){
+  var d = e.data;
+  if(d && (d === 'gsic:hello' || d.type === 'gsic:hello')) reportHeight(true);
+});
+[100, 400, 1000, 2500].forEach(function(ms){
+  setTimeout(function(){ reportHeight(true); }, ms);
+});
+
 window.addEventListener('load', reportHeight);
 window.addEventListener('resize', reportHeight);
 if(window.ResizeObserver){
-  new ResizeObserver(reportHeight).observe(document.body);
+  new ResizeObserver(function(){ reportHeight(); }).observe(document.body);
 }
 reportHeight();
 </script>

@@ -19,17 +19,60 @@ Some features inside a tool also stand on their own so they can be embedded indi
 
 - Georgia Foundation Impact Investor Case Studies: https://gasocialimpact.github.io/resources/foundation-toolkit/case-studies.html
 
-Embed one with an iframe:
+Paste this into a blog post to embed it. The script keeps the iframe exactly as tall as its content, so there is never an inner scrollbar and the height never has to be guessed. It also scrolls the reader back up to the selector buttons when they switch foundations.
 
 ```html
 <iframe src="https://gasocialimpact.github.io/resources/foundation-toolkit/case-studies.html"
         title="Georgia Foundation Impact Investor Case Studies"
-        width="100%" height="1400" style="border:0" loading="lazy"></iframe>
+        height="900" style="border:0; width:100%; display:block" loading="lazy"></iframe>
+<script>
+(function(){
+  var ORIGIN = 'https://gasocialimpact.github.io';
+  function frameFor(win){
+    var frames = document.getElementsByTagName('iframe');
+    for(var i = 0; i < frames.length; i++){
+      if(frames[i].contentWindow === win) return frames[i];
+    }
+  }
+  window.addEventListener('message', function(e){
+    if(e.origin !== ORIGIN) return;
+    var d = e.data;
+    if(!d || d.frame !== 'foundation-case-studies') return;
+    var frame = frameFor(e.source);
+    if(!frame) return;
+    if(d.type === 'gsic:resize' && d.height){
+      frame.style.height = d.height + 'px';
+    }
+    if(d.type === 'gsic:scrollTo'){
+      var top = frame.getBoundingClientRect().top + window.pageYOffset + (d.offset || 0);
+      window.scrollTo({top: top, behavior: 'smooth'});
+    }
+  });
+  // Ask for the height, in case the page reported it before this script ran.
+  function hello(){
+    var frames = document.getElementsByTagName('iframe');
+    for(var i = 0; i < frames.length; i++){
+      try{ frames[i].contentWindow.postMessage({type:'gsic:hello'}, ORIGIN); }catch(err){}
+    }
+  }
+  window.addEventListener('load', hello);
+  hello();
+})();
+</script>
 ```
 
-Adding `?embed=1` to the URL hides the page's own title and footer, which is how the Starter Kit loads it. Leave the parameter off for a blog embed so the page keeps its title and the link back to the full Starter Kit.
+The snippet finds its iframe by matching the message sender, so it still works if the platform strips the `id` attribute, and it handles more than one embed on a page. The `height="900"` is only what shows for the moment before the script takes over.
 
-The page posts its content height to the parent window (`{frame: 'foundation-case-studies', type: 'gsic:resize', height}`), so a host page that wants an auto-sizing iframe can listen for it. With a fixed height, the iframe simply scrolls internally.
+If the blog platform strips `<script>` entirely, no cross-origin iframe can self-size — that is a browser security boundary, not something the page can work around. In that case the iframe falls back to scrolling internally at whatever fixed `height` you set. Platforms that do allow the script include Squarespace code blocks, the WordPress Custom HTML block (on self-hosted or Business-plan sites), Ghost HTML cards, and Webflow embeds.
+
+Adding `?embed=1` to the URL hides the footer, which is how the Starter Kit loads it. Leave the parameter off for a blog embed so the page keeps its link back to the full Starter Kit.
+
+Messages the page posts to its host, all tagged `frame: 'foundation-case-studies'`:
+
+| Message | Meaning |
+| --- | --- |
+| `{type: 'gsic:resize', height}` | Content height changed; size the iframe to it. |
+| `{type: 'gsic:scrollTo', offset}` | The reader switched foundations; scroll to `offset` pixels into the iframe. |
 
 ## Repository structure
 
