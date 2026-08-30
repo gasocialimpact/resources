@@ -398,30 +398,51 @@ ol.steps .step-body span{display:block; font-size:13.5px}
   padding:32px;
   max-width:780px; margin:0 auto;
 }
+
+/* The form shows all ten questions at once, so the count and bar ride along at
+   the top of the card while you scroll rather than scrolling away with it. */
+.assess-progress{
+  position:sticky; top:0; z-index:2; background:#fff;
+  margin:-32px -32px 26px; padding:22px 32px 14px;
+  border-radius:12px 12px 0 0; border-bottom:1px solid var(--line);
+}
 .assess-progress-row{
   display:flex; justify-content:space-between; align-items:center;
-  margin-bottom:14px;
+  margin-bottom:10px;
   font-size:13px; font-weight:600;
 }
 .assess-progress-bar{
   height:6px; background:var(--soft-gray); border-radius:999px;
-  overflow:hidden; margin-bottom:30px;
+  overflow:hidden;
 }
 .assess-progress-fill{
   height:100%; background:var(--accent);
-  width:10%; transition:width .25s ease;
+  width:0; transition:width .25s ease;
   border-radius:999px;
 }
-.assess-q{display:none}
-.assess-q.active{display:block}
+
+.assess-q{padding-bottom:26px; margin-bottom:26px; border-bottom:1px solid var(--line)}
+.assess-q:last-of-type{border-bottom:none; margin-bottom:0}
 .assess-q .q-text{
-  font-size:18px; font-weight:700; line-height:1.3;
-  margin-bottom:20px;
+  font-size:17px; font-weight:700; line-height:1.35;
+  margin-bottom:16px;
+  display:flex; align-items:flex-start; gap:12px;
 }
-.assess-q .q-options{display:flex; flex-direction:column; gap:8px}
+.assess-q .q-num{
+  flex-shrink:0; width:26px; height:26px; border-radius:999px;
+  background:var(--soft-gray); color:var(--ink);
+  font-size:13px; font-weight:700;
+  display:flex; align-items:center; justify-content:center;
+  margin-top:1px; transition:.15s;
+}
+.assess-q.answered .q-num{background:var(--accent); color:#fff}
+
+/* Two columns halve a 60-row form. The options are an ordered scale and the
+   grid fills row by row, so left-to-right still reads low to high. */
+.assess-q .q-options{display:grid; grid-template-columns:1fr 1fr; gap:8px}
 .q-option{
   background:#fff; border:1px solid var(--line);
-  border-radius:8px; padding:14px 16px;
+  border-radius:8px; padding:12px 14px;
   cursor:pointer; font-size:14px;
   font-family:inherit; transition:.15s;
   display:flex; align-items:center; gap:10px;
@@ -441,9 +462,28 @@ ol.steps .step-body span{display:block; font-size:13.5px}
   content:""; position:absolute; left:3px; top:3px;
   width:8px; height:8px; border-radius:999px; background:#fff;
 }
+
+/* Flagged when someone submits with this one still blank. */
+.assess-q.missing{
+  background:var(--warn-bg); border-radius:10px;
+  margin-left:-14px; margin-right:-14px; padding:14px 14px 20px;
+}
+.assess-q.missing .q-num{background:var(--accent-orange); color:#fff}
+
 .assess-nav{
-  display:flex; justify-content:space-between; align-items:center;
-  margin-top:24px; padding-top:18px; border-top:1px solid var(--line);
+  display:flex; justify-content:center; align-items:center; gap:14px;
+  margin-top:28px; padding-top:22px; border-top:1px solid var(--line);
+  flex-wrap:wrap;
+}
+.assess-hint{font-size:13px; color:var(--ink); opacity:.7}
+
+/* Airtable is cross-origin: it cannot report a height, so it keeps its own
+   scrollbar. Give it a tall bounded panel and a visible edge so the inner
+   scroll reads as a deliberate boundary rather than a stuck page. */
+.airtable-embed{
+  width:100%; height:76vh; height:76dvh; max-height:900px; min-height:460px;
+  border:1px solid var(--line-dark); border-radius:10px;
+  background:#fff; display:block; margin-top:22px;
 }
 
 /* Results */
@@ -489,6 +529,9 @@ ol.steps .step-body span{display:block; font-size:13.5px}
   .section h1{font-size:22px}
   .section h2{font-size:17px}
   .assess-card{padding:22px 18px}
+  .assess-progress{margin:-22px -18px 22px; padding:16px 18px 12px}
+  .assess-q .q-options{grid-template-columns:1fr}
+  .assess-q.missing{margin-left:-8px; margin-right:-8px; padding:12px 8px 16px}
 }
 
 @media(max-width:480px){
@@ -565,6 +608,7 @@ ol.steps .step-body span{display:block; font-size:13.5px}
       <button data-view="data"><svg><use href="#i-bar"/></svg> Data Reality: Georgia&rsquo;s Nonprofit Financial Wellbeing</button>
       <button data-view="spectrum"><svg><use href="#i-pulse"/></svg> Unpacking the Nonprofit Financial Sustainability Spectrum</button>
       <button data-view="assessment"><svg><use href="#i-clipboard"/></svg> Nonprofit Financial Resilience Self-Assessment Tool</button>
+      <button data-view="nff"><svg><use href="#i-book"/></svg> Leveraging Nonprofit Finance Fund&rsquo;s Trainings &amp; Resources</button>
     </div>
 
     <div class="legend">
@@ -574,7 +618,7 @@ ol.steps .step-body span{display:block; font-size:13.5px}
     </div>
 
     <div class="tip">
-      Use the tabs above to navigate. The Self-Assessment Tool at the end helps you place your organization on the spectrum and get tailored next steps.
+      Use the tabs above to navigate. The Self-Assessment Tool helps you place your organization on the spectrum, and the last tab collects NFF's trainings and resources for acting on what it tells you.
     </div>
   </aside>
 
@@ -1072,17 +1116,19 @@ ol.steps .step-body span{display:block; font-size:13.5px}
       <p class="subtitle">Answer 10 quick questions to understand your organization's current financial health stage and get targeted recommendations for building resilience. Takes about 3 minutes.</p>
 
       <div class="assess-card" id="assessCard">
-        <div class="assess-progress-row">
-          <div id="qProgress">Question 1 of 10</div>
-          <div id="qPercent" style="color:var(--accent)">10%</div>
+        <div class="assess-progress">
+          <div class="assess-progress-row">
+            <div id="qProgress">0 of 10 answered</div>
+            <div id="qPercent" style="color:var(--accent)">0%</div>
+          </div>
+          <div class="assess-progress-bar"><div class="assess-progress-fill" id="progressFill"></div></div>
         </div>
-        <div class="assess-progress-bar"><div class="assess-progress-fill" id="progressFill"></div></div>
 
         <div id="assessQuestions"></div>
 
         <div class="assess-nav">
-          <button class="btn" id="prevBtn" disabled><svg><use href="#i-arrow-left"/></svg> Back</button>
-          <button class="btn primary" id="nextBtn" disabled>Next <svg><use href="#i-arrow-right"/></svg></button>
+          <button class="btn primary" id="submitBtn">See My Results <svg><use href="#i-check"/></svg></button>
+          <span class="assess-hint" id="assessHint">Answer all 10 questions to see your results.</span>
         </div>
       </div>
 
@@ -1101,6 +1147,24 @@ ol.steps .step-body span{display:block; font-size:13.5px}
           <button class="btn" onclick="resetAssessment()"><svg><use href="#i-refresh"/></svg> Take Assessment Again</button>
         </div>
       </div>
+    </div>
+
+    <!-- NFF TRAININGS & RESOURCES -->
+    <!-- No Save as PDF here: the tab is a cross-origin Airtable directory that
+         cannot be captured, so an export would be the heading and intro with a
+         hole where the content is. The directory is the thing worth having, and
+         it lives at its own URL. -->
+    <div id="view-nff" class="section" data-no-pdf>
+      <h1><svg><use href="#i-book"/></svg> Leveraging Nonprofit Finance Fund&rsquo;s Trainings &amp; Resources</h1>
+      <p class="subtitle">NFF's trainings and resources, gathered in one place. Browse the directory below to find what fits where your organization sits on the sustainability spectrum.</p>
+
+      <div class="panel purpose">
+        The Self-Assessment Tool points to the stage you are in; this is where you go next. The directory holds NFF's module series and webinars on the financial practices the roundtables kept returning to &mdash; budgeting and scenario planning, telling your financial story to funders and boards, and understanding your mission/money mix.
+      </div>
+
+      <iframe class="airtable-embed"
+              src="https://airtable.com/embed/appaiDoxyHhRJmqpq/shrSeLPwS3dOY1ejS"
+              title="Nonprofit Finance Fund Trainings &amp; Resources" loading="lazy"></iframe>
     </div>
 
   </section>
@@ -1141,7 +1205,7 @@ document.getElementById('resetView').addEventListener('click', function(){
   selectStage('vuln');
 });
 document.getElementById('howBtn').addEventListener('click', function(){
-  alert('How to use this tool.\n\n1. Use the left sidebar to navigate between tabs.\n2. Each tab covers a different layer of the work, from why we started, to what we learned, to where we are headed.\n3. The Self-Assessment Tool gives you a tailored snapshot of your organization\'s financial health.\n4. Every tab has a Save as PDF button at its top right, which saves that tab on its own as a single-page document.');
+  alert('How to use this tool.\n\n1. Use the left sidebar to navigate between tabs.\n2. Each tab covers a different layer of the work, from why we started, to what we learned, to where we are headed.\n3. The Self-Assessment Tool gives you a tailored snapshot of your organization\'s financial health, and the last tab collects NFF\'s trainings and resources for acting on it.\n4. Every tab has a Save as PDF button at its top right, which saves that tab on its own as a single-page document.');
 });
 
 // ---------- Ecosystem Transformation: gap detail ----------
@@ -1360,15 +1424,20 @@ var questions = [
 ];
 
 var scores = {};
-var currentQ = 0;
 
+// One long form: every question is on the page at once. Nothing is gated behind
+// a Next button, so answers can be given and revised in any order, and the whole
+// filled-in form is what the tab's Save as PDF picks up.
 function buildQuestions(){
   var qContainer = document.getElementById('assessQuestions');
   qContainer.innerHTML = questions.map(function(q, i){
-    var optsHtml = q.opts.map(function(opt, j){
-      return '<button class="q-option" data-q="'+i+'" data-score="'+opt[1]+'"><span class="opt-marker"></span><span>'+opt[0]+'</span></button>';
+    var optsHtml = q.opts.map(function(opt){
+      return '<button type="button" class="q-option" data-q="'+i+'" data-score="'+opt[1]+'">' +
+        '<span class="opt-marker"></span><span>'+opt[0]+'</span></button>';
     }).join('');
-    return '<div class="assess-q'+(i===0?' active':'')+'" data-q="'+i+'"><div class="q-text">'+q.q+'</div><div class="q-options">'+optsHtml+'</div></div>';
+    return '<div class="assess-q" data-q="'+i+'" id="assess-q-'+i+'">' +
+      '<div class="q-text"><span class="q-num">'+(i+1)+'</span><span>'+q.q+'</span></div>' +
+      '<div class="q-options">'+optsHtml+'</div></div>';
   }).join('');
 
   qContainer.querySelectorAll('.q-option').forEach(function(opt){
@@ -1377,35 +1446,44 @@ function buildQuestions(){
       var qPanel = this.closest('.assess-q');
       qPanel.querySelectorAll('.q-option').forEach(function(o){ o.classList.remove('selected'); });
       this.classList.add('selected');
+      qPanel.classList.add('answered');
+      qPanel.classList.remove('missing');
       scores[qIdx] = parseInt(this.dataset.score);
-      document.getElementById('nextBtn').disabled = false;
+      updateProgress();
     });
   });
 }
 buildQuestions();
 
-function showQuestion(idx){
-  document.querySelectorAll('.assess-q').forEach(function(q){
-    q.classList.toggle('active', parseInt(q.dataset.q) === idx);
-  });
-  document.getElementById('qProgress').textContent = 'Question ' + (idx+1) + ' of ' + questions.length;
-  var pct = Math.round(((idx+1)/questions.length)*100);
+function answeredCount(){
+  return questions.reduce(function(n, q, i){ return n + (scores[i] === undefined ? 0 : 1); }, 0);
+}
+
+function updateProgress(){
+  var done = answeredCount();
+  var pct = Math.round((done/questions.length)*100);
+  document.getElementById('qProgress').textContent = done + ' of ' + questions.length + ' answered';
   document.getElementById('qPercent').textContent = pct + '%';
   document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('prevBtn').disabled = (idx === 0);
-  document.getElementById('nextBtn').disabled = (scores[idx] === undefined);
-  document.getElementById('nextBtn').innerHTML = (idx === questions.length-1)
-    ? 'See Results <svg><use href="#i-check"/></svg>'
-    : 'Next <svg><use href="#i-arrow-right"/></svg>';
+  document.getElementById('assessHint').textContent = done === questions.length
+    ? 'All questions answered.'
+    : 'Answer all ' + questions.length + ' questions to see your results.';
 }
-showQuestion(0);
+updateProgress();
 
-document.getElementById('prevBtn').addEventListener('click', function(){
-  if(currentQ > 0){ currentQ--; showQuestion(currentQ); }
-});
-document.getElementById('nextBtn').addEventListener('click', function(){
-  if(currentQ < questions.length-1){ currentQ++; showQuestion(currentQ); }
-  else { showResults(); }
+// Submitting early is not blocked with a dead button — it jumps to the first
+// blank question and flags every one still outstanding, which says more about
+// what to do next than a disabled control would.
+document.getElementById('submitBtn').addEventListener('click', function(){
+  var missing = questions.map(function(q, i){ return i; }).filter(function(i){ return scores[i] === undefined; });
+  if(missing.length){
+    missing.forEach(function(i){ document.getElementById('assess-q-'+i).classList.add('missing'); });
+    document.getElementById('assessHint').textContent =
+      missing.length + (missing.length === 1 ? ' question is' : ' questions are') + ' still unanswered.';
+    document.getElementById('assess-q-'+missing[0]).scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  showResults();
 });
 
 function showResults(){
@@ -1459,18 +1537,25 @@ function showResults(){
     return '<div class="r-rec"><div class="rt">'+r.t+'</div><div class="rd">'+r.d+'</div></div>';
   }).join('');
 
-  document.getElementById('assessCard').style.display = 'none';
+  // The form stays put rather than being swapped out, so answers can be changed
+  // and the results recalculated without starting over.
+  document.getElementById('submitBtn').innerHTML = 'Update My Results <svg><use href="#i-refresh"/></svg>';
   document.getElementById('assessResults').classList.add('show');
   document.getElementById('assessResults').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 function resetAssessment(){
   scores = {};
-  currentQ = 0;
   document.querySelectorAll('.q-option').forEach(function(o){ o.classList.remove('selected'); });
-  document.getElementById('assessCard').style.display = 'block';
+  document.querySelectorAll('.assess-q').forEach(function(q){ q.classList.remove('answered', 'missing'); });
+  document.getElementById('submitBtn').innerHTML = 'See My Results <svg><use href="#i-check"/></svg>';
   document.getElementById('assessResults').classList.remove('show');
-  showQuestion(0);
+  updateProgress();
+  // Reset View calls this from another tab, where scrolling the form would be
+  // meaningless — only jump back to the top when the form is actually on screen.
+  if(document.getElementById('view-assessment').classList.contains('active')){
+    document.getElementById('assessCard').scrollIntoView({behavior:'smooth', block:'start'});
+  }
 }
 
 // ---------- Save as PDF, one button per tab ----------
@@ -1484,6 +1569,7 @@ function resetAssessment(){
 document.addEventListener('DOMContentLoaded', function(){
   if(!window.GSICPdf) return;
   document.querySelectorAll('.content-frame > .section').forEach(function(section){
+    if(section.hasAttribute('data-no-pdf')) return;
     var name = (section.querySelector('h1') || {}).textContent || '';
     name = name.trim();
     var row = window.GSICPdf.button(
