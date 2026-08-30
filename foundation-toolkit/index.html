@@ -4,7 +4,14 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Foundation Impact Investing Starter Kit</title>
+<!-- Identifies this page to a host that embeds it, and tells assets/gsic-frame.js
+     to report a height only in flow mode. In desktop app-shell mode this page is
+     height:100vh by design, so its measured height is just the height the host
+     already gave it, which tells the host nothing. -->
+<meta name="gsic-frame" content="foundation-toolkit">
+<meta name="gsic-height" content="flow">
 <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="../assets/gsic-frame.js" defer></script>
 <style>
 :root{
   --accent:#149a49;
@@ -26,7 +33,10 @@
 html,body{height:100%; background:#fff}
 body{
   margin:0; color:var(--ink); overflow:hidden;
-  display:flex; flex-direction:column; height:100vh;
+  display:flex; flex-direction:column;
+  /* dvh tracks the viewport as mobile browser toolbars slide away; vh does not,
+     which is why the bottom of a 100vh app is unreachable on a phone. */
+  height:100vh; height:100dvh;
   font-family:"Familjen Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   font-size:15px; line-height:1.4;
 }
@@ -75,8 +85,6 @@ aside{
 .nav button.active{background:var(--secondary-green); color:var(--accent); font-weight:700; border-color:var(--accent)}
 .nav button svg{width:16px; height:16px; flex-shrink:0}
 
-.tip{margin-top:14px; padding-top:14px; border-top:1px solid var(--line); font-size:12.5px; color:var(--ink); line-height:1.5}
-
 .content-frame{
   flex:1; min-height:0;
   background:#fff; border:1px solid var(--line); border-radius:12px;
@@ -97,29 +105,95 @@ aside{
 }
 
 .menu-toggle{display:none; background:none; border:1px solid var(--line-dark); border-radius:8px; padding:6px 10px; cursor:pointer; color:var(--ink); font-size:18px; line-height:1}
+.external-note{display:none}
 
 @media(max-width:1100px){
   main{grid-template-columns:220px 1fr; gap:20px; padding:14px 18px}
 }
-@media(max-width:768px){
+
+/* ---------------------------------------------------------------------------
+   FLOW MODE
+
+   Below 900px, and on any touch device at any width, the fixed app shell is
+   dropped for ordinary document flow: the page scrolls, and each tool iframe is
+   sized to its own content by assets/gsic-frame.js so it has no scrollbar of its
+   own. That is the durable fix for "I cannot scroll into the content" — the
+   inner scroll container that was almost impossible to grab on a phone stops
+   existing. There is one page and one scrollbar, and the phone scrolls it the
+   way it scrolls anything else.
+
+   `hover:none` is deliberate. Nested scrolling is a touch problem, not a width
+   problem: a tablet at 1024px hits it exactly as a phone at 375px does. Keep
+   this query in sync with FLOW_QUERY in assets/gsic-frame.js — between them
+   they are the only definition of the boundary.
+
+   Nothing in here is position:fixed or position:sticky. An iframe sized to its
+   content has no viewport of its own, so fixed and sticky anchor to the top of
+   the whole document instead of to the screen — usually far out of view. Keeping
+   everything in normal flow makes this page behave identically standalone,
+   embedded at a fixed height, and embedded with auto-height.
+--------------------------------------------------------------------------- */
+@media(max-width:900px), (hover:none){
+  html,body{height:auto; overflow:visible}
+  body{display:block}
+
+  main{display:block; max-width:none; padding:0}
+  main > section{display:block}
+
   .menu-toggle{display:inline-flex}
-  main{grid-template-columns:1fr; padding:12px; gap:12px}
+
+  /* The sidebar becomes a panel in normal flow, collapsed until the header
+     button opens it, rather than an off-canvas drawer. */
   aside{
-    position:fixed; left:-300px; top:62px; bottom:0; width:280px;
-    z-index:90; transition:left .3s ease; border-radius:0;
-    max-height:none; height:calc(100vh - 62px);
-    border:none; border-right:1px solid var(--line);
+    display:none; align-self:auto; position:static;
+    border:0; border-bottom:1px solid var(--line); border-radius:0;
+    padding:10px 12px; overflow:visible;
   }
-  aside.open{left:0; box-shadow:4px 0 20px rgba(0,0,0,.15)}
-  .overlay{display:none; position:fixed; inset:0; background:rgba(0,0,0,.3); z-index:89}
-  .overlay.open{display:block}
-  .wrap{padding:10px 12px}
-  .section-intro{padding:18px 18px}
-  .section-intro h1{font-size:20px}
+  body.nav-open aside{display:block}
+
+  .content-frame{display:block; flex:none; border:0; border-radius:0; overflow:visible}
+  .section.active{display:block}
+
+  .section-intro{padding:16px 16px 14px}
+  .section-intro h1{font-size:19px}
+  .section-intro p{font-size:13.5px}
+
+  .tool-frame{
+    flex:none; height:auto; min-height:60vh;
+    border-top:1px solid var(--line);
+  }
+  /* Once a real content height has arrived the placeholder must stop applying,
+     or a short tool would be padded out to 60vh. */
+  .tool-frame[data-gsic-height]{min-height:0}
+
+  /* Airtable is cross-origin: it cannot report a height, so it keeps its own
+     scrollbar. Give it a tall bounded panel and a visible edge so the inner
+     scroll reads as a deliberate boundary rather than a stuck page. */
+  .tool-frame.external{
+    min-height:0; height:78vh; height:78dvh;
+    max-height:820px; border:1px solid var(--line-dark); border-radius:10px;
+  }
+  .external-note{display:block; padding:12px 16px 0; font-size:12.5px; opacity:.75}
 }
-@media(max-width:480px){
+
+@media(max-width:768px){
+  .wrap{padding:8px 12px; gap:10px}
+  .brand-mark{width:22px; height:22px}
+  .kicker{font-size:11px; letter-spacing:.05em; line-height:1.25}
+  .btn{padding:7px 9px; font-size:12px}
+  /* Keep the header to one row. A wrapping flex line prefers pushing an item
+     onto a second row over shrinking it, so the title has to be told it may
+     shrink (min-width:0) and the row told not to wrap. The title then wraps its
+     own text instead of displacing the controls. */
+  .wrap{flex-wrap:nowrap}
+  .brand-logo{flex:1 1 auto; min-width:0}
+  .kicker{min-width:0}
+  .controls{flex:0 0 auto; flex-wrap:nowrap}
+}
+@media(max-width:560px){
   .controls{gap:6px}
-  .btn{padding:7px 10px; font-size:12px}
+  .btn .label{display:none}
+  .btn svg{width:16px; height:16px}
 }
 </style>
 </head>
@@ -143,21 +217,19 @@ aside{
 
 <header>
   <div class="wrap">
-    <button class="menu-toggle" id="menuToggle" aria-label="Open navigation"><svg width="18" height="18"><use href="#i-menu"/></svg></button>
+    <button class="menu-toggle" id="menuToggle" aria-label="Show the list of tools" aria-expanded="false" aria-controls="toolNav"><svg width="18" height="18"><use href="#i-menu"/></svg></button>
     <div class="brand-logo">
       <div class="brand-mark" aria-hidden="true"></div>
       <div class="kicker">Foundation Impact Investing Starter Kit</div>
     </div>
     <div class="controls">
-      <button class="btn" id="exportPrint"><svg><use href="#i-printer"/></svg> Print</button>
-      <button class="btn" id="howBtn"><svg><use href="#i-help"/></svg> How to</button>
+      <button class="btn" id="howBtn" aria-label="How to use this toolkit"><svg><use href="#i-help"/></svg> <span class="label">How to</span></button>
     </div>
   </div>
 </header>
 
-<div class="overlay" id="menuOverlay"></div>
 <main>
-  <aside>
+  <aside id="toolNav">
     <div class="nav">
       <button class="active" data-view="getting-started"><svg><use href="#i-compass"/></svg> Getting the Most Out of the Starter Kit</button>
       <button data-view="basics"><svg><use href="#i-book"/></svg> Covering the Basics</button>
@@ -168,9 +240,6 @@ aside{
       <button data-view="guidance"><svg><use href="#i-compass"/></svg> The Importance of Finding the Right Investment Advisor</button>
       <button data-view="rfp-pool"><svg><use href="#i-users"/></svg> OCIO or Impact Investing Consultant Search Prospects Pool</button>
       <button data-view="rfp-evaluation"><svg><use href="#i-clipboard"/></svg> Investment Advisor Proposals &amp; Search Responses Evaluation Tool</button>
-    </div>
-    <div class="tip">
-      Use the tabs above to move between tools. Each tool also has its own page if you want to embed just one. Use Print to save the current view as a PDF.
     </div>
   </aside>
 
@@ -222,7 +291,8 @@ aside{
           <h1><svg><use href="#i-pin"/></svg> Deals from the Field</h1>
           <p>Real impact investing deals across Georgia and beyond, showing how capital is being put to work on the ground.</p>
         </div>
-        <iframe class="tool-frame" src="https://airtable.com/embed/appMhwLHnU00fss23/shrqldVkUKJKFP9iu" title="Deals from the Field" loading="lazy"></iframe>
+        <p class="external-note">This table is hosted by Airtable and scrolls inside its own panel below.</p>
+        <iframe class="tool-frame external" data-gsic-autosize="off" src="https://airtable.com/embed/appMhwLHnU00fss23/shrqldVkUKJKFP9iu" title="Deals from the Field" loading="lazy"></iframe>
       </div>
 
       <div id="view-guidance" class="section">
@@ -238,7 +308,8 @@ aside{
           <h1><svg><use href="#i-users"/></svg> OCIO or Impact Investing Consultant Search Prospects Pool</h1>
           <p>A curated Airtable of impact investing strategy advisors that foundations can consider when sourcing proposals.</p>
         </div>
-        <iframe class="tool-frame" src="https://airtable.com/embed/appaiDoxyHhRJmqpq/shrqctgAS4lbvstsr" title="OCIO or Impact Investing Consultant Search Prospects Pool" loading="lazy"></iframe>
+        <p class="external-note">This table is hosted by Airtable and scrolls inside its own panel below.</p>
+        <iframe class="tool-frame external" data-gsic-autosize="off" src="https://airtable.com/embed/appaiDoxyHhRJmqpq/shrqctgAS4lbvstsr" title="OCIO or Impact Investing Consultant Search Prospects Pool" loading="lazy"></iframe>
       </div>
 
       <div id="view-rfp-evaluation" class="section">
@@ -254,16 +325,16 @@ aside{
 </main>
 
 <script>
-// Mobile menu toggle
+// Tool list toggle. In flow mode the sidebar is a collapsible panel in normal
+// flow rather than an off-canvas drawer, so this only adds and removes a class.
 (function(){
   var toggle = document.getElementById('menuToggle');
-  var aside = document.querySelector('aside');
-  var overlay = document.getElementById('menuOverlay');
-  function close(){ aside.classList.remove('open'); overlay.classList.remove('open'); }
-  function open(){ aside.classList.add('open'); overlay.classList.add('open'); }
-  toggle.addEventListener('click', function(){ aside.classList.contains('open') ? close() : open(); });
-  overlay.addEventListener('click', close);
-  aside.querySelectorAll('.nav button').forEach(function(b){ b.addEventListener('click', close); });
+  function close(){ document.body.classList.remove('nav-open'); toggle.setAttribute('aria-expanded','false'); }
+  function open(){ document.body.classList.add('nav-open'); toggle.setAttribute('aria-expanded','true'); }
+  toggle.addEventListener('click', function(){
+    document.body.classList.contains('nav-open') ? close() : open();
+  });
+  document.querySelectorAll('aside .nav button').forEach(function(b){ b.addEventListener('click', close); });
 })();
 
 // Tab navigation
@@ -273,16 +344,32 @@ function switchView(view){
   if(btn) btn.classList.add('active');
   document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
   var target = document.getElementById('view-'+view);
-  if(target) target.classList.add('active');
-  window.scrollTo({top:0, behavior:'smooth'});
+  if(target){
+    target.classList.add('active');
+    // While its section was hidden the frame had no layout, so any height it
+    // reported was stale or zero. Now that it is on screen, ask again.
+    var frame = target.querySelector('iframe');
+    if(frame && window.GSICFrame) window.GSICFrame.refresh(frame);
+  }
+  scrollToContent();
+}
+
+// Put the top of the tool in view. In app-shell mode the page does not scroll
+// and this is a no-op. In flow mode it scrolls here; and if this page has itself
+// been auto-sized inside a host page, it cannot scroll at all, so it asks the
+// host to bring the same point into view instead.
+function scrollToContent(){
+  var anchor = document.querySelector('.content-frame');
+  var top = anchor ? Math.max(0, anchor.getBoundingClientRect().top + (window.pageYOffset||0) - 8) : 0;
+  try{ window.scrollTo({top:top, behavior:'smooth'}); }catch(e){ window.scrollTo(0, top); }
+  if(window.GSICFrame && window.GSICFrame.isFlow()) window.GSICFrame.scrollTo(top);
 }
 document.querySelectorAll('aside .nav button').forEach(function(b){
   b.addEventListener('click', function(){ switchView(b.dataset.view); });
 });
 
-document.getElementById('exportPrint').addEventListener('click', function(){ window.print(); });
 document.getElementById('howBtn').addEventListener('click', function(){
-  alert('How to use this toolkit.\n\n1. Use the left sidebar to move between the tools. Start with Getting the Most Out of the Starter Kit.\n2. Covering the Basics has the strategy spectrum, the case for alignment, and a recorded GSIC training.\n3. Source of Funds Calculator models mechanisms and 10 year projections for private and community foundations.\n4. Foundation Case Studies show how four Georgia foundations approach impact investing.\n5. Advisor Proposal Evaluation Tool lets you screen and rate proposals. Your scoring is saved to your browser.\n6. Several tools have subtabs across the top. Each tool also has its own URL if you want to embed just one.');
+  alert('How to use this toolkit.\n\n1. Use the left sidebar to move between the tools. Start with Getting the Most Out of the Starter Kit.\n2. Covering the Basics has the strategy spectrum, the case for alignment, and a recorded GSIC training.\n3. Source of Funds Calculator models mechanisms and 10 year projections for private and community foundations.\n4. Foundation Case Studies show how four Georgia foundations approach impact investing.\n5. Advisor Proposal Evaluation Tool lets you screen and rate proposals. Your scoring is saved to your browser.\n6. Several tools have subtabs across the top. Each tool also has its own URL if you want to embed just one.\n7. Each tool has its own Save as PDF button, which saves that tool\'s content rather than the surrounding page.');
 });
 </script>
 </body>

@@ -186,14 +186,25 @@ body{
 }
 .form-input:focus{outline:none; border-color:var(--accent)}
 
+/* The dialog is positioned against the visible band that assets/gsic-frame.js
+   reports, not against the viewport. When the Starter Kit sizes this page to its
+   content, the page has no viewport of its own — it is as tall as its content
+   and never scrolls — so position:fixed would pin the dialog to the top of the
+   whole document, far above wherever the reader actually is. The fallbacks are
+   the plain viewport, which is exactly what the standalone page and a
+   fixed-height embed want, so one rule covers every case. */
 .modal-overlay{
-  position:fixed; inset:0; background:rgba(0,0,0,.4);
+  position:absolute; left:0; right:0;
+  top:var(--gsic-vp-top, 0px);
+  height:var(--gsic-vp-height, 100vh);
+  background:rgba(0,0,0,.4);
   display:flex; align-items:flex-start; justify-content:center;
-  padding-top:6vh; z-index:1000; overflow-y:auto;
+  padding:28px 0; z-index:1000; overflow-y:auto;
 }
 .modal{
   background:#fff; border-radius:12px; padding:28px;
-  max-width:600px; width:92%; max-height:88vh; overflow-y:auto;
+  max-width:600px; width:92%;
+  max-height:calc(var(--gsic-vp-height, 100vh) - 56px); overflow-y:auto;
 }
 .modal h3{font-size:18px; font-weight:700; color:var(--accent); margin-bottom:16px}
 
@@ -233,6 +244,8 @@ body{
   .progress-stats{gap:18px}
 }
 </style>
+<script src="../assets/gsic-frame.js" defer></script>
+<script src="../assets/gsic-print.js" defer></script>
 </head>
 <body>
 <div id="root"></div>

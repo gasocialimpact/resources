@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="gsic-frame" content="foundation-case-studies">
+<script src="../assets/gsic-frame.js" defer></script>
+<script src="../assets/gsic-print.js" defer></script>
 <title>Georgia Foundation Impact Investor Case Studies</title>
 <meta name="description" content="How four Georgia foundations became impact investors: their motivations, where the capital comes from, what they invest in, how decisions get made, and the lessons they learned.">
 <meta property="og:type" content="article">
@@ -664,6 +667,9 @@ if(new URLSearchParams(location.search).get('embed') === '1'){
   document.body.classList.add('embed');
 }
 
+// Height reporting and the host handshake now live in assets/gsic-frame.js,
+// which every tool page shares. The message protocol is unchanged, so the embed
+// snippet in the README keeps working exactly as before.
 function showFoundation(id, btn){
   document.querySelectorAll('.foundation-content').forEach(c => c.classList.remove('active'));
   document.querySelectorAll('.foundation-button').forEach(b => b.classList.remove('active'));
@@ -672,48 +678,13 @@ function showFoundation(id, btn){
   var top = document.querySelector('.foundation-selector').offsetTop - 20;
   // Report the new height first so a host page sizing the iframe has already
   // grown it by the time it handles the scroll request below.
-  reportHeight();
+  if(window.GSICFrame) window.GSICFrame.report();
   // Ask the host to scroll back to the buttons (auto-height embeds, where this
   // document itself does not scroll) and scroll here too (fixed-height embeds
   // and the standalone page). Whichever one applies, the other is a no-op.
-  postToParent({type:'gsic:scrollTo', offset: top});
+  if(window.GSICFrame) window.GSICFrame.scrollTo(top);
   window.scrollTo({top: top, behavior: 'smooth'});
 }
-
-// Broadcast our height so a host page can size the iframe to the content.
-// Optional: an iframe with a fixed height simply scrolls internally instead.
-function postToParent(msg){
-  if(window.parent === window) return;
-  msg.frame = 'foundation-case-studies';
-  window.parent.postMessage(msg, '*');
-}
-
-var lastHeight = 0;
-function reportHeight(force){
-  var h = Math.ceil(document.documentElement.getBoundingClientRect().height);
-  if(force || h !== lastHeight){
-    lastHeight = h;
-    postToParent({type:'gsic:resize', height: h});
-  }
-}
-
-// A host page may attach its listener after we have already reported, which
-// would strand the iframe at its starting height. Two defenses: answer any
-// later request for the height, and re-announce it over the first few seconds.
-window.addEventListener('message', function(e){
-  var d = e.data;
-  if(d && (d === 'gsic:hello' || d.type === 'gsic:hello')) reportHeight(true);
-});
-[100, 400, 1000, 2500].forEach(function(ms){
-  setTimeout(function(){ reportHeight(true); }, ms);
-});
-
-window.addEventListener('load', reportHeight);
-window.addEventListener('resize', reportHeight);
-if(window.ResizeObserver){
-  new ResizeObserver(function(){ reportHeight(); }).observe(document.body);
-}
-reportHeight();
 </script>
 </body>
 </html>
