@@ -159,7 +159,9 @@ aside{
 <main>
   <aside>
     <div class="nav">
-      <button class="active" data-view="calculator"><svg><use href="#i-coin"/></svg> Source of Funds Calculator</button>
+      <button class="active" data-view="getting-started"><svg><use href="#i-compass"/></svg> Getting the Most Out of the Starter Kit</button>
+      <button data-view="basics"><svg><use href="#i-book"/></svg> Covering the Basics</button>
+      <button data-view="calculator"><svg><use href="#i-coin"/></svg> Source of Funds Calculator</button>
       <button data-view="case-studies"><svg><use href="#i-book"/></svg> Foundation Case Studies</button>
       <button data-view="deals"><svg><use href="#i-pin"/></svg> Deals from the Field</button>
       <button data-view="reflective-worksheet"><svg><use href="#i-pencil"/></svg> Reflective Worksheet</button>
@@ -175,10 +177,26 @@ aside{
   <section>
     <div class="content-frame">
 
-      <div id="view-calculator" class="section active">
+      <div id="view-getting-started" class="section active">
+        <div class="section-intro">
+          <h1><svg><use href="#i-compass"/></svg> Getting the Most Out of the Starter Kit</h1>
+          <p>Where this Starter Kit adds value across the impact investing lifecycle, and the full question set that shapes a local or place-based impact investing strategy.</p>
+        </div>
+        <iframe class="tool-frame" src="getting-started.html" title="Getting the Most Out of the Starter Kit" loading="lazy"></iframe>
+      </div>
+
+      <div id="view-basics" class="section">
+        <div class="section-intro">
+          <h1><svg><use href="#i-book"/></svg> Covering the Basics</h1>
+          <p>The impact investing strategy spectrum, the case for aligning mission and investments, and a recorded GSIC training covering the fundamentals.</p>
+        </div>
+        <iframe class="tool-frame" src="basics.html" title="Covering the Basics" loading="lazy"></iframe>
+      </div>
+
+      <div id="view-calculator" class="section">
         <div class="section-intro">
           <h1><svg><use href="#i-coin"/></svg> Source of Funds Calculator</h1>
-          <p>Model how grants, PRIs, and MRIs together shape your foundation's capital deployment for impact. Adjust the sliders to see how different mixes change your reach.</p>
+          <p>Source of funds mechanisms and 10 year projection models for private foundations and community foundations, each in its own subtab.</p>
         </div>
         <iframe class="tool-frame" src="calculator.html" title="Source of Funds Calculator" loading="lazy"></iframe>
       </div>
@@ -264,7 +282,7 @@ document.querySelectorAll('aside .nav button').forEach(function(b){
 
 document.getElementById('exportPrint').addEventListener('click', function(){ window.print(); });
 document.getElementById('howBtn').addEventListener('click', function(){
-  alert('How to use this toolkit.\n\n1. Use the left sidebar to move between the four tools.\n2. Source of Funds Calculator helps you model your grant, PRI, and MRI mix.\n3. Foundation Case Studies show how four Georgia foundations approach impact investing.\n4. RFP Evaluation Tool lets you screen and rate consultant proposals. Your scoring is saved to your browser.\n5. RFP Candidate Pool is a curated Airtable of advisors.\n6. Each tool also has its own URL if you want to embed just one.');
+  alert('How to use this toolkit.\n\n1. Use the left sidebar to move between the tools. Start with Getting the Most Out of the Starter Kit.\n2. Covering the Basics has the strategy spectrum, the case for alignment, and a recorded GSIC training.\n3. Source of Funds Calculator models mechanisms and 10 year projections for private and community foundations.\n4. Foundation Case Studies show how four Georgia foundations approach impact investing.\n5. Advisor Proposal Evaluation Tool lets you screen and rate proposals. Your scoring is saved to your browser.\n6. Several tools have subtabs across the top. Each tool also has its own URL if you want to embed just one.');
 });
 </script>
 </body>
