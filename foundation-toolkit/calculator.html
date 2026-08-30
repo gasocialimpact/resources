@@ -42,11 +42,11 @@
   }
   body{font-family:'Familjen Grotesk',sans-serif;background:var(--light-bg);color:var(--text);line-height:1.4;font-weight:400;font-size:15px;}
 
-  .container{max-width:1280px;margin:0 auto;padding:24px 48px 72px;}
+  .container{max-width:1280px;margin:0 auto;padding:24px 32px 72px;}
 
   /* Tabs */
   .tab-bar{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:32px;padding-top:24px;flex-wrap:wrap;}
-  .tab-btn{padding:14px 28px;font-family:'Familjen Grotesk',sans-serif;font-size:15px;font-weight:500;
+  .tab-btn{padding:14px 15px;white-space:nowrap;font-family:'Familjen Grotesk',sans-serif;font-size:15px;font-weight:500;
     border:none;background:transparent;cursor:pointer;color:var(--text-sec);
     border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.2s;}
   .tab-btn.active{color:var(--secondary-purple);border-bottom-color:var(--primary-green);font-weight:600;}
@@ -234,9 +234,9 @@
 
 <div class="container">
   <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab('pf-mech')">Private Foundation Source of Funds Mechanisms</button>
+    <button class="tab-btn active" onclick="switchTab('pf-mech')">Private Foundation Mechanisms</button>
     <button class="tab-btn" onclick="switchTab('pf-calc')">Private Foundation Calculator</button>
-    <button class="tab-btn" onclick="switchTab('cf-mech')">Community Foundation Source of Funds Mechanisms</button>
+    <button class="tab-btn" onclick="switchTab('cf-mech')">Community Foundation Mechanisms</button>
     <button class="tab-btn" onclick="switchTab('cf-calc')">Community Foundation Calculator</button>
   </div>
 

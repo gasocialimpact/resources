@@ -43,7 +43,7 @@
 
   /* Tabs */
   .tab-bar{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:32px;padding-top:24px;flex-wrap:wrap;}
-  .tab-btn{padding:14px 28px;font-family:'Familjen Grotesk',sans-serif;font-size:15px;font-weight:500;
+  .tab-btn{padding:14px 20px;white-space:nowrap;font-family:'Familjen Grotesk',sans-serif;font-size:15px;font-weight:500;
     border:none;background:transparent;cursor:pointer;color:var(--text-sec);
     border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.2s;}
   .tab-btn.active{color:var(--secondary-purple);border-bottom-color:var(--primary-green);font-weight:600;}
@@ -248,9 +248,9 @@
 <div class="container">
 
   <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab('strategies')">Understand the Impact Investing Strategies</button>
-    <button class="tab-btn" onclick="switchTab('case')">The Case for Mission &amp; Investment Alignment</button>
-    <button class="tab-btn" onclick="switchTab('training')">Recorded Training: GSIC Covers the Basics</button>
+    <button class="tab-btn active" onclick="switchTab('strategies')">Impact Investing Strategies</button>
+    <button class="tab-btn" onclick="switchTab('case')">The Case for Alignment</button>
+    <button class="tab-btn" onclick="switchTab('training')">Recorded Training</button>
   </div>
 
   <div class="tab-content active" id="tab-strategies">
