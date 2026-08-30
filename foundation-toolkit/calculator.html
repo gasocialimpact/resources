@@ -229,6 +229,8 @@
     .strategy-criteria{flex-direction:column;}
   }
 </style>
+<script src="../assets/gsic-frame.js" defer></script>
+<script src="../assets/gsic-print.js" defer></script>
 </head>
 <body>
 
@@ -376,6 +378,13 @@
       </div>
 
       <div class="callout" id="pf-callout" style="margin-top:18px;"></div>
+
+      <div class="cf-save-row">
+        <button class="cf-btn primary" onclick="savePFScenario()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Save This Scenario as PDF
+        </button>
+      </div>
     </div>
   </div>
 
@@ -1064,7 +1073,13 @@ updatePF();
 updateCF();
 
 // ============ SAVE CF SCENARIO AS PDF ============
-async function saveCFScenario(){
+// Both calculator subtabs export the same way: capture the card the chart lives
+// in, and lay it into one tall page. The only differences are which chart to
+// find and what to call the file, so they are parameters.
+function saveCFScenario(){ return saveScenario('cf-chart', 'CF'); }
+function savePFScenario(){ return saveScenario('pf-chart', 'PF'); }
+
+async function saveScenario(chartId, filePrefix){
   if(!window.jspdf || !window.jspdf.jsPDF){
     alert('PDF library is still loading. Give it a moment and try again.');
     return;
@@ -1076,7 +1091,7 @@ async function saveCFScenario(){
   const { jsPDF } = window.jspdf;
 
   // Capture the full calculator card with inputs, outputs, chart, and callout
-  const chart = document.getElementById('cf-chart');
+  const chart = document.getElementById(chartId);
   const card  = chart ? chart.closest('.card') : null;
   if(!card){
     alert('Could not find the calculator card to export.');
@@ -1116,7 +1131,7 @@ async function saveCFScenario(){
     pdf.addImage(imgData, 'PNG', margin, margin, imgW, imgH);
 
     const stamp = new Date().toISOString().slice(0,10);
-    pdf.save('CF-Scenario-' + stamp + '.pdf');
+    pdf.save(filePrefix + '-Scenario-' + stamp + '.pdf');
   } catch (err) {
     console.error(err);
     alert('Sorry, the scenario could not be exported. ' + (err && err.message ? err.message : ''));

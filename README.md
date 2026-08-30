@@ -19,66 +19,82 @@ Some features inside a tool also stand on their own so they can be embedded indi
 
 - Georgia Foundation Impact Investor Case Studies: https://gasocialimpact.github.io/resources/foundation-toolkit/case-studies.html
 
-Paste this into a blog post to embed it. The script keeps the iframe exactly as tall as its content, so there is never an inner scrollbar and the height never has to be guessed. It also scrolls the reader back up to the selector buttons when they switch foundations.
+Adding `?embed=1` to the case studies URL hides the footer, which is how the Starter Kit loads it. Leave the parameter off for a blog embed so the page keeps its link back to the full Starter Kit.
+
+## Embedding a tool
+
+Use a plain iframe plus one script tag. This works for any tool here, and for the Starter Kit itself.
 
 ```html
-<iframe src="https://gasocialimpact.github.io/resources/foundation-toolkit/case-studies.html"
-        title="Georgia Foundation Impact Investor Case Studies"
-        height="900" style="border:0; width:100%; display:block" loading="lazy"></iframe>
-<script>
-(function(){
-  var ORIGIN = 'https://gasocialimpact.github.io';
-  function frameFor(win){
-    var frames = document.getElementsByTagName('iframe');
-    for(var i = 0; i < frames.length; i++){
-      if(frames[i].contentWindow === win) return frames[i];
-    }
-  }
-  window.addEventListener('message', function(e){
-    if(e.origin !== ORIGIN) return;
-    var d = e.data;
-    if(!d || d.frame !== 'foundation-case-studies') return;
-    var frame = frameFor(e.source);
-    if(!frame) return;
-    if(d.type === 'gsic:resize' && d.height){
-      frame.style.height = d.height + 'px';
-    }
-    if(d.type === 'gsic:scrollTo'){
-      var top = frame.getBoundingClientRect().top + window.pageYOffset + (d.offset || 0);
-      window.scrollTo({top: top, behavior: 'smooth'});
-    }
-  });
-  // Ask for the height, in case the page reported it before this script ran.
-  function hello(){
-    var frames = document.getElementsByTagName('iframe');
-    for(var i = 0; i < frames.length; i++){
-      try{ frames[i].contentWindow.postMessage({type:'gsic:hello'}, ORIGIN); }catch(err){}
-    }
-  }
-  window.addEventListener('load', hello);
-  hello();
-})();
-</script>
+<iframe src="https://gasocialimpact.github.io/resources/foundation-toolkit/"
+        title="Foundation Impact Investing Starter Kit"
+        style="width:100%; height:900px; border:0; display:block" loading="lazy"></iframe>
+<script src="https://gasocialimpact.github.io/resources/assets/gsic-frame.js" defer></script>
 ```
 
-The snippet finds its iframe by matching the message sender, so it still works if the platform strips the `id` attribute, and it handles more than one embed on a page. The `height="900"` is only what shows for the moment before the script takes over.
+The script finds any iframe on the page pointing at this site and keeps it exactly as tall as its content, so the height never has to be guessed and there is no scrollbar inside the frame. The `height:900px` is only what shows for the moment before the script takes over. One script tag covers as many embeds as the page has.
 
-If the blog platform strips `<script>` entirely, no cross-origin iframe can self-size — that is a browser security boundary, not something the page can work around. In that case the iframe falls back to scrolling internally at whatever fixed `height` you set. Platforms that do allow the script include Squarespace code blocks, the WordPress Custom HTML block (on self-hosted or Business-plan sites), Ghost HTML cards, and Webflow embeds.
+Three things to avoid, because each one causes the same symptom — a reader on a phone who cannot scroll to the content:
 
-Adding `?embed=1` to the URL hides the footer, which is how the Starter Kit loads it. Leave the parameter off for a blog embed so the page keeps its link back to the full Starter Kit.
+- **Do not set `scrolling="no"`.** It stops the frame from scrolling even when its content is taller than the frame, so anything below the fold is unreachable.
+- **Do not size the frame with a percentage aspect-ratio box** (`padding-bottom:105%` and similar). A ratio that gives a reasonable height on a desktop gives a tiny one on a phone: at 375px wide, `padding-bottom:105%` is 394px tall — less than a phone screen for a tool that is several screens long.
+- **Do not put a unitless value in a CSS height** (`height:1200`). CSS ignores it, so whatever else is sizing the box silently wins.
 
-Messages the page posts to its host, all tagged `frame: 'foundation-case-studies'`:
+If the blog platform strips `<script>` entirely, no cross-origin iframe can self-size — that is a browser security boundary, not something the page can work around. Set a generous fixed `height` instead and the tool scrolls inside the frame, which works but is less comfortable on a phone. Platforms that do allow the script include Squarespace code blocks, the WordPress Custom HTML block (on self-hosted or Business-plan sites), Ghost HTML cards, and Webflow embeds.
 
-| Message | Meaning |
-| --- | --- |
-| `{type: 'gsic:resize', height}` | Content height changed; size the iframe to it. |
-| `{type: 'gsic:scrollTo', offset}` | The reader switched foundations; scroll to `offset` pixels into the iframe. |
+### The frame protocol
+
+`assets/gsic-frame.js` is included by every tool page and by the Starter Kit shell, and is the same file a host page loads. It works out which roles apply: report its own height if it is inside a frame, size any same-origin frames it contains, or both at once, so the chain blog page → Starter Kit → tool page sizes end to end.
+
+| Message | Direction | Meaning |
+| --- | --- | --- |
+| `{type: 'gsic:resize', height}` | child → host | Content height changed; size the frame to it. |
+| `{type: 'gsic:scrollTo', offset}` | child → host | Scroll to `offset` pixels into the frame. |
+| `{type: 'gsic:hello'}` | host → child | Report your height now. |
+| `{type: 'gsic:viewport', top, height}` | host → child | The part of you that is currently on screen. |
+
+Every message is tagged with `frame`, the value of the page's `<meta name="gsic-frame">`. The case studies page still reports as `foundation-case-studies`, so any host already listening for it keeps working.
+
+`gsic:viewport` is what lets a page still open a dialog after it has been sized to its content. Such a page has no viewport of its own — it is as tall as its content and never scrolls — so `position:fixed` would anchor to the top of the whole document rather than to the screen. The visible band arrives as two CSS custom properties instead:
+
+```css
+.my-overlay{
+  position:absolute; left:0; right:0;
+  top:var(--gsic-vp-top, 0px);
+  height:var(--gsic-vp-height, 100vh);
+}
+```
+
+The fallbacks are the plain viewport, which is what the standalone page and a fixed-height embed want, so one rule is correct in every case. `foundation-toolkit/rfp-evaluation.html` uses this for its dialogs.
+
+### Layout modes
+
+Each tool renders in one of two layouts, chosen by a single media query that lives in `assets/gsic-frame.js` (as `FLOW_QUERY`) and in the Starter Kit's stylesheet:
+
+```
+(max-width: 900px), (hover: none)
+```
+
+Above it, on a desktop with a mouse, the Starter Kit is a fixed app shell: full-height sidebar, and the tool scrolls inside its frame.
+
+Below it, or on any touch device at any width, it switches to **flow mode**: the page scrolls normally, each tool frame is sized to its content, and nothing is `position:fixed` or `position:sticky`. Nested scrolling is a touch problem rather than a width problem — a tablet at 1024px hits it exactly as a phone at 375px does — which is why `hover: none` is part of the query and not just a width.
+
+If you add a tool, include `assets/gsic-frame.js` and it participates in both modes automatically.
+
+### Saving a tool as PDF
+
+`assets/gsic-print.js` puts a **Save as PDF** button on each tool page. The button prints that tool's own document, so the whole tool is saved however long it is, and on a page with subtabs only the open subtab prints.
+
+This replaced a single Print button in the Starter Kit header. That one printed the shell — a full-height page with the tool in an iframe — so the export was one screen of frame with the rest cut off. A page can only print itself properly, so the button belongs on the tool.
+
+A page that already has its own export opts out with `<meta name="gsic-print" content="off">`.
 
 ## Repository structure
 
 ```
 /
 ├── index.html                       # Roll-up landing page linking to each tool
+├── assets/                          # Shared scripts (iframe sizing, Save as PDF)
 ├── atlanta-nonprofit-ecosystem-hub/ # Nonprofit Capital Access Hub
 ├── foundation-toolkit/              # Foundation Impact Investing Starter Kit
 ├── faith-based-starter-kit/         # Faith-Based Impact Investing Starter Kit
@@ -101,6 +117,8 @@ Folder paths are intentionally stable because they are the source of live iframe
 ## Adding a new tool
 
 Copy the `_template/` folder to a new, descriptively named directory, then edit its `index.html`. Once committed to `main`, GitHub Pages serves it at `https://gasocialimpact.github.io/resources/<your-folder>/`, and it can be linked from the landing page or embedded directly.
+
+The template already includes both shared scripts and the flow-mode stylesheet, so a new tool embeds and reads on a phone correctly from the start. Change the `<meta name="gsic-frame">` value to your tool's own name.
 
 ## Technology
 

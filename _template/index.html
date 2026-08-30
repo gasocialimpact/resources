@@ -4,7 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tool Template</title>
+  <!-- Identifies this tool to a page that embeds it. Give it your own name. -->
+  <meta name="gsic-frame" content="tool-template">
+  <meta name="gsic-height" content="flow">
   <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Shared: reports this page's height to a host that embeds it, and adds the
+       Save as PDF button. See the README under "Embedding a tool". -->
+  <script src="../assets/gsic-frame.js" defer></script>
+  <script src="../assets/gsic-print.js" defer></script>
   <style>
   /* ============================================================
      GSIC TOOL TEMPLATE — shared shell
@@ -29,7 +36,9 @@
 }
 *{box-sizing:border-box}
 html,body{height:100%; background:#fff}
-body{margin:0; color:var(--ink); overflow:hidden; display:flex; flex-direction:column; height:100vh; font-family:"Familjen Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size:15px; line-height:1.4;}
+/* dvh tracks the viewport as mobile browser toolbars slide away; vh does not,
+   which is why the bottom of a 100vh app is unreachable on a phone. */
+body{margin:0; color:var(--ink); overflow:hidden; display:flex; flex-direction:column; height:100vh; height:100dvh; font-family:"Familjen Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size:15px; line-height:1.4;}
 header{flex-shrink:0; z-index:50; background:#fff; border-bottom:1px solid var(--line)}
 .wrap{max-width:1500px; margin:0 auto; padding:14px 24px; display:flex; gap:14px; align-items:center; flex-wrap:wrap}
 .brand-logo{display:flex; align-items:center; gap:10px}
@@ -50,7 +59,22 @@ aside{align-self:stretch; background:#fff; border:1px solid var(--line); border-
 .section.active{display:block}
 .section h1{font-size:28px; font-weight:800; color:var(--accent); margin:0 0 8px}
 .subtitle{margin:0 0 24px; font-size:15px; color:var(--ink); max-width:780px}
-@media(max-width:768px){main{grid-template-columns:1fr; padding:12px; gap:12px}}
+/* FLOW MODE — see the README under "Layout modes". Below 900px, and on any
+   touch device at any width, the fixed app shell gives way to ordinary document
+   flow: the page scrolls instead of the content frame scrolling inside a locked
+   page. An inner scroll container is hard to grab on a phone and competes with
+   the page scroll, so in flow mode there simply is not one.
+
+   `hover:none` is deliberate — nested scrolling is a touch problem, not a width
+   problem. Keep this query in sync with FLOW_QUERY in assets/gsic-frame.js. */
+@media(max-width:900px), (hover:none){
+  html,body{height:auto; overflow:visible}
+  body{display:block}
+  main{display:block; max-width:none; padding:12px}
+  main > section{display:block}
+  aside{align-self:auto; margin-bottom:12px}
+  .content-frame{flex:none; overflow:visible; padding:20px 18px}
+}
 </style>
   </head>
   <body>
