@@ -83,7 +83,9 @@ If you add a tool, include `assets/gsic-frame.js` and it participates in both mo
 
 ### Saving a tool as PDF
 
-`assets/gsic-pdf.js` puts a **Save as PDF** button on each tool page and produces a single continuous page, laid out at a fixed desktop width whatever device it was saved from. The open subtab, the values typed into a calculator, the answers saved in the worksheet — all of it is in the export, because the capture is taken from the live page.
+`assets/gsic-pdf.js` puts a **Save as PDF** button on every tab and produces a single continuous page, laid out at a fixed desktop width whatever device it was saved from. Each button saves its own tab and nothing else. The open subtab, the values typed into a calculator, the answers saved in the worksheet — all of it is in the export, because the capture is taken from the live page.
+
+The button lives with the content, not in the sticky header. In the toolkits each tab is its own page inside an iframe, so the page loads the script and the button places itself; the Nonprofit Capital Access Hub holds all six tabs in one document, so it opts out of that and builds a row per tab instead.
 
 It does not use `window.print()`. That hands the job to the browser's paginator, which lays the page out at the *current* viewport width and slices it into sheets: saved from a phone, a 375px column chopped across a dozen pages with cards split down the middle. No print stylesheet fixes that, because the mobile layout is the one being printed.
 
@@ -95,7 +97,9 @@ Three things worth knowing if you touch this:
 - **Scale is chosen against the browser's canvas ceilings**, which iOS enforces far more tightly than desktop Chrome. Going over does not throw — it silently yields a blank or truncated canvas — so the scale is picked to stay inside them rather than discovering the limit afterwards.
 - **Textareas are swapped for divs during the capture.** html2canvas draws a textarea's contents as a single unwrapped line clipped to the box, so a long worksheet answer would come out as one line running off the edge with the rest missing. Growing the box does not help; the text still does not wrap.
 
-Hooks: `data-gsic-pdf-hide` keeps an element out of the export, `data-gsic-pdf-expand` unclips one that scrolls its own content, and `data-gsic-pdf-root` names the element to capture when it is not the page's `.container`. A page that has its own export button opts out of the injected one with `<meta name="gsic-print" content="off">` and calls `GSICPdf.save(element, {fileName, title, subtitle})` itself, which is what the worksheet and both calculator subtabs do.
+Hooks: `data-gsic-pdf-hide` keeps an element out of the export, `data-gsic-pdf-expand` unclips one that scrolls its own content, and `data-gsic-pdf-root` names the element to capture when it is not the page's `.container`. The subtab bar (`.tab-bar`, `.phase-nav`) is dropped from the export on its own — its inactive tabs mean nothing once there is nothing to click — and the open subtab's name goes into the heading block instead.
+
+A page opts out of the self-placing button with `<meta name="gsic-print" content="off">`, then either calls `GSICPdf.save(element, {fileName, title, subtitle})` on its own control — the worksheet and both calculator subtabs — or asks for a ready-made row with `GSICPdf.button(getTarget, getOpts)` and places it itself. Both arguments to `button()` are resolved at click time, which is how the Hub gives six tabs in one document a button each.
 
 ## Repository structure
 

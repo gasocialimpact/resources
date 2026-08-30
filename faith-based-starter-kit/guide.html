@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>8-Part FBII Guide</title>
+<title>8-Part Faith-Based Impact Investing Action Guide</title>
+<script src="../assets/gsic-pdf.js" defer></script>
 <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box; margin:0; padding:0}
@@ -86,6 +87,10 @@ li strong{color:#1a1a1a}
 .intro-text{
   max-width:1200px; margin:0 auto; padding:28px 40px 0;
 }
+
+/* The Save as PDF button is injected as the first thing in the body, ahead of
+   the sticky phase nav; line it up with the column the rest of the page uses. */
+.gsic-pdf-row{max-width:1200px; margin:0 auto; padding:16px 40px 0}
 .intro-text p{font-size:15px; color:#444; margin-bottom:14px; max-width:780px}
 .intro-text .asset-table{
   width:100%; border-collapse:collapse; margin:20px 0 8px; font-size:14px;
@@ -106,6 +111,7 @@ li strong{color:#1a1a1a}
   .phase-btn{font-size:12px; padding:7px 10px}
   .outcomes-grid{grid-template-columns:1fr}
   .intro-text{padding:20px 18px 0}
+  .gsic-pdf-row{padding:12px 18px 0}
 }
 </style>
 </head>
@@ -411,7 +417,7 @@ li strong{color:#1a1a1a}
   </div>
 </div>
 
-<div class="progress-bar" id="progressBar"></div>
+<div class="progress-bar" id="progressBar" data-gsic-pdf-hide></div>
 
 <script>
 (function(){

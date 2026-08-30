@@ -30,13 +30,18 @@
  *
  * Public API
  * ----------
- *   GSICPdf.save(element, {fileName, width, title, subtitle})
+ *   GSICPdf.save(element, {fileName, title, subtitle})
+ *   GSICPdf.button(getTarget, getOpts) -> a Save as PDF row to place yourself
  *
- * The injected button calls it with the page's `.container`. calculator.html
- * calls it with a single card for its per-scenario exports.
+ * On a one-tool-per-page file the button places itself, capturing the page's
+ * `.container`. calculator.html calls save() directly with a single card for its
+ * per-scenario exports.
  *
- * A page opts out of the injected button with
- * <meta name="gsic-print" content="off"> (the worksheet has its own export).
+ * A page opts out of the self-placing button with
+ * <meta name="gsic-print" content="off"> — either because it has its own export
+ * (the worksheet) or because one button for the whole page is the wrong shape.
+ * The Nonprofit Capital Access Hub holds all six of its tabs in one document, so
+ * it opts out and builds a row per tab with GSICPdf.button().
  */
 (function () {
   'use strict';
@@ -133,7 +138,7 @@
   // into the heading block below.
   function prepareClone(cloneDoc, opts) {
     var hide = cloneDoc.querySelectorAll(
-      '.gsic-pdf-row, [data-gsic-pdf-hide], .cf-save-row, .cf-actions, .tab-bar'
+      '.gsic-pdf-row, [data-gsic-pdf-hide], .cf-save-row, .cf-actions, .tab-bar, .phase-nav'
     );
     Array.prototype.forEach.call(hide, function (el) { el.style.display = 'none'; });
 
@@ -203,7 +208,7 @@
   }
 
   function activeSubtabName() {
-    var btn = document.querySelector('.tab-btn.active, .tab.active');
+    var btn = document.querySelector('.tab-btn.active, .tab.active, .phase-btn.active');
     return btn ? btn.textContent.trim() : '';
   }
 
@@ -268,10 +273,11 @@
     else fn();
   }
 
-  ready(function () {
-    var opt = document.querySelector('meta[name="gsic-print"]');
-    if (opt && opt.content === 'off') return;
-    if (document.querySelector('.gsic-pdf-row')) return;
+  var styleAdded = false;
+
+  function ensureStyle() {
+    if (styleAdded) return;
+    styleAdded = true;
 
     var style = document.createElement('style');
     style.textContent = [
@@ -289,6 +295,16 @@
       '@media print{.gsic-pdf-row{display:none !important}}'
     ].join('\n');
     document.head.appendChild(style);
+  }
+
+  // A ready-to-place Save as PDF row.
+  //
+  // Both arguments are resolved at click time rather than now, so a page whose
+  // tabs come and go can hand over whichever one is open, with a title and
+  // subtitle that match it. A page holding every tab at once — the Nonprofit
+  // Capital Access Hub — gives one row per tab this way.
+  function button(getTarget, getOpts) {
+    ensureStyle();
 
     var row = document.createElement('div');
     row.className = 'gsic-pdf-row';
@@ -304,11 +320,9 @@
     var label = row.querySelector('span');
 
     btn.addEventListener('click', function () {
-      var host = document.querySelector('[data-gsic-pdf-root]') ||
-        document.querySelector('.container') || document.body;
       btn.disabled = true;
       label.textContent = 'Preparing PDF…';
-      save(host).catch(function (err) {
+      save(getTarget(), getOpts ? getOpts() : null).catch(function (err) {
         console.error(err);
         alert('Sorry, the PDF could not be created. ' + (err && err.message ? err.message : ''));
       }).then(function () {
@@ -317,9 +331,20 @@
       });
     });
 
+    return row;
+  }
+
+  ready(function () {
+    var opt = document.querySelector('meta[name="gsic-print"]');
+    if (opt && opt.content === 'off') return;
+    if (document.querySelector('.gsic-pdf-row')) return;
+
     var host = document.querySelector('.container') || document.body;
-    host.insertBefore(row, host.firstChild);
+    host.insertBefore(button(function () {
+      return document.querySelector('[data-gsic-pdf-root]') ||
+        document.querySelector('.container') || document.body;
+    }), host.firstChild);
   });
 
-  window.GSICPdf = { save: save };
+  window.GSICPdf = { save: save, button: button, slug: slug };
 })();

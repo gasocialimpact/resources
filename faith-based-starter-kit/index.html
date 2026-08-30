@@ -66,12 +66,12 @@ aside{
 .nav button{
   width:100%; text-align:left; background:#fff; color:var(--ink);
   border:1px solid transparent; padding:10px 12px; border-radius:8px; cursor:pointer;
-  font-family:inherit; font-size:14px; font-weight:500;
-  display:flex; align-items:center; gap:10px; transition:.15s;
+  font-family:inherit; font-size:14px; font-weight:500; line-height:1.35;
+  display:flex; align-items:flex-start; gap:10px; transition:.15s;
 }
 .nav button:hover{background:var(--secondary-green); color:var(--accent)}
 .nav button.active{background:var(--secondary-green); color:var(--accent); font-weight:700; border-color:var(--accent)}
-.nav button svg{width:16px; height:16px; flex-shrink:0}
+.nav button svg{width:16px; height:16px; flex-shrink:0; margin-top:2px}
 
 .tip{margin-top:14px; padding-top:14px; border-top:1px solid var(--line); font-size:12.5px; color:var(--ink); line-height:1.5}
 
@@ -84,8 +84,10 @@ aside{
 .section.active{display:flex; flex-direction:column; flex:1; min-height:0}
 
 .section-intro{flex-shrink:0; padding:20px 28px; border-bottom:1px solid var(--line); background:#fff}
-.section-intro h1{font-size:24px; font-weight:800; margin:0 0 8px; color:var(--accent); display:flex; align-items:center; gap:10px}
-.section-intro h1 svg{width:24px; height:24px}
+/* Tab names run long enough to wrap, so the icon aligns to the first line
+   rather than floating beside the middle of the block. */
+.section-intro h1{font-size:24px; font-weight:800; margin:0 0 8px; color:var(--accent); line-height:1.25; display:flex; align-items:flex-start; gap:10px}
+.section-intro h1 svg{width:24px; height:24px; flex-shrink:0; margin-top:3px}
 .section-intro p{font-size:14px; color:var(--ink); margin:0; max-width:780px}
 
 .tool-frame{
@@ -128,7 +130,6 @@ aside{
     <symbol id="i-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></symbol>
     <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol>
     <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></symbol>
-    <symbol id="i-printer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></symbol>
     <symbol id="i-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
     <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></symbol>
   </defs>
@@ -142,7 +143,6 @@ aside{
       <div class="kicker">Faith-Based Impact Investing Starter Kit</div>
     </div>
     <div class="controls">
-      <button class="btn" id="exportPrint"><svg><use href="#i-printer"/></svg> Print</button>
       <button class="btn" id="howBtn"><svg><use href="#i-help"/></svg> How to</button>
     </div>
   </div>
@@ -152,12 +152,12 @@ aside{
 <main>
   <aside>
     <div class="nav">
-      <button class="active" data-view="grounding"><svg><use href="#i-compass"/></svg> Field-Level Grounding</button>
-      <button data-view="guide"><svg><use href="#i-book"/></svg> 8-Part FBII Guide</button>
-      <button data-view="stories"><svg><use href="#i-pin"/></svg> FBII in Action</button>
+      <button class="active" data-view="grounding"><svg><use href="#i-compass"/></svg> Understanding the Faith-Based Impact Investing History &amp; Landscape</button>
+      <button data-view="guide"><svg><use href="#i-book"/></svg> 8-Part Faith-Based Impact Investing Action Guide</button>
+      <button data-view="stories"><svg><use href="#i-pin"/></svg> Learning from Faith-Based Impact Investor Case Studies</button>
     </div>
     <div class="tip">
-      Use the tabs above to explore the toolkit. <strong>Field-Level Grounding</strong> covers the history and market landscape. The <strong>8-Part Guide</strong> walks through implementation phase by phase. <strong>FBII in Action</strong> highlights real stories from Georgia and beyond.
+      Use the tabs above to explore the toolkit. <strong>History &amp; Landscape</strong> covers where the field came from and how large it is today. The <strong>Action Guide</strong> walks through implementation phase by phase. <strong>Case Studies</strong> highlight real faith-based impact investors in Georgia and beyond.
     </div>
   </aside>
 
@@ -166,26 +166,26 @@ aside{
 
       <div id="view-grounding" class="section active">
         <div class="section-intro">
-          <h1><svg><use href="#i-compass"/></svg> Field-Level Grounding</h1>
+          <h1><svg><use href="#i-compass"/></svg> Understanding the Faith-Based Impact Investing History &amp; Landscape</h1>
           <p>The roots, scale, and structure of faith-based impact investing&mdash;from centuries-old traditions to today's $1.57 trillion market, including the two distinct pathways faith institutions use to deploy capital.</p>
         </div>
-        <iframe class="tool-frame" src="grounding.html" title="Field-Level Grounding" loading="lazy"></iframe>
+        <iframe class="tool-frame" src="grounding.html" title="Understanding the Faith-Based Impact Investing History &amp; Landscape" loading="lazy"></iframe>
       </div>
 
       <div id="view-guide" class="section">
         <div class="section-intro">
-          <h1><svg><use href="#i-book"/></svg> 8-Part FBII Guide</h1>
+          <h1><svg><use href="#i-book"/></svg> 8-Part Faith-Based Impact Investing Action Guide</h1>
           <p>A practical, phase-by-phase implementation roadmap for faith communities of any size. Each phase covers the key decision, how to run it, what "done" looks like, and when to move forward.</p>
         </div>
-        <iframe class="tool-frame" src="guide.html" title="8-Part FBII Guide" loading="lazy"></iframe>
+        <iframe class="tool-frame" src="guide.html" title="8-Part Faith-Based Impact Investing Action Guide" loading="lazy"></iframe>
       </div>
 
       <div id="view-stories" class="section">
         <div class="section-intro">
-          <h1><svg><use href="#i-pin"/></svg> FBII in Action</h1>
+          <h1><svg><use href="#i-pin"/></svg> Learning from Faith-Based Impact Investor Case Studies</h1>
           <p>Real stories of faith communities putting capital to work for mission. Filter between stories from Georgia and stories from beyond to see the breadth of what's possible.</p>
         </div>
-        <iframe class="tool-frame" src="stories.html" title="FBII in Action" loading="lazy"></iframe>
+        <iframe class="tool-frame" src="stories.html" title="Learning from Faith-Based Impact Investor Case Studies" loading="lazy"></iframe>
       </div>
 
     </div>
@@ -217,9 +217,8 @@ document.querySelectorAll('aside .nav button').forEach(function(b){
   b.addEventListener('click', function(){ switchView(b.dataset.view); });
 });
 
-document.getElementById('exportPrint').addEventListener('click', function(){ window.print(); });
 document.getElementById('howBtn').addEventListener('click', function(){
-  alert('How to use this Starter Kit:\n\n1. Field-Level Grounding — Start here to understand the history, market scale, and the two pathways (public-market ESG and place-based community investing).\n\n2. 8-Part FBII Guide — Walk through each implementation phase. Use the sub-tabs to navigate between phases. The asset-size table helps you prioritize.\n\n3. FBII in Action — Browse real stories from Georgia and beyond. Use the filter buttons to focus on local or national examples.\n\nEach section can also be accessed directly via its own URL for embedding.');
+  alert('How to use this Starter Kit:\n\n1. Understanding the Faith-Based Impact Investing History & Landscape — Start here for the history, the market scale, and the two pathways (public-market ESG and place-based community investing).\n\n2. 8-Part Faith-Based Impact Investing Action Guide — Walk through each implementation phase. Use the sub-tabs to navigate between phases. The asset-size table helps you prioritize.\n\n3. Learning from Faith-Based Impact Investor Case Studies — Browse real stories from Georgia and beyond. Use the filter buttons to focus on local or national examples.\n\nEvery tab has a Save as PDF button at the top right, which saves that tab on its own as a single-page document.\n\nEach section can also be accessed directly via its own URL for embedding.');
 });
 </script>
 </body>

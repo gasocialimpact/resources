@@ -4,6 +4,10 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Nonprofit Capital Access Hub</title>
+<!-- Off: the shared engine's button assumes one tool per page. This page holds
+     every tab at once, so it gets a button per tab instead — see below. -->
+<meta name="gsic-print" content="off">
+<script src="../assets/gsic-pdf.js" defer></script>
 <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -83,13 +87,13 @@ aside{
   background:#fff; color:var(--ink);
   border:1px solid transparent;
   padding:10px 12px; border-radius:8px; cursor:pointer;
-  font-family:inherit; font-size:14px; font-weight:500;
-  display:flex; align-items:center; gap:10px;
+  font-family:inherit; font-size:14px; font-weight:500; line-height:1.35;
+  display:flex; align-items:flex-start; gap:10px;
   transition:.15s;
 }
 .nav button:hover{background:var(--secondary-green); color:var(--accent)}
 .nav button.active{background:var(--secondary-green); color:var(--accent); font-weight:700; border-color:var(--accent)}
-.nav button svg{width:16px; height:16px; flex-shrink:0}
+.nav button svg{width:16px; height:16px; flex-shrink:0; margin-top:2px}
 
 .legend{margin-top:16px; padding-top:14px; border-top:1px solid var(--line); display:grid; gap:8px; font-size:13px}
 .legend .row{display:flex; align-items:center; gap:8px; color:var(--ink)}
@@ -111,14 +115,19 @@ aside{
 }
 .section{display:none}
 .section.active{display:block}
+/* The row sits above the tab's heading, so it wants its space underneath
+   rather than the engine's default above. */
+.section > .gsic-pdf-row{padding:0 0 14px}
 
 /* Headings */
+/* Tab names run long enough to wrap, so the icon aligns to the first line
+   rather than floating beside the middle of the block. */
 .section h1{
   font-size:28px; font-weight:800; margin:0 0 8px;
   color:var(--accent); line-height:1.2;
-  display:flex; align-items:center; gap:12px;
+  display:flex; align-items:flex-start; gap:12px;
 }
-.section h1 svg{width:28px; height:28px; flex-shrink:0}
+.section h1 svg{width:28px; height:28px; flex-shrink:0; margin-top:3px}
 .section h2{
   font-size:20px; font-weight:700; margin:32px 0 12px;
   color:var(--secondary-purple); padding-bottom:6px;
@@ -517,7 +526,6 @@ ol.steps .step-body span{display:block; font-size:13.5px}
     <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></symbol>
     <symbol id="i-dollar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></symbol>
     <symbol id="i-pie" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></symbol>
-    <symbol id="i-printer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></symbol>
     <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></symbol>
     <symbol id="i-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></symbol>
     <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></symbol>
@@ -542,7 +550,6 @@ ol.steps .step-body span{display:block; font-size:13.5px}
     </div>
     <div class="controls">
       <button class="btn primary" id="resetView"><svg><use href="#i-refresh"/></svg> Reset View</button>
-      <button class="btn" id="exportPrint"><svg><use href="#i-printer"/></svg> Print</button>
       <button class="btn" id="howBtn"><svg><use href="#i-help"/></svg> How to</button>
     </div>
   </div>
@@ -552,12 +559,12 @@ ol.steps .step-body span{display:block; font-size:13.5px}
 <main>
   <aside>
     <div class="nav">
-      <button class="active" data-view="spurred"><svg><use href="#i-zap"/></svg> Spurred to Action</button>
-      <button data-view="learnings"><svg><use href="#i-users"/></svg> Roundtable Learnings</button>
-      <button data-view="transformation"><svg><use href="#i-trend"/></svg> Ecosystem Transformation</button>
-      <button data-view="data"><svg><use href="#i-bar"/></svg> Georgia's Data Reality</button>
-      <button data-view="spectrum"><svg><use href="#i-pulse"/></svg> Sustainability Spectrum</button>
-      <button data-view="assessment"><svg><use href="#i-clipboard"/></svg> Self-Assessment Tool</button>
+      <button class="active" data-view="spurred"><svg><use href="#i-zap"/></svg> Background: 2025 Nonprofit Capital Access Roundtable Series</button>
+      <button data-view="learnings"><svg><use href="#i-users"/></svg> Sharing Roundtable Learnings</button>
+      <button data-view="transformation"><svg><use href="#i-trend"/></svg> Identifying the Pathways for Ecosystem Transformation</button>
+      <button data-view="data"><svg><use href="#i-bar"/></svg> Data Reality: Georgia&rsquo;s Nonprofit Financial Wellbeing</button>
+      <button data-view="spectrum"><svg><use href="#i-pulse"/></svg> Unpacking the Nonprofit Financial Sustainability Spectrum</button>
+      <button data-view="assessment"><svg><use href="#i-clipboard"/></svg> Nonprofit Financial Resilience Self-Assessment Tool</button>
     </div>
 
     <div class="legend">
@@ -567,7 +574,7 @@ ol.steps .step-body span{display:block; font-size:13.5px}
     </div>
 
     <div class="tip">
-      Use the tabs above to navigate. The Self-Assessment Tool helps you place your organization on the spectrum and get tailored next steps.
+      Use the tabs above to navigate. The Self-Assessment Tool at the end helps you place your organization on the spectrum and get tailored next steps.
     </div>
   </aside>
 
@@ -575,7 +582,7 @@ ol.steps .step-body span{display:block; font-size:13.5px}
 
     <!-- SPURRED TO ACTION -->
     <div id="view-spurred" class="section active">
-      <h1><svg><use href="#i-zap"/></svg> Spurred to Action</h1>
+      <h1><svg><use href="#i-zap"/></svg> Background: 2025 Nonprofit Capital Access Roundtable Series</h1>
       <p class="subtitle">What catalyzed the Nonprofit Roundtable Series.</p>
 
       <p>Beginning in 2020, a small group of Atlanta funders started collaborating more deliberately around the financial pressures nonprofits face. During the COVID-19 crisis, several of those foundations coordinated funding and investment strategies. They seeded the <strong>Community Foundation for Greater Atlanta's Community Guarantee Pool</strong>, which helped unlock CDFI bridge lending to cover delayed government funding.</p>
@@ -622,7 +629,7 @@ ol.steps .step-body span{display:block; font-size:13.5px}
 
     <!-- ROUNDTABLE LEARNINGS -->
     <div id="view-learnings" class="section">
-      <h1><svg><use href="#i-users"/></svg> Roundtable Learnings</h1>
+      <h1><svg><use href="#i-users"/></svg> Sharing Roundtable Learnings</h1>
       <p class="subtitle">What we heard during the roundtable sessions.</p>
 
       <h2><svg><use href="#i-flag"/></svg> Roundtable Session 1. Field Context</h2>
@@ -775,7 +782,7 @@ ol.steps .step-body span{display:block; font-size:13.5px}
 
     <!-- ECOSYSTEM TRANSFORMATION -->
     <div id="view-transformation" class="section">
-      <h1><svg><use href="#i-trend"/></svg> Ecosystem Transformation</h1>
+      <h1><svg><use href="#i-trend"/></svg> Identifying the Pathways for Ecosystem Transformation</h1>
       <p class="subtitle">Five layered ecosystem interventions to bring about a healthier, navigable nonprofit capital system.</p>
 
       <div class="panel success">
@@ -797,7 +804,7 @@ ol.steps .step-body span{display:block; font-size:13.5px}
 
     <!-- GEORGIA DATA REALITY -->
     <div id="view-data" class="section">
-      <h1><svg><use href="#i-bar"/></svg> Georgia's Data Reality</h1>
+      <h1><svg><use href="#i-bar"/></svg> Data Reality: Georgia&rsquo;s Nonprofit Financial Wellbeing</h1>
       <p class="subtitle">Data from NFF's 2025 State of the Nonprofit Sector Survey on the financial pressures Georgia nonprofits face, and why this ecosystem transformation is urgent.</p>
 
       <div class="panel purpose">
@@ -951,7 +958,7 @@ ol.steps .step-body span{display:block; font-size:13.5px}
 
     <!-- SUSTAINABILITY SPECTRUM -->
     <div id="view-spectrum" class="section">
-      <h1><svg><use href="#i-pulse"/></svg> Nonprofit Financial Sustainability Spectrum</h1>
+      <h1><svg><use href="#i-pulse"/></svg> Unpacking the Nonprofit Financial Sustainability Spectrum</h1>
       <p class="subtitle">A diagnostic framework for funders, CDFIs, and capacity builders to assess where nonprofits sit on the financial stability spectrum and to design targeted interventions that move the needle.</p>
 
       <div class="panel purpose">
@@ -1061,7 +1068,7 @@ ol.steps .step-body span{display:block; font-size:13.5px}
 
     <!-- SELF-ASSESSMENT TOOL -->
     <div id="view-assessment" class="section">
-      <h1><svg><use href="#i-clipboard"/></svg> Self-Assessment Tool</h1>
+      <h1><svg><use href="#i-clipboard"/></svg> Nonprofit Financial Resilience Self-Assessment Tool</h1>
       <p class="subtitle">Answer 10 quick questions to understand your organization's current financial health stage and get targeted recommendations for building resilience. Takes about 3 minutes.</p>
 
       <div class="assess-card" id="assessCard">
@@ -1127,7 +1134,6 @@ document.querySelectorAll('aside .nav button').forEach(function(b){
 });
 
 // ---------- Header buttons ----------
-document.getElementById('exportPrint').addEventListener('click', function(){ window.print(); });
 document.getElementById('resetView').addEventListener('click', function(){
   switchView('spurred');
   resetAssessment();
@@ -1135,7 +1141,7 @@ document.getElementById('resetView').addEventListener('click', function(){
   selectStage('vuln');
 });
 document.getElementById('howBtn').addEventListener('click', function(){
-  alert('How to use this tool.\n\n1. Use the left sidebar to navigate between tabs.\n2. Each tab covers a different layer of the work, from why we started, to what we learned, to where we are headed.\n3. The Self-Assessment Tool gives you a tailored snapshot of your organization\'s financial health.\n4. Use Print to save any tab as a PDF for sharing.');
+  alert('How to use this tool.\n\n1. Use the left sidebar to navigate between tabs.\n2. Each tab covers a different layer of the work, from why we started, to what we learned, to where we are headed.\n3. The Self-Assessment Tool gives you a tailored snapshot of your organization\'s financial health.\n4. Every tab has a Save as PDF button at its top right, which saves that tab on its own as a single-page document.');
 });
 
 // ---------- Ecosystem Transformation: gap detail ----------
@@ -1466,6 +1472,36 @@ function resetAssessment(){
   document.getElementById('assessResults').classList.remove('show');
   showQuestion(0);
 }
+
+// ---------- Save as PDF, one button per tab ----------
+// Every tab lives in this one document, so the shared engine's self-placing
+// button is turned off in the head and each section gets its own instead. The
+// row sits above the tab's heading and captures only that section, so what you
+// get is the tab you were reading, not all six.
+//
+// Runs on DOMContentLoaded: gsic-pdf.js is deferred, so it has not defined
+// GSICPdf yet at the point this inline script is parsed.
+document.addEventListener('DOMContentLoaded', function(){
+  if(!window.GSICPdf) return;
+  document.querySelectorAll('.content-frame > .section').forEach(function(section){
+    var name = (section.querySelector('h1') || {}).textContent || '';
+    name = name.trim();
+    var row = window.GSICPdf.button(
+      function(){ return section; },
+      // The section's own h1 already names the tab, so the heading block the
+      // engine adds carries the hub's name and leaves the subtitle empty rather
+      // than printing the tab name twice.
+      function(){
+        return {
+          title: 'Nonprofit Capital Access Hub',
+          subtitle: '',
+          fileName: 'nonprofit-capital-access-hub-' + window.GSICPdf.slug(name)
+        };
+      }
+    );
+    section.insertBefore(row, section.firstChild);
+  });
+});
 </script>
 </body>
 </html>
