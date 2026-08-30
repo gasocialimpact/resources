@@ -58,10 +58,13 @@
             background: var(--white);
         }
 
+        /* 1300px matches the other Starter Kit tools (guidance, getting-started,
+           the advisor evaluation tool), so the worksheet does not read as a
+           narrower column than the tab the reader just came from. */
         .content-wrapper {
-            max-width: 900px;
+            max-width: 1300px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 24px 24px 48px;
         }
 
         .page-title {
@@ -617,13 +620,15 @@
             }
         }
     </style>
+<meta name="gsic-print" content="off">
 <script src="../assets/gsic-frame.js" defer></script>
+<script src="../assets/gsic-pdf.js" defer></script>
 </head>
 <body>
     <div class="container">
         <div class="content-wrapper">
             <!-- Action Buttons -->
-            <div class="action-bar">
+            <div class="action-bar" data-gsic-pdf-hide>
                 <button class="action-btn primary" onclick="exportToPDF()">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -632,14 +637,8 @@
                     </svg>
                     Export to PDF
                 </button>
-                <button class="action-btn secondary" onclick="saveProgress()">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
-                        <polyline points="7 3 7 8 15 8"></polyline>
-                    </svg>
-                    Save Progress
-                </button>
+                <!-- No Save Progress button: the form auto-saves on every change
+                     (see setupAutoSave), so saving by hand only duplicates it. -->
                 <button class="action-btn danger" onclick="clearAll()">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="3 6 5 6 21 6"></polyline>
@@ -1213,12 +1212,24 @@
     }
 
     // Export to PDF
-    function exportToPDF() {
+    async function exportToPDF() {
         // Save current progress first
         saveProgress();
-        
-        // Trigger print dialog
-        window.print();
+
+        // window.print() would lay the worksheet out at the current viewport
+        // width and slice it across sheets, which on a phone is unreadable. The
+        // shared engine renders it at desktop width onto a single page and grows
+        // each answer box so nothing typed is cut off at the fold.
+        try {
+            await GSICPdf.save(document.querySelector('.container'), {
+                fileName: 'Impact-Investing-Readiness-Worksheet',
+                title: 'Educational Reflections & Action-Planning Worksheet',
+                subtitle: ''
+            });
+        } catch (err) {
+            console.error(err);
+            alert('Sorry, the worksheet could not be exported. ' + (err && err.message ? err.message : ''));
+        }
     }
 
     // Clear all data

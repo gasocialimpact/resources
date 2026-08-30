@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Source of Funds for Impact Investing</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@300;400;500;600;700&family=Young+Serif&display=swap');
   *{margin:0;padding:0;box-sizing:border-box;}
@@ -230,7 +228,7 @@
   }
 </style>
 <script src="../assets/gsic-frame.js" defer></script>
-<script src="../assets/gsic-print.js" defer></script>
+<script src="../assets/gsic-pdf.js" defer></script>
 </head>
 <body>
 
@@ -379,10 +377,10 @@
 
       <div class="callout" id="pf-callout" style="margin-top:18px;"></div>
 
-      <div class="cf-save-row">
-        <button class="cf-btn primary" onclick="savePFScenario()">
+      <div class="cf-save-row" data-gsic-pdf-hide>
+        <button class="cf-btn primary" onclick="savePFScenario(this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Save This Scenario as PDF
+          <span>Save This Scenario as PDF</span>
         </button>
       </div>
     </div>
@@ -408,9 +406,9 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
         Open the How-To Guide
       </a>
-      <button class="cf-btn" onclick="saveCFScenario()">
+      <button class="cf-btn" onclick="saveCFScenario(this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Save This Scenario
+        <span>Save This Scenario</span>
       </button>
     </div>
 
@@ -604,10 +602,10 @@
 
       <div class="callout" id="cf-callout" style="margin-top:18px;"></div>
 
-      <div class="cf-save-row">
-        <button class="cf-btn primary" onclick="saveCFScenario()">
+      <div class="cf-save-row" data-gsic-pdf-hide>
+        <button class="cf-btn primary" onclick="saveCFScenario(this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Save This Scenario as PDF
+          <span>Save This Scenario as PDF</span>
         </button>
       </div>
     </div>
@@ -1072,25 +1070,16 @@ renderMechList(communityMechs, 'cf-mech-list', 'cf-mech-detail', 'cf');
 updatePF();
 updateCF();
 
-// ============ SAVE CF SCENARIO AS PDF ============
+// ============ SAVE A SCENARIO AS PDF ============
 // Both calculator subtabs export the same way: capture the card the chart lives
-// in, and lay it into one tall page. The only differences are which chart to
-// find and what to call the file, so they are parameters.
-function saveCFScenario(){ return saveScenario('cf-chart', 'CF'); }
-function savePFScenario(){ return saveScenario('pf-chart', 'PF'); }
+// in onto a single page. The shared engine in assets/gsic-pdf.js does the work,
+// including forcing the desktop layout so a scenario saved from a phone is still
+// readable. The only differences here are which chart to find and what to call
+// the file.
+function saveCFScenario(btn){ return saveScenario('cf-chart', 'Community-Foundation-Scenario', btn); }
+function savePFScenario(btn){ return saveScenario('pf-chart', 'Private-Foundation-Scenario', btn); }
 
-async function saveScenario(chartId, filePrefix){
-  if(!window.jspdf || !window.jspdf.jsPDF){
-    alert('PDF library is still loading. Give it a moment and try again.');
-    return;
-  }
-  if(!window.html2canvas){
-    alert('Capture library is still loading. Give it a moment and try again.');
-    return;
-  }
-  const { jsPDF } = window.jspdf;
-
-  // Capture the full calculator card with inputs, outputs, chart, and callout
+async function saveScenario(chartId, fileName, btn){
   const chart = document.getElementById(chartId);
   const card  = chart ? chart.closest('.card') : null;
   if(!card){
@@ -1098,45 +1087,28 @@ async function saveScenario(chartId, filePrefix){
     return;
   }
 
-  // Hide the in-card save button so it does not appear in the export
-  const saveRow = card.querySelector('.cf-save-row');
-  const prevVis = saveRow ? saveRow.style.visibility : null;
-  if(saveRow) saveRow.style.visibility = 'hidden';
-
-  // Give Chart.js a beat to finish any pending render before capture
+  // Give Chart.js a beat to finish any pending render before the capture
   await new Promise(r => setTimeout(r, 60));
 
+  const label = btn ? btn.querySelector('span') : null;
+  const prev  = label ? label.textContent : null;
+  if(btn){ btn.disabled = true; }
+  if(label){ label.textContent = 'Preparing PDF…'; }
+
   try {
-    const canvas = await html2canvas(card, {
-      backgroundColor: '#ffffff',
-      scale: 2,
-      useCORS: true,
-      logging: false,
-      windowWidth: card.scrollWidth,
-      windowHeight: card.scrollHeight
+    await GSICPdf.save(card, {
+      fileName: fileName,
+      title: document.title,
+      subtitle: chartId === 'pf-chart'
+        ? 'Private Foundation Calculator'
+        : 'Community Foundation Calculator'
     });
-
-    const imgData = canvas.toDataURL('image/png');
-
-    // Build a single tall page that fits the whole capture. Width stays at
-    // US Letter so the export views naturally, height stretches to content.
-    const margin  = 36;
-    const pageW   = 612; // US Letter width in pt
-    const usableW = pageW - margin * 2;
-    const imgW    = usableW;
-    const imgH    = (canvas.height / canvas.width) * imgW;
-    const pageH   = imgH + margin * 2;
-
-    const pdf = new jsPDF({ unit: 'pt', format: [pageW, pageH], orientation: 'portrait' });
-    pdf.addImage(imgData, 'PNG', margin, margin, imgW, imgH);
-
-    const stamp = new Date().toISOString().slice(0,10);
-    pdf.save(filePrefix + '-Scenario-' + stamp + '.pdf');
   } catch (err) {
     console.error(err);
     alert('Sorry, the scenario could not be exported. ' + (err && err.message ? err.message : ''));
   } finally {
-    if(saveRow) saveRow.style.visibility = prevVis || '';
+    if(btn){ btn.disabled = false; }
+    if(label){ label.textContent = prev; }
   }
 }
 </script>

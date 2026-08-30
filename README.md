@@ -83,11 +83,19 @@ If you add a tool, include `assets/gsic-frame.js` and it participates in both mo
 
 ### Saving a tool as PDF
 
-`assets/gsic-print.js` puts a **Save as PDF** button on each tool page. The button prints that tool's own document, so the whole tool is saved however long it is, and on a page with subtabs only the open subtab prints.
+`assets/gsic-pdf.js` puts a **Save as PDF** button on each tool page and produces a single continuous page, laid out at a fixed desktop width whatever device it was saved from. The open subtab, the values typed into a calculator, the answers saved in the worksheet — all of it is in the export, because the capture is taken from the live page.
 
-This replaced a single Print button in the Starter Kit header. That one printed the shell — a full-height page with the tool in an iframe — so the export was one screen of frame with the rest cut off. A page can only print itself properly, so the button belongs on the tool.
+It does not use `window.print()`. That hands the job to the browser's paginator, which lays the page out at the *current* viewport width and slices it into sheets: saved from a phone, a 375px column chopped across a dozen pages with cards split down the middle. No print stylesheet fixes that, because the mobile layout is the one being printed.
 
-A page that already has its own export opts out with `<meta name="gsic-print" content="off">`.
+Instead html2canvas renders the page into an offscreen clone whose `windowWidth` is set to the export width. Media queries in the clone evaluate against that, so the capture comes out in the desktop layout, and jsPDF puts it on one page as tall as it needs to be. US Letter width, so it still prints at true size.
+
+Three things worth knowing if you touch this:
+
+- **The capture is JPEG, not PNG.** jsPDF embeds a JPEG as-is but stores a PNG as raw uncompressed pixels. The same capture is 2MB as JPEG and 32MB as PNG, and takes 39ms to add instead of 736ms. That one choice is the difference between a half-second export and a 24-second one.
+- **Scale is chosen against the browser's canvas ceilings**, which iOS enforces far more tightly than desktop Chrome. Going over does not throw — it silently yields a blank or truncated canvas — so the scale is picked to stay inside them rather than discovering the limit afterwards.
+- **Textareas are swapped for divs during the capture.** html2canvas draws a textarea's contents as a single unwrapped line clipped to the box, so a long worksheet answer would come out as one line running off the edge with the rest missing. Growing the box does not help; the text still does not wrap.
+
+Hooks: `data-gsic-pdf-hide` keeps an element out of the export, `data-gsic-pdf-expand` unclips one that scrolls its own content, and `data-gsic-pdf-root` names the element to capture when it is not the page's `.container`. A page that has its own export button opts out of the injected one with `<meta name="gsic-print" content="off">` and calls `GSICPdf.save(element, {fileName, title, subtitle})` itself, which is what the worksheet and both calculator subtabs do.
 
 ## Repository structure
 
