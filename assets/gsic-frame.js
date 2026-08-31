@@ -187,8 +187,23 @@
   function applyHeights() {
     sizableFrames().forEach(function (f) {
       var h = parseInt(f.getAttribute('data-gsic-height') || '0', 10);
-      if (flow.matches && h) f.style.height = Math.max(h, MIN_FRAME_HEIGHT) + 'px';
-      else f.style.height = ''; // hand the height back to the stylesheet
+      if (flow.matches && h) {
+        // Stash whatever inline height the embedding page set before taking it
+        // over, so leaving flow mode can put it back exactly.
+        if (!f.hasAttribute('data-gsic-sized')) {
+          f.setAttribute('data-gsic-prev-height', f.style.height || '');
+          f.setAttribute('data-gsic-sized', '');
+        }
+        f.style.height = Math.max(h, MIN_FRAME_HEIGHT) + 'px';
+      } else if (f.hasAttribute('data-gsic-sized')) {
+        // Restore the page's own height rather than just clearing ours. Blanking
+        // it would drop an inline height the embedding page set for itself and
+        // collapse the frame to the browser's 150px default; an empty stash
+        // correctly hands the height back to the stylesheet.
+        f.style.height = f.getAttribute('data-gsic-prev-height') || '';
+        f.removeAttribute('data-gsic-prev-height');
+        f.removeAttribute('data-gsic-sized');
+      }
     });
   }
 
@@ -251,6 +266,11 @@
   var ticking = false;
   function onScrollOrResize() {
     reportHeight();
+    // applyHeights() here as well as on the media query's change event. The
+    // change event is the precise signal, but it does not fire everywhere the
+    // boundary can be crossed, and if it is missed the frames keep whichever
+    // mode's heights they had. Re-applying on resize is cheap and idempotent.
+    applyHeights();
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(function () { ticking = false; sendViewports(); });
