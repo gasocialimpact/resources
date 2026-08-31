@@ -26,13 +26,21 @@ Adding `?embed=1` to the case studies URL hides the footer, which is how the Sta
 Use a plain iframe plus one script tag. This works for any tool here, and for the Starter Kit itself.
 
 ```html
-<iframe src="https://gasocialimpact.github.io/resources/foundation-toolkit/"
+<style>
+  .gsic-embed{ width:100%; height:1250px; border:0; display:block; }
+</style>
+
+<iframe class="gsic-embed"
+        src="https://gasocialimpact.github.io/resources/foundation-toolkit/"
         title="Foundation Impact Investing Starter Kit"
-        style="width:100%; height:900px; border:0; display:block" loading="lazy"></iframe>
+        loading="lazy"></iframe>
+
 <script src="https://gasocialimpact.github.io/resources/assets/gsic-frame.js" defer></script>
 ```
 
-The script finds any iframe on the page pointing at this site and keeps it exactly as tall as its content, so the height never has to be guessed and there is no scrollbar inside the frame. The `height:900px` is only what shows for the moment before the script takes over. One script tag covers as many embeds as the page has.
+The height in that rule governs **desktop only**, where the tool is a fixed app shell that scrolls inside its frame — pick whatever suits the page, 1250px is a reasonable start. On a phone or tablet the script replaces it with the tool's real content height, so the frame has no scrollbar of its own and the host page does the scrolling. Leaving the desktop viewport puts the page's own height back exactly as it was. One script tag covers as many embeds as the page has.
+
+Put the height in a `<style>` rule rather than the iframe's `style` attribute. Both work, but the rule is what the script hands back to when it releases the height, and it keeps working on an older cached copy of the script.
 
 Three things to avoid, because each one causes the same symptom — a reader on a phone who cannot scroll to the content:
 
@@ -40,7 +48,23 @@ Three things to avoid, because each one causes the same symptom — a reader on 
 - **Do not size the frame with a percentage aspect-ratio box** (`padding-bottom:105%` and similar). A ratio that gives a reasonable height on a desktop gives a tiny one on a phone: at 375px wide, `padding-bottom:105%` is 394px tall — less than a phone screen for a tool that is several screens long.
 - **Do not put a unitless value in a CSS height** (`height:1200`). CSS ignores it, so whatever else is sizing the box silently wins.
 
-If the blog platform strips `<script>` entirely, no cross-origin iframe can self-size — that is a browser security boundary, not something the page can work around. Set a generous fixed `height` instead and the tool scrolls inside the frame, which works but is less comfortable on a phone. Platforms that do allow the script include Squarespace code blocks, the WordPress Custom HTML block (on self-hosted or Business-plan sites), Ghost HTML cards, and Webflow embeds.
+If the platform strips `<script>` entirely, no cross-origin iframe can self-size — that is a browser security boundary, not something the page can work around. Give the frame a viewport-relative height on small screens instead, so it is sized by the phone's screen rather than by its own width:
+
+```html
+<style>
+  .gsic-embed{ width:100%; height:1250px; border:0; display:block; }
+  @media (max-width: 900px){
+    .gsic-embed{ height:85vh; min-height:600px; }
+  }
+</style>
+
+<iframe class="gsic-embed"
+        src="https://gasocialimpact.github.io/resources/foundation-toolkit/"
+        title="Foundation Impact Investing Starter Kit"
+        loading="lazy"></iframe>
+```
+
+The tool then scrolls inside the frame on a phone, which works but is less comfortable than the script version. Platforms that do allow the script include Squarespace code blocks, the WordPress Custom HTML block (on self-hosted or Business-plan sites), Ghost HTML cards, and Webflow embeds.
 
 ### The frame protocol
 
