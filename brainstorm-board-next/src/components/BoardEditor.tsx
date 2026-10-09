@@ -6,12 +6,15 @@ import {
   MainMenu,
   getSceneVersion,
   newElementWith,
+  reconcileElements,
   viewportCoordsToSceneCoords,
 } from "@excalidraw/excalidraw";
 import type {
   BinaryFiles,
+  Collaborator,
   ExcalidrawImperativeAPI,
   ExcalidrawInitialDataState,
+  SocketId,
 } from "@excalidraw/excalidraw/types";
 import type { ExcalidrawElement } from "@excalidraw/excalidraw/element/types";
 
@@ -21,13 +24,30 @@ import { newId } from "../board/ids";
 import { loadImage } from "../board/image";
 import { downloadBoard } from "../board/io";
 import { renderPdf } from "../board/pdf";
-import { saveBoard, saveFile } from "../board/storage";
+import { deleteBoard, saveBoard, saveFile } from "../board/storage";
 import { renderThumbnail } from "../board/thumbnail";
 import type { Board, BoardFiles, Frame } from "../board/types";
+import { supabase } from "../sync/client";
+import { newShareId } from "../sync/ids";
+import { LiveSession, type LiveStatus, type Peer, type PointerMsg } from "../sync/live";
+import { isNewer, mergeElements } from "../sync/merge";
+import {
+  downloadFile,
+  fetchBoard,
+  frameMeta,
+  setTitle as saveRemoteTitle,
+  upsertElements,
+  upsertFrames,
+  uploadBoard,
+  uploadFile,
+  type ElementRow,
+  type FrameMeta,
+} from "../sync/remote";
 import { frameFromTemplate } from "../templates/boardTemplates";
 
 import { CLUSTER_MIME, ClusterPanel } from "./ClusterPanel";
 import { FrameRail } from "./FrameRail";
+import { NameDialog, getSavedName } from "./NameDialog";
 import { FrameTemplateDialog } from "./TemplatePicker";
 
 type Props = {
@@ -36,6 +56,8 @@ type Props = {
   /** PDF to import as soon as the editor is ready (from "Start from a PDF") */
   initialPdf?: File;
   onExit: () => void;
+  /** Called when a device-only board becomes shared (it gets a new id) */
+  onShared: (id: string) => void;
 };
 
 // Fixed margins (clear of the toolbar and zoom controls) so the frame sits in
@@ -44,7 +66,20 @@ const OFFSETS = { top: 76, bottom: 64, left: 16, right: 16 };
 
 const isTall = (f: Frame) => f.height !== undefined;
 
-export function BoardEditor({ initialBoard, initialFiles, initialPdf, onExit }: Props) {
+/** A sort key between two neighbors' positions */
+const between = (prev?: number, next?: number) =>
+  prev === undefined && next === undefined
+    ? 0
+    : prev === undefined
+      ? next! - 1
+      : next === undefined
+        ? prev + 1
+        : (prev + next) / 2;
+
+export const shareLink = (id: string) =>
+  `${window.location.origin}${window.location.pathname}#b=${id}`;
+
+export function BoardEditor({ initialBoard, initialFiles, initialPdf, onExit, onShared }: Props) {
   const [api, setApi] = useState<ExcalidrawImperativeAPI | null>(null);
   // The board is kept in a ref (the editor reads and writes it outside React's
   // render cycle) and `rev` re-renders the chrome when it changes.
@@ -57,22 +92,55 @@ export function BoardEditor({ initialBoard, initialFiles, initialPdf, onExit }: 
   const savedFiles = useRef(new Set(Object.keys(initialFiles)));
   const lastVersion = useRef<number>(-1);
   const saveTimer = useRef<number>(undefined);
+  const [title, setTitleState] = useState(initialBoard.title);
   const [status, setStatus] = useState("");
   const [pickingFrame, setPickingFrame] = useState(false);
   const pdfInput = useRef<HTMLInputElement>(null);
   const imageInput = useRef<HTMLInputElement>(null);
   const canvasWrap = useRef<HTMLDivElement>(null);
 
+  // Frames sort by position; older boards may not have one yet.
+  boardRef.current.frames.forEach((f, i) => (f.position ??= i));
+
   const board = boardRef.current;
   const currentIndex = board.frames.findIndex((f) => f.id === currentId);
   const currentFrame = () => boardRef.current.frames.find((f) => f.id === currentIdRef.current)!;
+  const frameById = (id: string) => boardRef.current.frames.find((f) => f.id === id);
 
-  const flash = (msg: string) => {
+  const flash = (msg: string, ms = 3000) => {
     setStatus(msg);
-    window.setTimeout(() => setStatus((s) => (s === msg ? "" : s)), 3000);
+    window.setTimeout(() => setStatus((s) => (s === msg ? "" : s)), ms);
   };
 
-  // ---------- Saving ----------
+  // ---------- Live sharing state ----------
+
+  const [shared, setShared] = useState(!!initialBoard.shared && !!supabase);
+  const [name, setName] = useState(getSavedName);
+  const liveRef = useRef<LiveSession | null>(null);
+  const [liveStatus, setLiveStatus] = useState<LiveStatus | null>(null);
+  const [peers, setPeers] = useState<Peer[]>([]);
+  const peersRef = useRef<Peer[]>([]);
+  const pointers = useRef(new Map<string, PointerMsg>());
+  /** Last version of each element that we've sent or received */
+  const known = useRef(new Map<string, number>());
+  const outbox = useRef(new Map<string, { frameId: string; element: ExcalidrawElement }>());
+  const unsaved = useRef(new Map<string, ElementRow>());
+  const unsavedFrames = useRef(new Map<string, FrameMeta>());
+  const sendTimer = useRef<number>(undefined);
+  const remoteSaveTimer = useRef<number>(undefined);
+  /** Elements that arrived for a frame we haven't heard about yet */
+  const orphans = useRef(new Map<string, ExcalidrawElement[]>());
+
+  const rememberAll = () => {
+    for (const f of boardRef.current.frames) for (const e of f.elements) known.current.set(e.id, e.version);
+  };
+  const rememberedOnce = useRef(false);
+  if (!rememberedOnce.current) {
+    rememberedOnce.current = true;
+    rememberAll();
+  }
+
+  // ---------- Saving on this device ----------
 
   /**
    * Copy what's on the canvas into the current frame. Skipped unless the
@@ -84,7 +152,7 @@ export function BoardEditor({ initialBoard, initialFiles, initialPdf, onExit }: 
     if (!api) return;
     const frame = boardRef.current.frames.find((f) => f.id === currentIdRef.current);
     if (!frame) return;
-    const scene = api.getSceneElements();
+    const scene = api.getSceneElementsIncludingDeleted();
     const paperId = frame.elements.find((e) => roleOf(e) === "paper")?.id;
     const showingFrame = paperId ? scene.some((e) => e.id === paperId) : scene.length > 0;
     if (showingFrame) frame.elements = scene;
@@ -109,18 +177,93 @@ export function BoardEditor({ initialBoard, initialFiles, initialPdf, onExit }: 
     saveTimer.current = window.setTimeout(persist, 600);
   }, [persist]);
 
+  // ---------- Saving online and sending to others ----------
+
+  const flushOutbox = () => {
+    const live = liveRef.current;
+    if (!live || !outbox.current.size) return;
+    const byFrame = new Map<string, ExcalidrawElement[]>();
+    for (const { frameId, element } of outbox.current.values()) {
+      byFrame.set(frameId, [...(byFrame.get(frameId) ?? []), element]);
+    }
+    outbox.current.clear();
+    for (const [frameId, els] of byFrame) live.sendElements(frameId, els);
+  };
+
+  const flushRemoteSave = async () => {
+    const b = boardRef.current;
+    if (!b.shared) return;
+    const rows = [...unsaved.current.values()];
+    const frames = [...unsavedFrames.current.values()];
+    unsaved.current.clear();
+    unsavedFrames.current.clear();
+    try {
+      // Frames first, so their elements are never orphaned in the database.
+      await upsertFrames(b.id, frames);
+      await upsertElements(b.id, rows);
+    } catch (err) {
+      console.error(err);
+      // Put them back (unless something newer is already queued) and retry.
+      for (const r of rows) {
+        const q = unsaved.current.get(r.element.id);
+        if (!q || isNewer(r.element, q.element)) unsaved.current.set(r.element.id, r);
+      }
+      for (const f of frames) if (!unsavedFrames.current.has(f.id)) unsavedFrames.current.set(f.id, f);
+      flash("Not saved online yet. Retrying...", 4000);
+      window.clearTimeout(remoteSaveTimer.current);
+      remoteSaveTimer.current = window.setTimeout(flushRemoteSave, 5000);
+    }
+  };
+
+  const scheduleRemote = () => {
+    window.clearTimeout(sendTimer.current);
+    sendTimer.current = window.setTimeout(flushOutbox, 50);
+    window.clearTimeout(remoteSaveTimer.current);
+    remoteSaveTimer.current = window.setTimeout(flushRemoteSave, 800);
+  };
+
+  /** Queue any elements of a frame that changed since we last synced them. */
+  const publishElements = (frameId: string, elements: readonly ExcalidrawElement[]) => {
+    if (!boardRef.current.shared) return;
+    let any = false;
+    for (const e of elements) {
+      if (known.current.get(e.id) === e.version) continue;
+      known.current.set(e.id, e.version);
+      outbox.current.set(e.id, { frameId, element: e });
+      unsaved.current.set(e.id, { frame_id: frameId, element: e });
+      any = true;
+    }
+    if (any) scheduleRemote();
+  };
+
+  /** Share frame additions, moves, renames and deletions. */
+  const publishFrames = (frames: Frame[], deleted: Frame[] = []) => {
+    if (!boardRef.current.shared) return;
+    const metas = frames.map((f) => frameMeta(f));
+    const gone = deleted.map((f) => frameMeta(f, true));
+    for (const m of [...metas, ...gone]) unsavedFrames.current.set(m.id, m);
+    liveRef.current?.sendFrames(metas, deleted.map((f) => f.id));
+    for (const f of frames) publishElements(f.id, f.elements);
+    scheduleRemote();
+  };
+
   // Save on the way out, and if the tab is closed mid-edit.
   useEffect(() => {
     const flush = () => {
       window.clearTimeout(saveTimer.current);
       void persist();
+      flushOutbox();
+      if (unsaved.current.size || unsavedFrames.current.size) void flushRemoteSave();
     };
     window.addEventListener("pagehide", flush);
     return () => {
       window.removeEventListener("pagehide", flush);
       flush();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [persist]);
+
+  // ---------- Images ----------
 
   const storeNewFiles = (files: BinaryFiles) => {
     for (const file of Object.values(files)) {
@@ -128,8 +271,71 @@ export function BoardEditor({ initialBoard, initialFiles, initialPdf, onExit }: 
       savedFiles.current.add(file.id);
       filesRef.current[file.id] = file;
       void saveFile(boardRef.current.id, file);
+      if (boardRef.current.shared) {
+        uploadFile(boardRef.current.id, file).catch((err) => {
+          console.error(err);
+          flash("An image didn't upload, so others may not see it.", 5000);
+        });
+      }
     }
   };
+
+  /**
+   * Fetch any images these elements need that we don't have yet. An image can
+   * arrive before its upload has finished, so failed downloads retry with
+   * growing waits.
+   */
+  const fetching = useRef(new Set<string>());
+  const ensureFiles = useCallback(
+    (elements: readonly ExcalidrawElement[]) => {
+      if (!boardRef.current.shared) return;
+      const missing = elements.filter(
+        (e): e is Extract<ExcalidrawElement, { type: "image" }> =>
+          e.type === "image" && !!e.fileId && !filesRef.current[e.fileId] && !fetching.current.has(e.fileId),
+      );
+      const attempt = (fileId: string, tries: number): Promise<BinaryFiles[string]> =>
+        downloadFile(boardRef.current.id, fileId).catch((err) => {
+          if (tries >= 6) throw err;
+          return new Promise((r) => window.setTimeout(r, 1000 * 2 ** tries)).then(() => attempt(fileId, tries + 1));
+        });
+      for (const e of missing) {
+        const fileId = e.fileId!;
+        fetching.current.add(fileId);
+        attempt(fileId, 0)
+          .then((file) => {
+            filesRef.current[fileId] = file;
+            savedFiles.current.add(fileId);
+            void saveFile(boardRef.current.id, file);
+            api?.addFiles([file]);
+            for (const f of boardRef.current.frames) {
+              if (f.elements.some((x) => x.type === "image" && x.fileId === fileId)) scheduleThumb(f.id);
+            }
+          })
+          .catch((err) => console.error(err))
+          .finally(() => fetching.current.delete(fileId));
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [api],
+  );
+
+  // ---------- Thumbnails for frames changed by others ----------
+
+  const thumbTimers = useRef(new Map<string, number>());
+  const scheduleThumb = (frameId: string) => {
+    window.clearTimeout(thumbTimers.current.get(frameId));
+    thumbTimers.current.set(
+      frameId,
+      window.setTimeout(async () => {
+        const f = frameById(frameId);
+        if (!f) return;
+        f.thumbnail = await renderThumbnail(f.elements, filesRef.current);
+        bump();
+      }, 800),
+    );
+  };
+
+  // ---------- Canvas changes ----------
 
   const onChange = (elements: readonly ExcalidrawElement[], _: unknown, files: BinaryFiles) => {
     storeNewFiles(files);
@@ -137,6 +343,12 @@ export function BoardEditor({ initialBoard, initialFiles, initialPdf, onExit }: 
     if (version === lastVersion.current) return;
     lastVersion.current = version;
     schedulePersist();
+    if (api && boardRef.current.shared) {
+      const frame = currentFrame();
+      const scene = api.getSceneElementsIncludingDeleted();
+      const paperId = frame?.elements.find((e) => roleOf(e) === "paper")?.id;
+      if (frame && (!paperId || scene.some((e) => e.id === paperId))) publishElements(frame.id, scene);
+    }
   };
 
   /** Add elements to the current frame as one undoable step */
@@ -221,7 +433,10 @@ export function BoardEditor({ initialBoard, initialFiles, initialPdf, onExit }: 
       api.history.clear();
       lastVersion.current = getSceneVersion(api.getSceneElementsIncludingDeleted());
       fitFrame();
+      liveRef.current?.setFrame(id);
+      refreshCollaborators();
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [api, fitFrame],
   );
 
@@ -232,12 +447,17 @@ export function BoardEditor({ initialBoard, initialFiles, initialPdf, onExit }: 
     showFrame(id);
   };
 
+  const sortFrames = () => boardRef.current.frames.sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+
   const addFrame = (templateId: string) => {
     setPickingFrame(false);
     captureCurrent();
     const b = boardRef.current;
+    const i = b.frames.findIndex((fr) => fr.id === currentIdRef.current);
     const f = frameFromTemplate(templateId, `Frame ${b.frames.length + 1}`);
-    b.frames.splice(b.frames.findIndex((fr) => fr.id === currentIdRef.current) + 1, 0, f);
+    f.position = between(b.frames[i]?.position, b.frames[i + 1]?.position);
+    b.frames.splice(i + 1, 0, f);
+    publishFrames([f]);
     showFrame(f.id);
     void persist();
   };
@@ -247,7 +467,8 @@ export function BoardEditor({ initialBoard, initialFiles, initialPdf, onExit }: 
     const b = boardRef.current;
     const i = b.frames.findIndex((f) => f.id === id);
     if (i < 0 || b.frames.length === 1) return;
-    b.frames.splice(i, 1);
+    const [gone] = b.frames.splice(i, 1);
+    publishFrames([], [gone]);
     if (id === currentIdRef.current) showFrame(b.frames[Math.max(0, i - 1)].id);
     void persist();
   };
@@ -259,6 +480,8 @@ export function BoardEditor({ initialBoard, initialFiles, initialPdf, onExit }: 
     const frames = boardRef.current.frames;
     const [f] = frames.splice(from, 1);
     frames.splice(to, 0, f);
+    f.position = between(frames[to - 1]?.position, frames[to + 1]?.position);
+    publishFrames([f]);
     void persist();
   };
 
@@ -268,7 +491,7 @@ export function BoardEditor({ initialBoard, initialFiles, initialPdf, onExit }: 
       elements: api
         .getSceneElementsIncludingDeleted()
         // newElementWith bumps each element's version so the change is saved
-        // (and would merge correctly in a shared board).
+        // and wins over older copies on other people's screens.
         .map((e) => (isFrameFurniture(e) || e.isDeleted ? e : newElementWith(e, { isDeleted: true }))),
       captureUpdate: CaptureUpdateAction.IMMEDIATELY,
     });
@@ -292,8 +515,22 @@ export function BoardEditor({ initialBoard, initialFiles, initialPdf, onExit }: 
         // A brand new board starting from a PDF replaces its empty first frame.
         const cur = currentFrame();
         const isEmpty = b.frames.length === 1 && cur.elements.every((e) => roleOf(e) === "paper");
+        const at = b.frames.indexOf(cur);
+        const lo = isEmpty ? undefined : cur.position;
+        const hi = b.frames[at + 1]?.position;
+        newFrames.forEach((f, i) => {
+          f.position =
+            lo === undefined && hi === undefined
+              ? i
+              : lo === undefined
+                ? hi! - newFrames.length + i
+                : hi === undefined
+                  ? lo + 1 + i
+                  : lo + ((hi - lo) * (i + 1)) / (newFrames.length + 1);
+        });
         if (isEmpty) b.frames = newFrames;
-        else b.frames.splice(b.frames.indexOf(cur) + 1, 0, ...newFrames);
+        else b.frames.splice(at + 1, 0, ...newFrames);
+        publishFrames(newFrames, isEmpty ? [cur] : []);
         for (const f of newFrames) f.thumbnail = await renderThumbnail(f.elements, filesRef.current);
         showFrame(newFrames[0].id);
         await persist();
@@ -329,6 +566,22 @@ export function BoardEditor({ initialBoard, initialFiles, initialPdf, onExit }: 
       cancelled = true;
     };
   }, []);
+
+  // Frames need distinct positions to sort the same way for everyone. Boards
+  // saved before positions were assigned get renumbered once.
+  useEffect(() => {
+    if (!api) return;
+    const frames = boardRef.current.frames;
+    if (new Set(frames.map((f) => f.position)).size === frames.length) return;
+    frames.forEach((f, i) => (f.position = i));
+    publishFrames(frames);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [api]);
+
+  // Shared boards may reference images this device hasn't downloaded yet.
+  useEffect(() => {
+    if (api && shared) ensureFiles(boardRef.current.frames.flatMap((f) => f.elements));
+  }, [api, shared, ensureFiles]);
 
   // ---------- Images ----------
 
@@ -389,6 +642,203 @@ export function BoardEditor({ initialBoard, initialFiles, initialPdf, onExit }: 
     addCluster(kind, at.x);
   };
 
+  // ---------- Live: receiving ----------
+
+  /** Show other people's cursors, for those on the same frame. */
+  const refreshCollaborators = () => {
+    if (!api) return;
+    const here = currentIdRef.current;
+    const map = new Map<SocketId, Collaborator>();
+    for (const p of peersRef.current) {
+      if (p.frameId !== here) continue;
+      const ptr = pointers.current.get(p.key);
+      map.set(p.key as SocketId, {
+        id: p.key,
+        socketId: p.key as SocketId,
+        username: p.name,
+        color: { background: p.color, stroke: p.color },
+        ...(ptr && ptr.frameId === here
+          ? { pointer: { x: ptr.x, y: ptr.y, tool: ptr.tool }, button: ptr.button }
+          : {}),
+      });
+    }
+    api.updateScene({ collaborators: map });
+  };
+
+  const applyRemoteElements = (frameId: string, elements: ExcalidrawElement[]) => {
+    for (const e of elements) {
+      const v = known.current.get(e.id);
+      if (v === undefined || e.version >= v) known.current.set(e.id, e.version);
+    }
+    const frame = frameById(frameId);
+    if (!frame) {
+      orphans.current.set(frameId, mergeElements(orphans.current.get(frameId) ?? [], elements));
+      return;
+    }
+    if (frameId === currentIdRef.current && api) {
+      const merged = reconcileElements(
+        api.getSceneElementsIncludingDeleted(),
+        elements as unknown as Parameters<typeof reconcileElements>[1],
+        api.getAppState(),
+      );
+      api.updateScene({ elements: merged, captureUpdate: CaptureUpdateAction.NEVER });
+      frame.elements = merged;
+    } else {
+      frame.elements = mergeElements(frame.elements, elements);
+    }
+    ensureFiles(elements);
+    scheduleThumb(frameId);
+    schedulePersist();
+  };
+
+  const applyRemoteFrames = (upserted: FrameMeta[], deleted: string[]) => {
+    const b = boardRef.current;
+    for (const m of upserted) {
+      const f = frameById(m.id);
+      if (f) {
+        f.position = m.position;
+        f.title = m.title;
+        f.width = m.width ?? undefined;
+        f.height = m.height ?? undefined;
+      } else if (!deleted.includes(m.id)) {
+        const els = orphans.current.get(m.id) ?? [];
+        orphans.current.delete(m.id);
+        b.frames.push({
+          id: m.id,
+          title: m.title,
+          position: m.position,
+          width: m.width ?? undefined,
+          height: m.height ?? undefined,
+          elements: els,
+        });
+        scheduleThumb(m.id);
+      }
+    }
+    const wasCurrent = currentIdRef.current;
+    const idx = b.frames.findIndex((f) => f.id === wasCurrent);
+    if (deleted.length) b.frames = b.frames.filter((f) => !deleted.includes(f.id));
+    sortFrames();
+    if (deleted.includes(wasCurrent) && b.frames.length) {
+      showFrame(b.frames[Math.max(0, Math.min(idx, b.frames.length) - 1)].id);
+      flash("That frame was removed by someone else.");
+    }
+    schedulePersist();
+    bump();
+  };
+
+  /** After a dropped connection, pull the latest from the database. */
+  const resync = async () => {
+    try {
+      const fresh = await fetchBoard(boardRef.current.id);
+      if (!fresh) return;
+      const deleted = boardRef.current.frames.filter((f) => !fresh.frames.some((x) => x.id === f.id)).map((f) => f.id);
+      applyRemoteFrames(
+        fresh.frames.map((f) => frameMeta(f)),
+        deleted.filter((id) => !unsavedFrames.current.has(id)),
+      );
+      for (const f of fresh.frames) applyRemoteElements(f.id, [...f.elements]);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Connect to the board's live channel while it's shared.
+  const handlers = useRef({ applyRemoteElements, applyRemoteFrames, refreshCollaborators, resync });
+  handlers.current = { applyRemoteElements, applyRemoteFrames, refreshCollaborators, resync };
+  useEffect(() => {
+    if (!api || !shared || !name || !supabase) return;
+    const live = new LiveSession(boardRef.current.id, name, currentIdRef.current, {
+      onElements: (frameId, els) => handlers.current.applyRemoteElements(frameId, els),
+      onFrames: (up, del) => handlers.current.applyRemoteFrames(up, del),
+      onTitle: (t) => {
+        boardRef.current.title = t;
+        setTitleState(t);
+      },
+      onPeers: (p) => {
+        peersRef.current = p;
+        setPeers(p);
+        handlers.current.refreshCollaborators();
+      },
+      onPointer: (p) => {
+        pointers.current.set(p.key, p);
+        handlers.current.refreshCollaborators();
+      },
+      onStatus: setLiveStatus,
+      onReconnect: () => void handlers.current.resync(),
+    });
+    liveRef.current = live;
+    return () => {
+      live.close();
+      liveRef.current = null;
+      setLiveStatus(null);
+    };
+  }, [api, shared, name]);
+
+  const lastPointer = useRef(0);
+  const onPointerUpdate = (p: { pointer: { x: number; y: number; tool: "pointer" | "laser" }; button: "up" | "down" }) => {
+    const live = liveRef.current;
+    const now = performance.now();
+    if (!live || now - lastPointer.current < 50) return;
+    lastPointer.current = now;
+    live.sendPointer({ frameId: currentIdRef.current, ...p.pointer, button: p.button });
+  };
+
+  // ---------- Sharing ----------
+
+  const [sharing, setSharing] = useState(false);
+  const copyLink = async () => {
+    const link = shareLink(boardRef.current.id);
+    try {
+      await navigator.clipboard.writeText(link);
+      flash("Link copied. Anyone with the link can view and edit this board.", 5000);
+    } catch {
+      setStatus("");
+      prompt("Copy this link to share the board:", link);
+    }
+  };
+
+  const share = async () => {
+    if (!supabase) return;
+    if (boardRef.current.shared) return copyLink();
+    setSharing(true);
+    setStatus("Uploading board...");
+    try {
+      captureCurrent();
+      const b = boardRef.current;
+      const oldId = b.id;
+      const id = newShareId();
+      await uploadBoard({ ...b, id }, filesRef.current);
+      b.id = id;
+      b.shared = true;
+      await saveBoard(b);
+      await Promise.all(Object.values(filesRef.current).map((f) => saveFile(id, f)));
+      await deleteBoard(oldId);
+      rememberAll();
+      setShared(true);
+      onShared(id);
+      await copyLink();
+    } catch (err) {
+      console.error(err);
+      flash("Couldn't share this board. Check your connection and try again.", 5000);
+    } finally {
+      setSharing(false);
+    }
+  };
+
+  const renameBoard = (t: string) => {
+    setTitleState(t);
+    boardRef.current.title = t;
+    schedulePersist();
+    if (boardRef.current.shared) {
+      liveRef.current?.sendTitle(t);
+      window.clearTimeout(titleTimer.current);
+      titleTimer.current = window.setTimeout(() => {
+        saveRemoteTitle(boardRef.current.id, boardRef.current.title).catch(console.error);
+      }, 800);
+    }
+  };
+  const titleTimer = useRef<number>(undefined);
+
   // ---------- Render ----------
 
   const [initialData] = useState<ExcalidrawInitialDataState>(() => ({
@@ -402,6 +852,8 @@ export function BoardEditor({ initialBoard, initialFiles, initialPdf, onExit }: 
     },
   }));
 
+  const frameNumber = (id: string) => board.frames.findIndex((f) => f.id === id) + 1;
+
   return (
     <div className="app">
       <header className="topbar">
@@ -410,12 +862,9 @@ export function BoardEditor({ initialBoard, initialFiles, initialPdf, onExit }: 
         </button>
         <input
           className="board-title"
-          defaultValue={board.title}
+          value={title}
           aria-label="Board title"
-          onChange={(e) => {
-            boardRef.current.title = e.target.value;
-            schedulePersist();
-          }}
+          onChange={(e) => renameBoard(e.target.value)}
         />
         <div className="frame-nav">
           <button
@@ -439,6 +888,24 @@ export function BoardEditor({ initialBoard, initialFiles, initialPdf, onExit }: 
         <span className="status" role="status">
           {status}
         </span>
+        {shared && (
+          <div className="presence" aria-label="People on this board">
+            {liveStatus && liveStatus !== "live" && (
+              <span className={"live-dot " + liveStatus}>{liveStatus === "offline" ? "Offline" : "Connecting"}</span>
+            )}
+            {peers.map((p) => (
+              <button
+                key={p.key}
+                className="avatar"
+                style={{ background: p.color }}
+                title={`${p.name}, on frame ${frameNumber(p.frameId) || "?"}. Click to go there.`}
+                onClick={() => frameById(p.frameId) && switchTo(p.frameId)}
+              >
+                {p.name.trim().slice(0, 1).toUpperCase() || "?"}
+              </button>
+            ))}
+          </div>
+        )}
         <div className="topbar-actions">
           <button className="btn" onClick={() => imageInput.current?.click()}>
             Add image
@@ -458,6 +925,11 @@ export function BoardEditor({ initialBoard, initialFiles, initialPdf, onExit }: 
           >
             Export
           </button>
+          {supabase && (
+            <button className="btn btn-primary" onClick={share} disabled={sharing}>
+              {shared ? "Copy link" : "Share"}
+            </button>
+          )}
         </div>
         <input
           ref={pdfInput}
@@ -491,13 +963,16 @@ export function BoardEditor({ initialBoard, initialFiles, initialPdf, onExit }: 
           onAdd={() => setPickingFrame(true)}
           onDelete={deleteFrame}
           onMove={moveFrame}
+          peers={peers}
         />
         <div className="canvas-wrap" ref={canvasWrap} onDropCapture={onDropCapture}>
           <Excalidraw
             onExcalidrawAPI={setApi}
             initialData={initialData}
             onChange={onChange}
-            name={board.title}
+            onPointerUpdate={onPointerUpdate}
+            isCollaborating={shared}
+            name={title}
             UIOptions={{
               canvasActions: {
                 changeViewBackgroundColor: false,
@@ -521,6 +996,7 @@ export function BoardEditor({ initialBoard, initialFiles, initialPdf, onExit }: 
       {pickingFrame && (
         <FrameTemplateDialog onPick={addFrame} onClose={() => setPickingFrame(false)} />
       )}
+      {shared && !name && <NameDialog onDone={setName} />}
     </div>
   );
 }

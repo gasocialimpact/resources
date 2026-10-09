@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@excalidraw/excalidraw": "0.18.0-143b5b6",
+    "@supabase/supabase-js": "2.116.0",
     "idb-keyval": "6.2.2",
     "pdfjs-dist": "4.10.38",
     "react": "19.1.1",

@@ -96,7 +96,10 @@ export function Landing({ onNew, onNewFromPdf, onOpen, onImport }: Props) {
                     <span className="board-thumb-empty" />
                   )}
                   <span className="board-text">
-                    <span className="board-name">{b.title || "Untitled Brainstorm"}</span>
+                    <span className="board-name">
+                      {b.title || "Untitled Brainstorm"}
+                      {b.shared && <span className="badge">Shared</span>}
+                    </span>
                     <span className="muted small">
                       {b.frames.length} frame{b.frames.length === 1 ? "" : "s"} · {edited(b.updated)}
                     </span>
@@ -118,7 +121,7 @@ export function Landing({ onNew, onNewFromPdf, onOpen, onImport }: Props) {
             ))}
           </ul>
         )}
-        <p className="muted small">Saved in this browser on this device.</p>
+        <p className="muted small">Shared boards are saved online. Others are saved in this browser only.</p>
       </aside>
     </div>
   );

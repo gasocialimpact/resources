@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 
 import type { Frame } from "../board/types";
+import type { Peer } from "../sync/live";
 
 type Props = {
   frames: Frame[];
@@ -9,10 +10,12 @@ type Props = {
   onAdd: () => void;
   onDelete: (id: string) => void;
   onMove: (from: number, to: number) => void;
+  /** People on a shared board, shown on the frame they're viewing */
+  peers?: Peer[];
 };
 
 // Frames down the left side, Jamboard style. Drag a thumbnail to reorder.
-export function FrameRail({ frames, currentId, onSelect, onAdd, onDelete, onMove }: Props) {
+export function FrameRail({ frames, currentId, onSelect, onAdd, onDelete, onMove, peers = [] }: Props) {
   // Refs carry the drag between events; state only drives the visuals.
   const dragFrom = useRef<number | null>(null);
   const dropAt = useRef<{ index: number; after: boolean } | null>(null);
@@ -68,6 +71,13 @@ export function FrameRail({ frames, currentId, onSelect, onAdd, onDelete, onMove
             >
               <span className="thumb-num">{i + 1}</span>
               {f.thumbnail && <img src={f.thumbnail} alt="" draggable={false} />}
+              <span className="thumb-peers">
+                {peers
+                  .filter((p) => p.frameId === f.id)
+                  .map((p) => (
+                    <i key={p.key} style={{ background: p.color }} title={p.name} />
+                  ))}
+              </span>
               {frames.length > 1 && (
                 <button
                   className="thumb-del"

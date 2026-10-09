@@ -4,6 +4,8 @@ import type { BinaryFileData } from "@excalidraw/excalidraw/types";
 export type Frame = {
   id: string;
   title: string;
+  /** Sort key for frame order (shared boards sync this) */
+  position?: number;
   /** Frame size in scene units. Omitted for the standard 1600 x 900 frame. */
   width?: number;
   height?: number;
@@ -17,6 +19,8 @@ export type Board = {
   id: string;
   title: string;
   updated: number;
+  /** Shared online: `id` is the secret share id and edits sync live */
+  shared?: boolean;
   frames: Frame[];
 };
 

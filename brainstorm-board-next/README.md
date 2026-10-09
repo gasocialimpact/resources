@@ -31,6 +31,34 @@ engine inside each frame. The current single-file version lives in
 - Boards are saved in the browser's IndexedDB on this device. Export saves a
   `.brainstorm.json` file (images included) that Open a file loads back.
 
+## Live sharing
+
+Boards can be shared online with live editing, using Supabase.
+
+- New boards are shared from the start. A board made before sharing was set
+  up (or while offline) gets a Share button that uploads it.
+- The link is the app URL plus `#b=<share id>`. The share id is 128 random
+  bits; anyone with the link can view and edit. There are no accounts.
+- Every Excalidraw element is stored as its own row with its `version`, and
+  the database keeps whichever copy is newer, so simultaneous edits merge
+  instead of overwriting each other. Live changes travel over a Supabase
+  Realtime broadcast channel per board; presence shows who is here, which
+  frame they're on, and their cursor.
+- PDF pages and images go to the public `board-files` storage bucket under
+  the board's share id. The bucket can't be listed.
+- Tables are closed to the public key. Everything goes through the `bb_*`
+  database functions, each of which needs a board id.
+
+Setup: run `supabase/schema.sql` once in the Supabase SQL editor, then put the
+project URL and anon key in `.env.local`:
+
+```
+VITE_SUPABASE_URL=https://<project>.supabase.co
+VITE_SUPABASE_ANON_KEY=<anon key>
+```
+
+Without these the app still works, with boards saved on the device only.
+
 ## Develop
 
 ```bash
@@ -47,6 +75,3 @@ a CDN.
 - Excalidraw is pinned to the nightly build `0.18.0-143b5b6`. The viewport
   lock and sticky notes are not in a stable release yet (latest stable is
   0.18.1). Upgrade deliberately and retest frame locking when moving off it.
-- Multi-user editing is not built yet. Excalidraw elements already carry
-  `version` / `versionNonce` and the package exports `reconcileElements`, which
-  is the merge step a live sync service would use.
