@@ -158,7 +158,7 @@ The template already includes both shared scripts and the flow-mode stylesheet, 
 
 ## Technology
 
-Each tool is pure HTML, CSS, and JavaScript with no build step, which keeps the pages portable and easy to embed. Hosting is handled by GitHub Pages, published by the `Deploy site` workflow (`.github/workflows/deploy-pages.yml`) on every push to `main`. The one exception to "no build step" is `brainstorm-board-next/`, a Vite app the workflow builds before publishing; its live sharing reads the `SUPABASE_URL` and `SUPABASE_ANON_KEY` Actions variables.
+Each tool is pure HTML, CSS, and JavaScript with no build step, which keeps the pages portable and easy to embed. Hosting is handled by GitHub Pages.
 
 ## Archive
 
