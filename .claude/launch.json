@@ -4,8 +4,29 @@
     {
       "name": "resources",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["http-server", ".", "-p", "8766", "-c-1"],
+      "runtimeArgs": [
+        "http-server",
+        ".",
+        "-p",
+        "8766",
+        "-c-1"
+      ],
       "port": 8766
+    },
+    {
+      "name": "brainstorm-board-next",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--prefix",
+        "brainstorm-board-next",
+        "--",
+        "--port",
+        "5180",
+        "--strictPort"
+      ],
+      "port": 5180
     }
   ]
 }
