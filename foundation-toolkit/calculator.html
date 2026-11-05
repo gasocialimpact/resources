@@ -1046,9 +1046,8 @@ function selectMech(prefix, idx) {
   renderMechDetail(mechs, prefix+'-mech-detail', prefix, idx);
 }
 
-function renderMechDetail(mechs, detailId, prefix, idx) {
-  const m=mechs[idx];
-  document.getElementById(detailId).innerHTML=`
+function mechDetailHtml(m) {
+  return `
     <h3 style="font-size:18px;margin-bottom:8px;">${m.title}</h3>
     <div class="desc">${m.desc}</div>
     <div class="detail-grid">
@@ -1063,6 +1062,39 @@ function renderMechDetail(mechs, detailId, prefix, idx) {
     </div>
     <div class="key-insight"><strong>Key Insight.</strong> ${m.insight}</div>`;
 }
+
+function renderMechDetail(mechs, detailId, prefix, idx) {
+  document.getElementById(detailId).innerHTML = mechDetailHtml(mechs[idx]);
+}
+
+// On screen the mechanisms panel shows one mechanism at a time, because that is
+// how you compare them. A saved PDF is read away from the page with nothing to
+// click, so the export opens every mechanism instead of freezing whichever
+// happened to be selected. The side-by-side list/detail grid is dropped to a
+// single column for the same reason: there is no interaction left to support.
+// gsic-pdf.js is deferred, so it has not run yet while this inline script is
+// being parsed; DOMContentLoaded fires after deferred scripts, which is the
+// first moment GSICPdf is there to register with.
+document.addEventListener('DOMContentLoaded', function () {
+  if (!window.GSICPdf) return;
+  GSICPdf.onPrepare(function (cloneDoc) {
+    [['pf', privateMechs], ['cf', communityMechs]].forEach(function (pair) {
+      var detail = cloneDoc.getElementById(pair[0] + '-mech-detail');
+      if (!detail) return;
+      var layout = detail.parentNode;
+      if (layout && layout.classList.contains('mech-layout')) {
+        layout.style.display = 'block';
+      }
+      var list = layout ? layout.querySelector('.mech-list') : null;
+      if (list) list.style.marginBottom = '22px';
+      detail.innerHTML = pair[1].map(function (m, i) {
+        return '<div style="' + (i ? 'margin-top:22px;padding-top:22px;' +
+          'border-top:1px solid var(--border);' : '') + '">' +
+          mechDetailHtml(m) + '</div>';
+      }).join('');
+    });
+  }, 3);  // four mechanisms open instead of one
+});
 
 // ============ INIT ============
 renderMechList(privateMechs, 'pf-mech-list', 'pf-mech-detail', 'pf');

@@ -109,7 +109,7 @@
   function estimateHeight(el) {
     var current = el.getBoundingClientRect();
     var width = current.width || LAYOUT_WIDTH;
-    return Math.max(400, Math.ceil(current.height * (width / LAYOUT_WIDTH) * 1.15));
+    return Math.max(400, Math.ceil(current.height * (width / LAYOUT_WIDTH) * 1.15 * growthFactor));
   }
 
   function pickScale(height) {
@@ -136,7 +136,41 @@
   // themselves, and the subtab bar, whose inactive tabs are meaningless once
   // there is nothing to click. The open subtab's name is not lost — it goes
   // into the heading block below.
+  // Pages that need to show more in the export than they show on screen can
+  // register a hook here. calculator.html uses it to expand every source of
+  // funds mechanism, because on screen only the selected one is open but a
+  // document the reader keeps should carry all of them.
+  //
+  // The scale of the capture has to be chosen before the render, from a height
+  // measured on the live DOM — which does not yet include whatever the hook is
+  // about to add. A hook that grows the page therefore declares roughly how
+  // much by, so the estimate stays ahead of the canvas ceilings. Guessing high
+  // costs a little resolution; guessing low silently truncates the capture.
+  var prepareHooks = [];
+  var growthFactor = 1;
+  function onPrepare(fn, growth) {
+    if (typeof fn !== 'function') return;
+    prepareHooks.push(fn);
+    if (growth > growthFactor) growthFactor = growth;
+  }
+
   function prepareClone(cloneDoc, opts) {
+    // html2canvas renders a fresh clone, so every CSS animation on it starts
+    // again from 0%. The subtab panels fade in over .3s, and the capture lands
+    // partway through that — which is why a saved subtab page came out with its
+    // body text washed out while the headings outside the panel looked right.
+    // Killing animations drops each element onto its base styles, and since
+    // nothing here animates with fill-mode forwards, the base styles are the
+    // finished state. Transitions go too: none should be mid-flight in a clone,
+    // but a half-applied hover would be just as invisible a bug.
+    var still = cloneDoc.createElement('style');
+    still.textContent =
+      '*,*::before,*::after{' +
+      'animation:none !important;' +
+      '-webkit-animation:none !important;' +
+      'transition:none !important}';
+    (cloneDoc.head || cloneDoc.documentElement).appendChild(still);
+
     var hide = cloneDoc.querySelectorAll(
       '.gsic-pdf-row, [data-gsic-pdf-hide], .cf-save-row, .cf-actions, .tab-bar, .phase-nav'
     );
@@ -175,6 +209,14 @@
       el.style.overflow = 'hidden';
       el.style.maxHeight = 'none';
       el.style.height = 'auto';
+    });
+
+    // Page-specific expansion runs before the heading is measured in, so a hook
+    // may add as much content as it likes. A hook that throws must not take the
+    // whole export down with it.
+    prepareHooks.forEach(function (fn) {
+      try { fn(cloneDoc); }
+      catch (e) { if (window.console) console.warn('A PDF prepare hook failed:', e); }
     });
 
     var head = cloneDoc.createElement('div');
@@ -346,5 +388,5 @@
     }), host.firstChild);
   });
 
-  window.GSICPdf = { save: save, button: button, slug: slug };
+  window.GSICPdf = { save: save, button: button, slug: slug, onPrepare: onPrepare };
 })();
