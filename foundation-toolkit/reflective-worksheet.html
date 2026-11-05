@@ -623,6 +623,7 @@
 <meta name="gsic-print" content="off">
 <script src="../assets/gsic-frame.js" defer></script>
 <script src="../assets/gsic-pdf.js" defer></script>
+<script src="../assets/gsic-form-pdf.js" defer></script>
 </head>
 <body>
     <div class="container">
@@ -635,7 +636,7 @@
                         <polyline points="7 10 12 15 17 10"></polyline>
                         <line x1="12" y1="15" x2="12" y2="3"></line>
                     </svg>
-                    Export to PDF
+                    Download Fillable PDF
                 </button>
                 <!-- No Save Progress button: the form auto-saves on every change
                      (see setupAutoSave), so saving by hand only duplicates it. -->
@@ -1216,19 +1217,25 @@
         // Save current progress first
         saveProgress();
 
-        // window.print() would lay the worksheet out at the current viewport
-        // width and slice it across sheets, which on a phone is unreadable. The
-        // shared engine renders it at desktop width onto a single page and grows
-        // each answer box so nothing typed is cut off at the fold.
+        // A worksheet is for working in, so this is a real form rather than a
+        // picture of one: gsic-form-pdf draws the questions as text and lays
+        // AcroForm fields over the answer boxes, so the reader can keep typing
+        // and ticking in the PDF. Anything already filled in here is carried
+        // across as each field's starting value.
+        const btn = document.querySelector('.action-bar .action-btn.primary');
+        const original = btn ? btn.innerHTML : null;
+        if (btn) { btn.disabled = true; btn.textContent = 'Preparing PDF…'; }
         try {
-            await GSICPdf.save(document.querySelector('.container'), {
+            await GSICFormPdf.save(document.getElementById('worksheetForm'), {
                 fileName: 'Impact-Investing-Readiness-Worksheet',
                 title: 'Educational Reflections & Action-Planning Worksheet',
-                subtitle: ''
+                subtitle: 'Foundation Impact Investing Starter Kit'
             });
         } catch (err) {
             console.error(err);
             alert('Sorry, the worksheet could not be exported. ' + (err && err.message ? err.message : ''));
+        } finally {
+            if (btn) { btn.disabled = false; btn.innerHTML = original; }
         }
     }
 
